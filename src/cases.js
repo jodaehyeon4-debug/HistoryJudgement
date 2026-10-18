@@ -137,6 +137,14 @@ function playShadow(kind,replay){
   });
 }
 
+/* 그림이 없는 프롤로그·장면용 어두운 배경 */
+function darkBG(a,b){ return SV+`<defs>${lg('dkbg',[[0,a],[1,b]])}</defs><rect width="1600" height="900" fill="url(#dkbg)"/><rect y="700" width="1600" height="200" fill="#000" opacity=".25"/></svg>`; }
+const sceneView=(a,b)=>({bg:darkBG(a,b),desk:'',pos:['50%','-4%','96%'],posImg:['50%','-6%','94%']});
+const prologueView=(a,b)=>({bg:darkBG(a,b),desk:'',pos:['50%','0%','90%'],nochar:true});
+async function gotEv(id,msg){ if(S.found.has(id)) return; S.found.add(id); Music.sting('get'); track('ev_found',{id:id,from:'scene'}); showEvidence(id); await say('guide','normal',msg||`증거 수첩에 [[${EV_BY_ID[id].title}]]을(를) 넣었다.`); hideEvidence(); }
+/* 결과용: 어떤 증언에서 처음 맞힌 증거 */
+function firstHit(key){ const x=(S.log||[]).find(l=>l.ok&&String(l.line).startsWith(key+' ')); return x?x.card:null; }
+
 /* ---------- 인물 더하기 (그림이 없으면 코드 그림으로 대신) ---------- */
 function addCast(id,o){
   CAST[id]=Object.assign({name:o.name},o.spec||{skin:'#e8c4a0',robe:'#5a6a80',robe2:'#3e4a5c',collar:'cross',hat:'short',hair:'#1c1a20',beard:'none',iris:'#3a2a20'});
@@ -165,6 +173,7 @@ function startCaseX(n,role,resume){
   setCase(n); S.case=n; S.role=role;
   const sub=document.querySelector('.brand span'); if(sub) sub.textContent=`사건 ${n} 「${D.title}」`;
   prepStory(); S.case=n; S.role=role; S.me=role==='def'?'rival':role==='judge'?'daon':'player'; S.p2at=99; S.day=1;
+  document.body.classList.toggle('judge-mode',role==='judge');
   let from=0; const v=resume?hasSaveX(n,role):null;
   if(v){ S.found=new Set(v.found); S.seen=new Set(v.seen||[]); S.trust=v.trust||5; S.misses=v.misses||0; S.presses=v.presses||0; S.log=v.log||[]; S.used=new Set(v.used||[]); S.talked=new Set(v.talked||[]); S.unlocked=new Set(v.unlocked||[]);
     S.flags=v.flags||{}; S.terms=new Set(v.terms||[]); S.zoomed=new Set(v.zoomed||[]); S.plums=new Set(v.plums||[]); S.observes=v.observes||0; if(v.charges) setCharges(v.charges.list,v.charges.label); renderGauge(); from=v.phase; }
@@ -207,7 +216,7 @@ async function choose(q,opts,o){
 async function presentFor(lead,ids,o){
   o=o||{}; let miss=0;
   for(;;){
-    S.expect=ids; const id=await pickEvidence(lead); S.expect=null;
+    S.expect=ids; if(o.allowUsed) S.allowUsed=true; const id=await pickEvidence(lead); S.expect=null; if(o.allowUsed) S.allowUsed=false;
     const ok=ids.includes(id); track('pick',{lead:lead,ev:id,ok:ok});
     if(ok){ if(!o.quiet){ showEvidence(id); await say(ME(),'present',o.say?o.say(EV_BY_ID[id]):`‘${EV_BY_ID[id].title}’입니다!`); hideEvidence(); } if(!o.noGain) await gainTrust(); return id; }
     const bad=EV_BY_ID[id]; miss++;
@@ -217,6 +226,16 @@ async function presentFor(lead,ids,o){
     if(miss===2&&o.hint) await say('judge','normal',o.hint);
     await loseTrust(); if(S.trust<=0){ await loseTrial(); return null; }
   }
+}
+/* 두 증거 맞대기 (증언 밖에서): 두 증거를 차례로 고른다 */
+async function presentPair(lead,a,b,o){
+  o=o||{};
+  const first=await presentFor(lead+' (첫 번째)',[a,b],{quiet:true,noGain:true,allowUsed:true,hint:o.hint}); if(!first) return null;
+  const other=first===a?b:a;
+  const second=await presentFor(`‘${EV_BY_ID[first].title}’와(과) 맞댈 두 번째 증거를 고르세요.`,[other],{quiet:true,noGain:true,allowUsed:true,hint:o.hint}); if(!second) return null;
+  Music.sting('realize'); showEvidence(first); await wait(500); showEvidence(second);
+  await say(ME(),'present',o.say||`‘${EV_BY_ID[first].title}’와 ‘${EV_BY_ID[second].title}’을 맞대 보면…!`); hideEvidence();
+  await gainTrust(); track('pair',{a:first,b:second}); return [first,second];
 }
 async function victim(who,lines,intro){
   Music.stop(0.8); await wait(500);

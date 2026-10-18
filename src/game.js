@@ -972,7 +972,7 @@ function showTitle(){
   $('#titleIn').innerHTML=logoSVG()+`<p>사료로 묻고, 증거로 판결한다</p><small>아래에서 역할을 고르면 재판이 시작됩니다</small>`;
 }
 function backToRoles(){
-  closeSheet(); Music.stop(0.6); S.inTrial=false; S.bgm=null; setMood('open'); setCharges(null); stageEl.classList.remove('meet');
+  closeSheet(); Music.stop(0.6); S.inTrial=false; S.bgm=null; setMood('open'); setCharges(null); stageEl.classList.remove('meet'); document.body.classList.remove('judge-mode');
   { const sub=document.querySelector('.brand span'); if(sub) sub.textContent='사료로 묻고, 증거로 판결한다'; }
   controlsEl.hidden=true,$('#pips')&&($('#pips').hidden=true); rolesEl.hidden=false; hideEvidence(); $('#invbar').hidden=true; $('#lens').hidden=true; stageEl.classList.remove('inv'); S.mode=null;
   setView('judge','judge','smile'); setName('guide'); textEl.className='text'; nextEl.hidden=true;
@@ -986,7 +986,7 @@ $('#shoutSkip').addEventListener('click',e=>{ e.stopPropagation(); if(skipCurren
 $('#tcSkip').addEventListener('click',e=>{ e.stopPropagation(); if(skipCurrent) skipCurrent(); });
 $('#tWorkshop').addEventListener('click',openWorkshop);
 $('#tTeacher').addEventListener('click',openTeacher);
-$('#tRecord').addEventListener('click',()=>{ if(S.pendingPick){ S.pendingPick(); return; } if(CX && !controlsEl.hidden && !S.busy){ openRecord(true); return; } openRecord(false); });
+$('#tRecord').addEventListener('click',()=>{ if(S.pendingPick){ S.pendingPick(); return; } if(CX && !controlsEl.hidden && !S.busy){ openRecord(!document.body.classList.contains('judge-mode')); return; } openRecord(false); });
 $('#tLog').addEventListener('click',()=>openHistory(null));
 const spB=$('#tSpeed'); const paintSpeed=()=>{ spB.textContent='글자 '+TEXT_SPEED[textSpeed].n; }; paintSpeed();
 spB.addEventListener('click',()=>{ textSpeed=(textSpeed+1)%TEXT_SPEED.length; store.set('yj-speed',textSpeed); paintSpeed(); Music.sting('click'); });
@@ -1033,7 +1033,7 @@ document.addEventListener('keydown',e=>{
     if(k===' '||k==='ArrowRight'){ e.preventDefault(); $('#bNext').click(); return; }
     if(k==='ArrowLeft'){ e.preventDefault(); $('#bPrev').click(); return; }
     if(k==='f'||k==='F'||k==='ㄹ'){ e.preventDefault(); doPress(); return; }
-    if(k==='e'||k==='E'||k==='ㄷ'){ e.preventDefault(); if(CX) openRecord(true); return; }
+    if(k==='e'||k==='E'||k==='ㄷ'){ e.preventDefault(); if(CX) openRecord(!document.body.classList.contains('judge-mode')); return; }
     if((k==='s'||k==='S'||k==='ㄴ') && CX && CX.T.habit){ e.preventDefault(); doObserve(); return; }
   }
   if((k==='Enter'||k===' ') && !(e.target instanceof HTMLButtonElement)){ e.preventDefault(); onAdvance(); }
