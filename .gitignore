@@ -4,3 +4,6 @@ src/v03.html
 node_modules/
 __pycache__/
 *.pyc
+src/assets.js
+src/dist/
+src/v03.html

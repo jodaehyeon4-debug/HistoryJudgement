@@ -52,7 +52,7 @@ const TRACKS={
     intro:{buk:'X.X.XXXX', snare:'....xxXX', crash:'x.......'}, fill:{snare:'....xxXX', buk:'x...x.xX'}}
 };
 const TRACK_ORDER=['open','investigate','testimony','cross','crisis','turnabout','verdict'];
-const STINGS=[['objection','이의 있습니다!'],['whoosh','외침 직전 휙'],['zoom','근접 화면'],['murmur','방청석 웅성거림'],['realize','깨달음'],['crack','방울 깨짐'],['get','증거 획득'],['heal','방울 회복'],['miss','헛짚음'],['step','구역 이동'],['tick','증언 넘김'],['click','고르기'],['slam','책상 내려치기'],['hold','잠깐만요!'],['evidence','증거 제시'],['breakdown','피고 무너짐'],['wrong','헛 제시'],['gavel','의사봉'],['title','장 전환']];
+const STINGS=[['objection','이의 있습니다!'],['whoosh','외침 직전 휙'],['zoom','근접 화면'],['murmur','방청석 웅성거림'],['realize','깨달음'],['crack','방울 깨짐'],['get','증거 획득'],['heal','방울 회복'],['miss','헛짚음'],['step','구역 이동'],['tick','증언 넘김'],['click','고르기'],['slam','책상 내려치기'],['hold','잠깐만요!'],['evidence','증거 제시'],['breakdown','피고 무너짐'],['wrong','헛 제시'],['gavel','의사봉'],['title','장 전환'],['gasp','컥!'],['cough','기침'],['thud','쿵 (무거운)'],['clash','칼 부딪는 소리'],['door','큰 문 닫힘'],['shovel','삽질'],['cheer','군중의 함성'],['boo','방청석 야유'],['wind','빈 방의 바람']];
 
 const Music=(function(){
   let ctx=null, master=null, bus=null, timer=null, cur=null, curId=null, step=0, nextT=0, noiseBuf=null;
@@ -207,6 +207,19 @@ const Music=(function(){
       case 'tick': { const o=O('triangle',1150,t), g=G(0); g.gain.setValueAtTime(0.09,t); g.gain.exponentialRampToValueAtTime(0.0001,t+0.04); o.connect(g); g.connect(out); o.start(t); o.stop(t+0.05); break; }
       case 'click': { const o=O('square',1500,t), g=G(0); g.gain.setValueAtTime(0.04,t); g.gain.exponentialRampToValueAtTime(0.0001,t+0.025); o.connect(g); g.connect(out); o.start(t); o.stop(t+0.03); break; }
       case 'slam': DRUM.buk(out,t,1.1); DRUM.kung(out,t+0.015,1); nz(out,t,'lowpass',420,0.7,0.28,0.6); break;
+      /* 그림자 연출용 (공통 규칙 1-4) */
+      case 'gasp': { // '컥': 숨이 막히는 짧은 소리
+        const o=O('sawtooth',260,t), g=G(0), bp=F('bandpass',900,2); o.frequency.exponentialRampToValueAtTime(150,t+0.12);
+        g.gain.setValueAtTime(0.0001,t); g.gain.exponentialRampToValueAtTime(0.35,t+0.01); g.gain.exponentialRampToValueAtTime(0.0001,t+0.16);
+        o.connect(bp); bp.connect(g); g.connect(out); o.start(t); o.stop(t+0.2); nz(out,t,'bandpass',1400,3,0.12,0.5); break; }
+      case 'cough': [0,0.28].forEach((w,i)=>{ nz(out,t+w,'bandpass',700+i*120,1.6,0.16,0.55); thump(out,t+w,180,110,0.12,0.25); }); break;
+      case 'thud': thump(out,t,90,34,0.9,1.2); nz(out,t,'lowpass',300,0.7,0.5,0.55); DRUM.buk(out,t+0.02,0.8); break;              // '쿵(무거운)'
+      case 'clash': [0,0.17,0.31].forEach((w,i)=>{ [[2400,0.2],[3650,0.12],[5200,0.07]].forEach(p=>{ const o=O('sine',p[0]*(1+i*0.04),t+w), g=G(0); g.gain.setValueAtTime(p[1],t+w); g.gain.exponentialRampToValueAtTime(0.0001,t+w+0.5); o.connect(g); g.connect(out); o.start(t+w); o.stop(t+w+0.55); }); nz(out,t+w,'highpass',3000,0.7,0.08,0.4); }); break;
+      case 'door': { nz(out,t,'bandpass',220,4,0.9,0.25); const o=O('sawtooth',70,t), g=G(0), lp=F('lowpass',300,2); o.frequency.linearRampToValueAtTime(52,t+0.8); g.gain.setValueAtTime(0.0001,t); g.gain.exponentialRampToValueAtTime(0.12,t+0.3); g.gain.exponentialRampToValueAtTime(0.0001,t+0.85); o.connect(lp); lp.connect(g); g.connect(out); o.start(t); o.stop(t+0.9); thump(out,t+0.85,80,30,1.1,1.3); nz(out,t+0.85,'lowpass',500,0.7,0.6,0.6); break; }
+      case 'shovel': [0,0.55,1.1].forEach(w=>{ nz(out,t+w,'bandpass',1800,1.2,0.09,0.45); nz(out,t+w+0.05,'lowpass',500,0.7,0.25,0.35); }); break;
+      case 'cheer': { for(let k=0;k<70;k++){ const w=t+Math.random()*2.2, d=0.4+Math.random()*0.6, f=380+Math.random()*900; const sN=ctx.createBufferSource(); sN.buffer=noiseBuf; const bp=F('bandpass',f,8), g=G(0); g.gain.setValueAtTime(0.0001,w); g.gain.exponentialRampToValueAtTime(0.5,w+0.08); g.gain.exponentialRampToValueAtTime(0.0001,w+d); sN.connect(bp); bp.connect(g); g.connect(out); sN.start(w,Math.random()*1.5); sN.stop(w+d+0.02); } nz(out,t,'bandpass',600,0.5,2.6,0.25); break; }
+      case 'boo': { for(let k=0;k<30;k++){ const w=t+Math.random()*1.2, d=0.35+Math.random()*0.4, o=O('sawtooth',110+Math.random()*90,w), g=G(0), lp=F('lowpass',500,1); o.frequency.linearRampToValueAtTime(80,w+d); g.gain.setValueAtTime(0.0001,w); g.gain.exponentialRampToValueAtTime(0.06,w+0.08); g.gain.exponentialRampToValueAtTime(0.0001,w+d); o.connect(lp); lp.connect(g); g.connect(out); o.start(w); o.stop(w+d+0.02); } break; }
+      case 'wind': { const sN=ctx.createBufferSource(); sN.buffer=noiseBuf; const bp=F('bandpass',500,0.8), g=G(0); bp.frequency.setValueAtTime(400,t); bp.frequency.linearRampToValueAtTime(900,t+1.4); bp.frequency.linearRampToValueAtTime(350,t+3); g.gain.setValueAtTime(0.0001,t); g.gain.exponentialRampToValueAtTime(0.3,t+1); g.gain.exponentialRampToValueAtTime(0.0001,t+3.2); sN.connect(bp); bp.connect(g); g.connect(out); sN.start(t,Math.random()); sN.stop(t+3.3); break; }
     }
     setTimeout(()=>{ try{ out.disconnect(); }catch(e){} },4500);
   }

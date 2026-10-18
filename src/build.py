@@ -24,5 +24,4 @@ assets=open('assets.js',encoding='utf-8').read() if os.path.exists('assets.js') 
 script=utils+assets+open('music.js',encoding='utf-8').read()+'\n'+open('art.js',encoding='utf-8').read()+'\n'+open('bg.js',encoding='utf-8').read()+'\n'+game+'\n'+open('story.js',encoding='utf-8').read()+'\n'+open('story2.js',encoding='utf-8').read()+'\n})();'
 html=open('shell.html',encoding='utf-8').read().replace('/*SCRIPT*/',script)
 open('v03.html','w',encoding='utf-8').write(html)
-open('/tmp/v03.js','w',encoding='utf-8').write(script)
 print('ok', len(html), 'bytes', html.count('\n'),'lines')
