@@ -1,6 +1,7 @@
-/* ===== 사건 5 「텅 빈 궁궐」: 판사 모드(첫 판사 사건) + 피고 바꾸기 =====
-   처음 피고 고종 → 증거가 ‘결정한 사람은 다른 사람’을 가리키면 판사가 피고를 최우로 바꾼다.
-   혐의 ① 백성을 두고 지배층만 강화도로 옮긴 죄 → 일부 유죄(산성·섬으로 피하라는 명령 참작)
+/* ===== 사건 5 「텅 빈 궁궐」: 판사 모드(첫 판사 사건) + 공소장 변경 =====
+   v3: 처음 피고 고종 → 검사(하람)가 공소장 변경을 요청하고, 판사(학생)가 증거를 붙여 허가한다.
+   주장 가르기는 1일차 두 칸 → 2일차 ‘의견일 뿐’ → 3일차부터 근거 필수.
+   혐의 ① 백성을 두고 지배층만 강화도로 옮긴 죄 → 책임 있음(천도는 전쟁 판단, 산성·섬으로 피하라는 명령 참작)
    혐의 ② 전쟁 중 사치를 누린 죄 → 유죄(사사로운 잔치만, 대장경은 사치가 아님) / 공: 약 30년의 버팀
    고종·최우·유승단·김윤후는 실존 인물, 대사는 상상. */
 addCast('gojong',{name:'고종',label:'피고 고종',col:'#8a2a2a',spec:{skin:'#efc9a2',robe:'#b3352b',robe2:'#86241d',collar:'round',hat:'ikseon',hair:'#1c1a20',beard:'thin',emblem:true,iris:'#3a2a20'}});
@@ -22,11 +23,14 @@ const EVIDENCE5=[
   {id:'Q7',type:'사료',icon:'scroll',title:'대장경 16년',body:'1236년부터 1251년까지 16년 동안 나무판에 불경을 새겼다(팔만대장경). 부처의 힘으로 나라를 지키려는 바람이 담겼다.',src:'「고려사」 · 해인사 대장경판',trust:3,note:'나라를 지키려던 일일까요, 사치일까요?'},
   {id:'Q8',reuse:true,type:'사료',icon:'censer',title:'그해의 잔치',body:'전쟁이 이어지던 때 최우가 자기 집에서 비단과 꽃으로 꾸민 큰 잔치를 열었다는 기록이 있다.',src:'「고려사」 열전을 바탕으로 정리',trust:3,note:'전쟁 중의 잔치예요.'},
   {id:'Q9',type:'증언',icon:'scroll',title:'김윤후의 사양',body:'처인성 싸움 뒤 나라가 높은 벼슬을 내리자, 김윤후는 공을 백성에게 돌리며 사양했다.',src:'「고려사」 김윤후 열전 바탕 · 2일차 법정',trust:3,note:'처인성의 공은 누구의 것인가요?'},
-  {id:'QF',type:'문서',icon:'scroll',fake:true,title:'잔치 기록 한 장',body:'“최우의 잔치에 1만 명이 모여 열흘 밤낮을 놀았다.” 쓴 사람과 날짜가 없다.',src:'최씨 집안 정원에 떨어져 있던 종이',trust:1,note:'다른 기록과 숫자가 맞을까요?',
-   zoom:{say:['종이를 크게 확대해 보았다.','글씨 끝에 작은 [[매화 모양 먹 얼룩]]. 숫자 ‘1만’과 ‘열흘’은 덧쓴 것처럼 먹 색이 다르다.','진짜 기록보다 [[열 배로 부풀린]] 종이 같다.'],plum:true,note:'매화 얼룩, 숫자를 덧쓴 흔적. 열 배로 부풀린 기록.'}},
+  {id:'QF',type:'문서',icon:'scroll',fake:true,y:1240,title:'잔치 기록 한 장',body:'“1240년 봄, 최우의 잔치에 1만 명이 모여 열흘 밤낮을 놀았다. 그 돈이면 [[팔만대장경]]을 두 번 새겼으리라.” 쓴 사람의 이름이 없다.',src:'최씨 집안 정원에 떨어져 있던 종이',trust:1,note:'다른 기록과 숫자가 맞을까요? 낱말도 살펴보세요.',
+   zoom:{say:['종이를 크게 확대해 보았다.','글씨 끝에 작은 [[매화 모양 먹 얼룩]]. 숫자 ‘1만’과 ‘열흘’은 덧쓴 것처럼 먹 색이 다르다.','그리고 1240년에 쓴 종이에 [[‘팔만대장경’]]이라는 이름이 나온다. 그때는 아직 새기는 중이었고, 이 이름은 [[훨씬 뒤에]] 널리 쓰인 이름인데…'],plum:true,note:'매화 얼룩, 숫자를 덧쓴 흔적. 1240년 종이에 훨씬 뒤에 널리 쓰인 이름 ‘팔만대장경’.'}},
+  {id:'QK',type:'증언',icon:'scroll',tag:'imagined',title:'고종의 숨은 말',body:'고종: “…내가 천도를 정했다고 하시오. 그렇게 말하지 않으면 나도 [[무사하지 못했을]] 것이오.”',src:'1일차 법정, 고종의 숨은 말 (대사는 상상)',trust:2,note:'왕이 스스로 정한 일이었을까요?'},
+  {id:'Q10',type:'증언',icon:'scroll',tag:'imagined',title:'장인이 본 잔치',body:'대장경 장인: “경판 나무를 실어 나르다 그 집 앞을 지났어요. 잔치는 [[하루]], 손님은 [[천 명 남짓]]이었어요. 그날 우리 마을 사람들은 성 쌓으러 불려 가 있었고요.”',src:'3일차 조사, 판각소 장인 (상상, 거울에 비춰 읽은 말)',trust:2,note:'잔치를 직접 본 사람의 말이에요.'},
   {id:'QD1',type:'유물',icon:'censer',title:'청자 술병',body:'푸른빛이 도는 고려청자 술병.',src:'최씨 집 대문 앞',trust:3,note:'고려의 솜씨예요. 쟁점과 이어질까요?'},
   {id:'QD2',type:'물건',icon:'army',title:'몽골 화살',body:'몽골군이 쓰던 화살 한 대.',src:'최씨 집 대문 앞',trust:3,note:'몽골이 쳐들어왔다는 것은 다들 아는 사실이에요.'}
 ];
+Object.entries({Q1:1232,Q2:1232,Q3:1219,Q4:1232,Q5:1232,Q6:1234,Q7:1236,Q8:1245,Q9:1232,QD2:1231,QK:1232,Q10:1245}).forEach(([k,y])=>{ const e=EVIDENCE5.find(x=>x.id===k); if(e) e.y=y; });
 const LOCS5=[
   {id:'gaegyeong',name:'개경 빈 궁궐',time:'흐린 아침',rooms:[
     {id:'gk-throne',name:'왕의 자리',intro:'개경 궁궐의 빈 왕좌. 주인이 떠난 지 오래다.',miss:['먼지 쌓인 바닥이다.','텅 빈 방이다.','아무것도 없다.','바람 소리뿐이다.'],
@@ -69,6 +73,7 @@ const LOCS5=[
    spots:[{x:84,y:4,w:16,h:52,label:'경판 선반',ev:'Q7',say:['선반마다 글자를 새긴 나무판이 빽빽하게 쌓여 있다.','1236년부터 16년 동안 새긴 [[대장경]]이다. 부처의 힘으로 나라를 지키려 했다.']},{x:2,y:55,w:34,h:30,label:'나무 담근 물통',say:['나무판을 물에 담가 두었다. 갈라지지 않게 하려는 것이다.']},{x:82,y:72,w:7,h:11,label:'조각칼 통',say:['날이 닳은 조각칼이 꽂혀 있다.']},{x:62,y:55,w:20,h:12,label:'작업대',say:['새기다 만 나무판이 놓여 있다.']},{x:65,y:77,w:11,h:13,label:'바닥의 나무판',say:['바닥에 내려놓은 나무판이다.']}],
    npcs:[{who:'carver',expr:'base',place:{x:46,h:60,b:2},topics:[
      {id:'cv-hi',t:'무엇을 새기나요?',lines:[['carver','base','부처님 말씀이오. 한 글자 새길 때마다 절을 하지.']]},
+     {id:'cv-feast',t:'최씨 댁 잔치를 보셨나요?',must:true,lines:[['carver','base','다니습봤 다 는내 를치잔 그. …앗, 또 거꾸로 나왔네.'],['ME','think','(…뭐라고? 소리 내어 거꾸로 읽어 볼까? 다…니…습…봤…)'],['ttolbang','joy','푸하하! 혀가 꼬이셨어요!'],['judge','normal','(어디선가 해치의 목소리) …소하 다시 해… 아니, 다시 하시오. 크흠.'],['ttolbang','joy','재판장님도 거꾸로 하셨어요! 푸하하하!'],['carver','sweat','경판은 글자를 거꾸로 새기거든요. 오래 하다 보니 말도 가끔…'],['ME','think','(경판은 찍으면 바로 읽히게 [[거꾸로]] 새기지. 그렇다면… [[거울]]에 비춰 보면 되겠다!)'],['guide','normal','(작업대 옆 구리거울에 장인의 말을 적은 종이를 비추자, 글자가 뒤집혀 바로 읽혔다.)'],['carver','base','“그 잔치는 내가 다 봤습니다.” 경판 나무를 실어 나르다 그 집 앞을 지났지요. 잔치는 [[하루]], 손님은 [[천 명 남짓]]이었어요.'],['carver','sweat','그날 우리 마을 사람들은… 성 쌓으러 불려 가 있었고요.'],['ME','think','(1만 명이 열흘이라던 그 종이와 다르잖아…!)']],gives:['Q10']},
      {id:'cv-wood',t:'나무 값',lock:'Q6',must:true,lockSay:'(장인은 칼질만 한다. 백성들이 불려 온 이야기를 꺼내면 대답할지도 모른다.)',
       lines:[['carver','base','나무와 일손은 [[백성에게서]] 나왔지. 그건 맞소.'],['carver','base','그래도 우리는 나라를 지키려고 새겼소. 잔치하고는 다르오.']]}],
     present:{Q6:{lines:[['carver','base','백성들 이야기로군…']],unlock:'cv-wood'}},
@@ -93,7 +98,7 @@ const T5yu=()=>({key:'유승단',who:'yuseungdan',allReveal:true,lines:[
 ]});
 const T5go=()=>({key:'고종',who:'gojong',allReveal:true,lines:[
   {text:'내가 천도를 정했다고 하시오.',expr:'base',reveal:1,press:[['daon','think','‘정했다고 하시오’라니… 정했다는 건가요, 그렇게 말하라는 건가요?'],['gojong','fear','그, 그건…'],['judge','normal','피고, 판사의 물음에 답하시오.']]},
-  {text:'…그렇게 말하지 않으면 나도 [[무사하지 못했을]] 것이오.',expr:'fear',hidden:true},
+  {text:'…그렇게 말하지 않으면 나도 [[무사하지 못했을]] 것이오.',expr:'fear',hidden:true,gives:['QK']},
   {text:'백성을 걱정하지 않은 것은 아니오.',expr:'base',press:[['daon','normal','걱정만으로는 무엇을 했는지 알 수 없어요.'],['gojong','base','…']]}
 ]});
 const T5yh=()=>({key:'김윤후',who:'yunhu',allReveal:true,lines:[
@@ -129,6 +134,14 @@ async function runJudge5(from){
     {court:d4_5}
   ],from);
 }
+/* 공소장 변경: 피고를 정하는 것은 검사, 그 요청이 증거에 맞는지 보는 것은 판사 */
+async function permitSwitch(){
+  if(!await presentFor('허가의 근거가 될 증거를 고르세요. (결정한 사람이 왕이 아니었음을 보여 줄 것)',['Q2','QK'],{allowUsed:true,hint:'천도를 정한 회의가 어디서 열렸는지, 또는 왕이 숨긴 말을 떠올려 보시오.',say:e=>`근거는 ‘${e.title}’입니다. 천도를 결정한 사람은 왕이 아니었어요.`})) return false;
+  await say('daon','base','검사의 [[공소장 변경]]을 허가합니다.',{view:'judge'});
+  await say('judge','normal','피고를 정하는 것은 [[검사]]요. 그 요청이 증거에 맞는지 보는 것이 [[판사]]요.');
+  await say('judge','normal','다만 고종에게 책임이 없다는 뜻은 아니오. 이 재판에서 묻는 ‘결정한 사람’이 아니라는 뜻이오.');
+  return true;
+}
 async function switchDefendant(){
   unmask5(true); S.flags.switched=true; setCharges(C5B());
   await say('judge','normal','판사는 겉의 자리가 아니라 [[실제로 한 일]]을 보오.');
@@ -143,9 +156,10 @@ async function d1_5(){
   await say('player','confident','피고 고종은 백성을 버리고 수도를 강화도로 옮겼습니다.');
   await say('rival','confident','왕은 나라를 지키려 했습니다!');
   await say('judge','normal','판사, 첫 연습이오. 두 사람의 주장을 [[가려 보시오]].');
+  await say('judge','normal','오늘은 연습이오. 주장마다 [[증거로 확인됨]]인지 [[확인 안 됨]]인지, 두 칸만 가르시오.');
   if(!await sortClaims([
     {who:'player',expr:'confident',text:'왕이 천도를 결정했다.',ans:'no',ev:['Q2'],after:[['judge','normal','그렇소. 결정한 자리는 궁궐이 아니라 최씨 댁이었소.']]},
-    {who:'rival',expr:'confident',text:'왕은 백성을 걱정했다.',ans:'op',after:[['judge','normal','걱정했는지는 마음의 일이라 확인할 수 없소. 의견일 뿐이오.']]}])) return false;
+    {who:'rival',expr:'confident',text:'왕은 백성을 걱정했다.',ans:'op',demo:'“걱정했다”는 마음의 일이라 증거로 확인할 수 없소. 이런 주장은 내일부터 [[의견일 뿐]]이라는 세 번째 칸으로 가르게 될 것이오.'}],{stage:1})) return false;
   await say('player','normal','그럼 증인을 부를게요. 천도에 반대한 신하 [[유승단]]입니다.');
   bgm('testimony'); await say('yuseungdan','base','유승단이오.');
   if(!await testimony(T5yu(),'나는 반대했소','판사는 더 묻기로 숨은 말을 끌어내요')) return false;
@@ -153,9 +167,11 @@ async function d1_5(){
   bgm('testimony'); await say('gojong','base','…고려의 왕이오.');
   if(!await testimony(T5go(),'내가 정했다고 하시오','판사는 더 묻기로 숨은 말을 끌어내요')) return false;
   bgm('crisis');
-  const c=await choiceSheet('판사, 피고를 바꾸겠소?',[{t:'예. 천도를 실제로 정한 사람은 최우입니다. 이 재판에서는 최우에게 묻겠습니다.',ok:true,tag:'switch'},{t:'아니요. 그래도 왕은 왕입니다. 고종을 계속 재판하겠습니다.',ok:true,tag:'later'}]);
+  await say('player','confident','재판장님, 판사님. 검사는 [[공소장을 바꾸겠습니다]]. 피고를 고종에서 [[최우]]로 하겠습니다.');
+  await say('judge','normal','판사, 검사의 요청을 허가하겠소?');
+  const c=await choiceSheet('판사, 검사의 공소장 변경을 허가하겠소?',[{t:'허가합니다. 천도를 실제로 정한 사람은 최우입니다. 그 근거를 붙이겠습니다.',ok:true,tag:'switch'},{t:'아직 허가하지 않습니다. 오늘 들은 것만으로는 판단하기 이릅니다.',ok:true,tag:'later'}]);
   S.flags.switchDay=c.tag==='switch'?1:2; track('switch',{day:S.flags.switchDay});
-  if(c.tag==='switch') await switchDefendant();
+  if(c.tag==='switch'){ if(!await permitSwitch()) return false; await switchDefendant(); }
   else { await say('judge','normal','…판사의 판단을 존중하오. 다만 증거가 가리키는 곳을 잘 보시오.'); }
   await gavel(); await titleCard('― 1일차 끝 ―','왕좌 뒤의 사람');
   return true;
@@ -163,22 +179,24 @@ async function d1_5(){
 async function d2_5(){
   await courtOpen(2);
   if(!S.flags.switched){
-    await say('player','confident','판사님, 어제의 증거로 다시 요청합니다. 천도를 정한 곳은 [[최씨 댁]]이었고, 회의를 끝낸 사람은 최우였어요.');
-    await say('rival','normal','변호인도 같은 생각이에요. 이름만 왕인 사람을 벌하는 건 공정하지 않아요.');
-    await say('daon','base','…알겠어요. 피고를 바꾸겠어요.');
+    await say('player','confident','판사님, 어제의 증거로 [[공소장 변경]]을 다시 요청합니다. 천도를 정한 곳은 [[최씨 댁]]이었고, 회의를 끝낸 사람은 최우였어요.');
+    await say('rival','normal','변호인도 반대하지 않아요. 이름만 왕인 사람을 벌하는 건 공정하지 않아요.');
+    if(!await permitSwitch()) return false;
     await switchDefendant();
   }
   await say('judge','normal','피고 최우, 증언하시오.');
   bgm('testimony');
   await say('choewoo','base','나는 나라를 지켰소. 몽골에 맞서 강화도에서 버텼지.',{testimony:true,tag:'증언'});
-  await say('judge','normal','판사, 피고의 주장을 가르시오.');
+  await say('judge','normal','판사, 오늘부터는 [[의견일 뿐]] 칸도 쓰시오. 피고의 주장을 가르시오.');
   if(!await sortClaims([
     {who:'choewoo',expr:'base',text:'백성에게도 피할 길을 열어 주었소.',ans:'ok',ev:['Q5']},
-    {who:'choewoo',expr:'cold',text:'그래서 백성은 모두 안전했소.',ans:'no',after:[['judge','normal','‘모두 안전했다’는 증거는 아직 없소. 피해를 입은 사람의 말을 들어 봐야 하오.']]}])) return false;
+    {who:'choewoo',expr:'cold',text:'그래서 백성은 모두 안전했소.',ans:'no',after:[['judge','normal','‘모두 안전했다’는 증거는 아직 없소. 피해를 입은 사람의 말을 들어 봐야 하오.']]}],{stage:2})) return false;
   await say('player','normal','증인을 부를게요. 처인성의 승려 [[김윤후]]입니다.');
   bgm('testimony'); await say('yunhu','base','김윤후요.');
   if(!await testimony(T5yh(),'처인성에서','판사는 더 묻기로 숨은 말을 끌어내요')) return false;
-  if(!await sortClaims([{who:'player',expr:'confident',text:'최우도 김윤후처럼 싸울 수 있었다.',ans:'op',after:[['judge','normal','그것은 ‘그랬으면 좋았겠다’는 생각이오. 참작의 재료일 수는 있어도 유죄의 증거는 아니오.']]}])) return false;
+  if(!await sortClaims([{who:'player',expr:'confident',text:'최우도 김윤후처럼 싸울 수 있었다.',ans:'op',after:[['judge','normal','그것은 ‘그랬으면 좋았겠다’는 생각이오. 참작의 재료일 수는 있어도 유죄의 증거는 아니오.']]},
+    {who:'choewoo',expr:'cold',text:'처인성의 승리도 결국 내가 다스린 나라의 공이오.',ans:'no',after:[['judge','normal','판사, 그 주장을 막으려면 증거 [[두 개]]가 필요하오. 누가 싸웠는지, 그리고 상을 받은 사람이 무엇이라 했는지.']]}],{stage:2})) return false;
+  if(!await presentPair('처인성의 공이 누구의 것인지 보여 줄 두 증거를 고르세요.','Q4','Q9',{hint:'처인성 싸움의 기록과, 김윤후가 벼슬을 사양하며 한 말을 함께 보시오.',say:'처인성에서 살리타를 쓰러뜨린 것은 [[김윤후와 백성들]]이었고, 김윤후는 공을 백성에게 돌렸어요. 피고의 공이 아닙니다.'})) return false;
   if(!await scale('혐의 ① 백성을 두고 지배층만 강화도로 옮긴 죄',[
     {k:'동기',q:'최우가 천도를 정한 까닭으로 증거에 맞는 것은?',opts:[{t:'몽골군을 피해 나라의 중심을 지키려 했다.',ok:true},{t:'백성이 미워서 버리려 했다.',ok:false,fb:'그런 증거는 없소. 미워했다는 것은 짐작이오.'}]},
     {k:'방법',q:'어떻게 정했나?',opts:[{t:'자기 집에 재상들을 모아, 반대를 누르고 정했다.',ok:true},{t:'백성의 뜻을 물어 정했다.',ok:false,fb:'그런 기록은 없소.'}]},
@@ -191,11 +209,12 @@ async function d2_5(){
 }
 async function d3_5(){
   await courtOpen(3);
-  await say('judge','normal','혐의 ②를 다루오. 판사, 주장을 가르시오.');
+  await say('judge','normal','혐의 ②를 다루오. 판사, 오늘부터는 [[근거가 꼭]] 있어야 하오. ‘확인 안 됨’이면 무엇이 빠졌는지, ‘의견일 뿐’이면 어느 말이 생각인지 짚으시오.');
   if(!await sortClaims([
     {who:'player',expr:'confident',text:'대장경을 새긴 것도 사치였다.',ans:'no',ev:['Q7'],after:[['judge','normal','대장경은 나라를 지키려는 바람으로 새긴 것이오. 사사로운 잔치와는 다르오.']]},
     {who:'player',expr:'confident',text:'최우는 전쟁 중에 큰 잔치를 열었다.',ans:'ok',ev:['Q8']},
-    {who:'rival',expr:'confident',text:'그 잔치도 군사들의 사기를 높이려던 것이었다.',ans:'op',after:[['judge','normal','그렇게 볼 수도 있다는 생각이오. 확인할 기록은 없소.']]}])) return false;
+    {who:'rival',expr:'confident',text:'그 잔치도 군사들의 사기를 높이려던 것이었다.',ans:'op',opPhrase:'사기를 높이려던 것이었다',after:[['judge','normal','그렇게 볼 수도 있다는 생각이오. 확인할 기록은 없소.']]},
+    {who:'player',expr:'confident',text:'그 잔치에는 1만 명이 모여 열흘 밤낮을 놀았다.',ans:'no',ev:['Q10'],after:[['judge','normal','장인이 직접 본 잔치는 하루, 천 명 남짓이었소. 1만 명·열흘은 [[열 배로 부풀린]] 말이오.'],['player','sweat','…그 숫자는 정원에서 주운 종이에 적혀 있었어요. 쓴 사람의 이름도 없는 종이에…']]}],{stage:3})) return false;
   await say('judge','normal','판사, 잔치가 열린 때가 언제였는지 [[두 증거를 맞대어]] 보이시오.');
   if(!await presentPair('잔치가 열린 때를 보여 줄 두 증거를 고르세요.','Q8','Q6',{say:'백성이 성 쌓기에 불려 가던 바로 그때, 최씨 집에서는 비단으로 꾸민 큰 잔치가 열렸어요!',hint:'잔치 기록과, 그때 백성이 무엇을 하고 있었는지를 함께 보시오.'})) return false;
   await say('choewoo','sweat','…잔치를 연 때까지 맞춰 볼 줄은 몰랐소.');
@@ -211,11 +230,13 @@ async function d4_5(){
     {t:'천도는 최우의 집에서 최우가 정했고, 왕은 그렇게 말하지 않으면 무사하지 못했다.',ok:true,ev:['Q2']},
     {t:'왕은 벌할 수 없는 사람이기 때문이다.',ok:false,fb:'자리 때문이 아니라 증거 때문에 뺀 것이오.'},
     {t:'고종은 착한 왕이었기 때문이다.',ok:false,fb:'그것은 의견일 뿐이오.'}])) return false;
-  if(!await reasonEv('혐의 ①을 ‘일부 유죄’로 보는 가장 알맞은 이유는?',[
+  if(!await verdictKind('혐의 ① 백성을 두고 지배층만 강화도로 옮긴 죄','resp',{q:'천도는 몽골과의 전쟁 중에 내린 나라의 판단이었어요. 그 결과 육지의 백성이 큰 피해를 입었어요. 어떻게 판결할까요?',idx:0,fb:{guilty:'천도는 사람에게 직접 해를 끼친 행위가 아니라 [[전쟁 판단]]이었소. 원칙 카드를 보시오.'}})) return false;
+  if(!await reasonEv('혐의 ①을 ‘책임 있음’으로 보는 가장 알맞은 이유는?',[
     {t:'백성을 두고 지배층만 섬으로 옮겼다. 다만 산성과 섬으로 피하라는 명령은 참작한다.',ok:true,ev:['Q1','Q2']},
     {t:'몽골이 쳐들어왔으니 아무 책임이 없다.',ok:false,fb:'몽골의 침입은 상황이지, 피고의 선택을 지우지 않소.'},
     {t:'최우는 김윤후처럼 싸우지 않았으므로 전부 유죄다.',ok:false,fb:'그것은 의견이었소.'}])) return false;
   if(!await presentFor('혐의 ①에서 참작할 사정의 근거를 고르세요.',['Q5'],{allowUsed:true,say:()=>'참작할 사정은 ‘산성과 섬으로’입니다. 백성에게도 피할 길을 열었어요.'})) return false;
+  if(!await verdictKind('혐의 ② 전쟁 중 사치를 누린 죄','guilty',{q:'백성이 성 쌓기에 불려 가던 때, 자기 집에서 큰 잔치를 열었어요. 사사로운 사치예요. 어떻게 판결할까요?',idx:1,fb:{resp:'사사로운 잔치는 나라를 위한 판단이 아니오. 피고 [[자신을 위한 행위]]요.'}})) return false;
   if(!await reasonEv('혐의 ②를 유죄로 보는 가장 알맞은 이유는?',[
     {t:'백성이 성 쌓기에 불려 가던 전쟁 중에, 사사로운 큰 잔치를 열었다.',ok:true,ev:['Q8']},
     {t:'16년 동안 대장경을 새겼다.',ok:false,fb:'대장경은 사치가 아니오.'},
@@ -227,21 +248,35 @@ async function d4_5(){
   bgm('verdict'); await gavel();
   await say('judge','normal','판사, 판결을 읽으시오.');
   await say('daon','base','고종은 이 재판의 피고에서 제외합니다. 천도를 결정한 사람은 왕좌에 앉은 사람이 아니었습니다.',{view:'judge'});
-  chargeSt(0,'partial','산성·섬으로 피하라는 명령 참작');
-  await say('daon','base','혐의 ①, [[일부 유죄]]. 백성을 두고 지배층만 섬으로 옮겼습니다. 다만 산성과 섬으로 피하라는 명령은 참작합니다.',{view:'judge'});
+  chargeSt(0,'resp','산성·섬으로 피하라는 명령 참작');
+  await say('daon','base','혐의 ①, [[책임 있음]]. 백성을 두고 지배층만 섬으로 옮겼습니다. 산성과 섬으로 피하라는 명령은 참작하되, 그 결과는 역사에 기록합니다.',{view:'judge'});
   chargeSt(1,'guilty','사사로운 잔치만');
   await say('daon','base','혐의 ②, [[유죄]]. 사사로운 잔치에 대해서만입니다. 대장경은 사치가 아닙니다.',{view:'judge'});
   await say('daon','base','공으로 기록합니다. 몽골에 맞서 약 30년을 버텼습니다.',{view:'judge'});
   await say('judge','normal','강화도의 성벽은 나라를 지켰소. 그러나 그 성벽 밖에 남은 백성이 있었소. 그리고 그 성벽을 정한 사람은 [[왕좌에 앉은 사람이 아니었소]].');
   const miss=S.claimMiss||0, pts=(S.flags.switchDay===1?1:0)+(miss<=1?1:0)+(S.trust>=3?1:0);
   caseResult({grade:pts>=3?'공정한 판사':pts===2?'꼼꼼한 판사':'견습 판사',lead:'겉의 자리가 아니라 실제로 결정한 사람에게 책임을 물었고, 주장마다 확인된 것과 의견을 가려 판결했습니다.',
-    items:[`피고를 바꾼 때: ${S.flags.switchDay===1?'1일차 (스스로)':'2일차 (검사의 요청 뒤)'}`,`주장 가르기에서 헷갈린 횟수: ${miss}번`,`잔치 기록 한 장(가짜): ${S.plums&&S.plums.has('QF')?'확대해 매화 얼룩을 찾음':'확대하지 않음'}`],
+    items:[`공소장 변경 허가: ${S.flags.switchDay===1?'1일차 (첫 요청에 증거를 붙여)':'2일차 (다시 요청을 받고)'}`,`주장 가르기에서 헷갈린 횟수: ${miss}번`,`잔치 기록 한 장(가짜): ${S.plums&&S.plums.has('QF')?'확대해 매화 얼룩을 찾음':'확대하지 않음'}`],
     judge:'판사는 겉의 자리가 아니라 실제로 한 일을 보오.',history:HIST5});
   return true;
 }
 const HIST5='1231년부터 몽골이 여러 차례 고려에 쳐들어왔습니다. 1232년 무신 집권자 최우는 자기 집에서 재상들과 의논해 수도를 강화도로 옮겼고, 백성에게는 산성과 섬으로 피하라고 했습니다. 처인성에서는 김윤후와 백성들이 몽골 장수 살리타를 쓰러뜨렸습니다. 고려는 약 30년을 버티며 팔만대장경을 새겼지만, 육지의 백성은 큰 피해를 입었습니다. 이 무렵 왕은 이름만 있고 실제 권력은 최씨 집안에 있었습니다.';
 regCase(5,{title:'텅 빈 궁궐',desc:'최우 · 판사(첫 판사 모드) · 난이도 4',ev:EVIDENCE5,locs:LOCS5,terms:TERMS5,defName:'피고',time:'90~100분',main:'judge',
-  lead:'사건 5는 판사 자리예요. 주장을 가르고, 판결 저울을 달고, 필요하면 피고를 바꿀 수 있어요.',
+  lead:'사건 5는 판사 자리예요. 주장을 가르고, 공소장 변경을 허가할지 정하고, 판결 저울을 달아요.',
+  goal:{judge:'처음으로 판사석에 앉아요. 주장을 가르고, 검사의 공소장 변경을 증거로 허가하고, 판결 저울을 달아요.'},
+  recall:{q:'지난 사건에서 숨은 피고(늙은 사신)를 찾은 실마리는 무엇이었나요?',opts:[{t:'늦게 왔다면서, 새 왕을 누가 왜 골랐는지 알고 있었다',ok:true},{t:'가장 큰 소리로 다른 증인을 꾸짖었다'},{t:'이름을 크게 밝혔다'}],yes:'잘 기억하고 있구려. 이번에는 그대가 판사석에 앉아 그런 말을 가려내시오.',no:'…‘들은 것밖에 모른다’면서 너무 많이 알고 있었소. 이번에는 판사석에서 그런 말을 가려내시오.'},
+  bgCards:{1:{ic:'🏯',t:'1231년부터 몽골이 고려에 쳐들어왔어요. 1232년 조정은 수도를 개경에서 강화도로 옮겼어요(천도).'},2:{ic:'⚔️',t:'이때 고려는 왕보다 힘센 장군 집안(최씨)이 나라를 움직였어요(무신 정권).'},3:{ic:'📜',t:'몽골과 싸우던 1236년부터 16년 동안 대장경을 새겼어요. 부처의 힘으로 나라를 지키려는 바람이었어요.'},4:{ic:'⚖️',t:'판결하는 날이에요. 판결 저울에 달고, 망치를 두드려요.'}},
+  record:['산성과 섬으로 피하다 마을과 논밭을 잃은 육지의 백성들','강화도의 성과 궁궐을 쌓으러 불려 간 백성들','피하지 못하고 몽골군에 끌려간 사람들'],
+  lesson:{opts:[{t:'겉의 자리가 아니라 실제로 한 일을 본다.',r:'그렇소. 이름만 왕인 사람과 결정한 사람은 다르오.'},{t:'‘확인 안 됨’과 ‘의견일 뿐’은 다르다.',r:'그렇소. 판사의 첫 일은 말을 가르는 것이오.'},{t:'오래 버틴 공과 백성의 희생은 함께 기록한다.',r:'그렇소. 한쪽만 적으면 기록이 아니오.'}]},
+  paper:{id:'QF',anach:'팔만대장경'},
+  teaser:'1618년, 굳게 닫힌 서궁의 문. 의뢰인 광해군은 [[변호인에게도]] 거짓말을 한다.',
+  gag:{scene:'대장경 장인 「거울 보는 날」',
+    inv:{1:[['ttolbang','bang','판사님 첫 조사예요! 증거 나와라, 뚝딱!'],['guide','normal','(메밀묵이 나왔다. 텅 빈 궁궐에 뚝딱 소리만 메아리친다.)'],['ttolbang','sad','…궁궐이 비어서 메아리가 커요. 메밀묵도 혼자네요.']],
+      2:[['ttolbang','base','강화도는 바다를 건너야 해요. 저는 배멀미가… 우웩. 먼저 가세요!']],
+      3:[['ttolbang','base','판각소의 장인 아저씨는 가끔 말을 [[거꾸로]] 한대요. 다니습했 …앗, 저도 옮았어요!']]},
+    fix:{2:{say:'어제 법정 요약! 천도는 고종 임금님이 궁궐에서 [[혼자 정했대요]]!',opts:[{t:'아니야. 최씨 댁에서 열린 회의에서 최우가 정했어.',ok:true},{t:'맞아. 왕이 혼자 정했어.'}]},
+      3:{say:'어제 법정 요약! 처인성에서 몽골 장수를 쓰러뜨린 건 [[최우의 군대]]래요!',opts:[{t:'아니야. 김윤후와 백성들이었고, 김윤후는 공을 백성에게 돌렸어.',ok:true},{t:'맞아. 최우의 군대였어.'}]}},
+    pun:[['judge','normal','판사석에 앉은 첫날이니, 오늘은 내가 [[판사]]를 도와 [[판 사]]… 아니, 판을 살리겠소.'],['ttolbang','joy','파, 판을 살린다! 하하하!'],['guide','normal','(판사석이 조용해졌다.)']],punDay:2},
   locked:{pros:'판사 사건',def:'판사 사건'},
   openLine:'지금부터 [[역사 법정]]을 엽니다. 오늘은 판사석에 다온 판사가 앉습니다.',history:HIST5,
   views:{prologue5:prologueView('#2e2a24','#0e0c0a'),'gk-throne':prologueView('#2e2a24','#0e0c0a')},

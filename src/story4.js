@@ -1,8 +1,10 @@
 /* ===== 사건 4 「포석정의 그림자」: 숨은 피고 (검사 하람) =====
-   1일차 법정은 ‘누가 피고인가’. 용의 증인 셋(김 아찬·능문·견 노인) 가운데 말해서는 안 될 것을 아는 사람을 찾는다.
-   혐의 ① 경주를 짓밟고 경애왕을 죽음으로 몬 죄 → 유죄(잠금) / ② 자기가 세운 나라를 무너뜨리는 데 앞장선 죄 → 유죄(아들의 배신은 참작)
+   1일차 법정은 ‘누가 피고인가’. 용의 증인 셋(김 아찬·능문·늙은 사신) 가운데 말해서는 안 될 것을 아는 사람을 찾는다.
+   v3: 이름 없는 ‘후백제에서 온 늙은 사신’(파일 envoy_old), 엉뚱한 지목은 방울 −2, 혐의 ② 책임 있음, 그 시대 사람은 ‘백제’라 부름(가짜 목격담의 ‘후백제’가 시대 안 맞는 말)
+   혐의 ① 경주를 짓밟고 경애왕을 죽음으로 몬 죄 → 유죄(잠금) / ② 자기가 세운 나라를 무너뜨리는 데 앞장선 죄 → 책임 있음(아들의 배신 크게 참작)
    견훤·신검·경순왕은 실존 인물, 대사는 상상. 김 아찬·능문·궁녀·노인·승려·병사는 상상 인물. */
-addCast('gyeonhwon',{name:'견 노인',label:'증인 견 노인',col:'#3a2a1a',spec:{skin:'#d9a77c',robe:'#5a4634',robe2:'#3e3024',collar:'cross',hat:'short',hair:'#2a2220',beard:'long',beardColor:'#2a2220',iris:'#3a2a20'}});
+addCast('envoy',{name:'늙은 사신',label:'증인 늙은 사신',col:'#3a2a1a',spec:{skin:'#d9a77c',robe:'#5a4634',robe2:'#3e3024',collar:'cross',hat:'short',hair:'#2a2220',beard:'long',beardColor:'#6a6a6a',iris:'#3a2a20'}});
+addCast('gyeonhwon',{name:'견훤',label:'피고 견훤',col:'#3a2a1a',spec:{skin:'#d9a77c',robe:'#5a4634',robe2:'#3e3024',collar:'cross',hat:'short',hair:'#2a2220',beard:'long',beardColor:'#2a2220',iris:'#3a2a20'}});
 addCast('achan',{name:'김 아찬',label:'증인 김 아찬',col:'#4a6a8a',spec:{skin:'#f0caa4',robe:'#6a9ac0',robe2:'#4a7aa0',collar:'round',hat:'gat',hair:'#1c1a20',beard:'thin',iris:'#3a2a20'}});
 addCast('neungmun',{name:'능문',label:'증인 능문',col:'#3a3a40',spec:{skin:'#e2b48a',robe:'#3a3020',robe2:'#2a2218',collar:'cross',hat:'short',hair:'#1c1a20',beard:'thin',iris:'#2e2018'}});
 addCast('courtlady',{name:'늙은 궁녀',label:'늙은 궁녀',col:'#8a4a5a',spec:{skin:'#ecc8a4',robe:'#d8a8a0',robe2:'#7a2a30',collar:'cross',hat:'bun',hair:'#d8d8d8',beard:'none',iris:'#3a2a20'}});
@@ -13,7 +15,7 @@ addCast('gyeongsun',{name:'경순왕',label:'증인 경순왕',col:'#6a3d8f',spe
 addCast('monk',{name:'금산사 승려',label:'승려',col:'#7a6a40',spec:{skin:'#ecc8a4',robe:'#8a7a50',robe2:'#5a4a30',collar:'cross',hat:'short',hair:'#ecc8a4',beard:'none',iris:'#3a2a20'}});
 
 const EVIDENCE4=[
-  {id:'H1',type:'사료',icon:'scroll',title:'927년 그날',body:'927년 겨울, 후백제 군대가 경주에 쳐들어왔다. 경애왕은 목숨을 잃었고, 군대를 이끈 사람이 왕족 김부를 새 왕(경순왕)으로 세웠다.',src:'「삼국사기」 신라본기 경애왕·경순왕',trust:3,note:'새 왕을 고른 사람은 누구였을까요?'},
+  {id:'H1',reuse:true,type:'사료',icon:'scroll',title:'927년 그날',body:'927년 겨울, 후백제 군대가 경주에 쳐들어왔다. 경애왕은 목숨을 잃었고, 군대를 이끈 사람이 왕족 김부를 새 왕(경순왕)으로 세웠다. 새 왕은 [[그날 군대를 이끈 자가 골랐다]].',src:'「삼국사기」 신라본기 경애왕·경순왕',trust:3,note:'새 왕을 고른 사람은 누구였을까요?'},
   {id:'H2',type:'물건',icon:'map',title:'떨어진 투구 깃털',body:'포석정 물길 굽이에 걸려 있던 붉은 꿩 깃털 하나. 높은 장수가 투구에 꽂는 깃털이다.',src:'포석정 (게임 속 단서)',trust:3,note:'이 깃털을 단 사람은 누구일까요?'},
   {id:'H3',type:'유적',icon:'censer',title:'불탄 전각',body:'경주 궁궐의 전각이 불에 탄 흔적. 그날 궁궐이 짓밟혔음을 보여 준다.',src:'경주 궁궐 마당 · 사료 바탕',trust:3,note:'궁궐은 무사했을까요?'},
   {id:'H4',type:'사료',icon:'scroll',title:'고려에 보낸 구원 요청',body:'후백제 군대가 다가오자 경애왕은 고려의 왕건에게 사람을 보내 도움을 청했다. 왕건은 군사를 보냈지만 늦었다.',src:'「삼국사기」·「고려사」를 바탕으로 정리',trust:3,note:'왕은 위험을 알고 있었을까요?'},
@@ -25,11 +27,14 @@ const EVIDENCE4=[
   {id:'H10',type:'증언',icon:'scroll',title:'신검의 죄',body:'“나는 아버지를 가둔 뒤, 동생 금강을 죽였소.”',src:'3일차 법정, 신검의 숨은 말 (기록 바탕, 대사는 상상)',trust:3,note:'피고가 배신당한 일, 참작할 사정이에요.'},
   {id:'H11',type:'증언',icon:'scroll',title:'경순왕의 선택',body:'“나는 싸우는 대신 나라를 고려에 넘겼소. 백성이 더 피 흘리지 않게.” (935년 신라는 고려에 나라를 넘겼다.)',src:'4일차 법정 · 「삼국사기」 바탕 (대사는 상상)',trust:3,note:'같은 시대, 다른 선택이에요.'},
   {id:'H13',reuse:true,type:'증언',icon:'scroll',title:'능문의 증언',body:'“왕을 포석정에서 궁으로 데려오라는 명은 위에서 내려왔소. 나는 그 어른의 깃털만 보고 따랐소.”',src:'1일차 법정, 능문의 숨은 말 (상상)',trust:2,note:'명을 내린 사람이 따로 있어요.'},
-  {id:'H12',type:'문서',icon:'scroll',fake:true,title:'목격담 종이',body:'“견훤이 직접 칼을 들어 왕을 해쳤다. 내가 똑똑히 보았다.” 이름이 적혀 있지 않다.',src:'경주 궁궐 마당에 떨어져 있던 종이',trust:1,note:'누가 쓴 종이일까요?',
-   zoom:{say:['종이를 크게 확대해 보았다.','오른쪽 아래 귀퉁이에 작은 [[매화 모양 먹 얼룩]]. 어디서 본 것 같다.','‘똑똑히 보았다’는 사람의 이름은 어디에도 없다.'],plum:true,note:'귀퉁이에 매화 모양 먹 얼룩. 쓴 사람의 이름이 없다.'}},
+  {id:'H12',type:'문서',icon:'scroll',fake:true,y:927,title:'목격담 종이',body:'“927년 겨울, [[후백제]] 왕 견훤이 직접 칼을 들어 왕을 해쳤다. 내가 똑똑히 보았다.” 이름이 적혀 있지 않다.',src:'경주 궁궐 마당에 떨어져 있던 종이',trust:1,note:'누가 쓴 종이일까요? 그 시대 사람이 쓴 말일까요?',
+   zoom:{say:['종이를 크게 확대해 보았다.','오른쪽 아래 귀퉁이에 작은 [[매화 모양 먹 얼룩]]. 어디서 본 것 같다.','그날 사람들은 견훤의 나라를 그냥 [[백제]]라고 불렀다. ‘후백제’는 [[뒷날]] 옛 백제와 구분하려고 붙인 이름인데… 927년의 목격자가 이 말을 썼을까?'],plum:true,note:'매화 모양 먹 얼룩. 927년 목격담에 뒷날 붙은 이름 ‘후백제’가 쓰였다. 쓴 사람의 이름도 없다.'}},
+  {id:'H14',type:'증언',icon:'scroll',tag:'imagined',title:'뒷문에서 본 장수',body:'김 아찬: “뒷문으로 빠져나갈 때, 투구에 붉은 깃털 [[둘]]을 꽂은 나이 든 장수가 포석정 쪽에서 오는 것을 보았소. 다른 장수들이 모두 고개를 숙였지.”',src:'1일차 법정, 김 아찬이 기절하지 않은 단 한 번 (상상)',trust:2,note:'겁쟁이 증인이 직접 본 장면이에요.'},
   {id:'HD1',type:'유물',icon:'censer',title:'포석정의 술잔',body:'포석정 돌 물길 옆에서 나온 작은 술잔.',src:'포석정',trust:2,note:'이 술잔이 쟁점과 이어질까요?'},
   {id:'HD2',type:'유물',icon:'censer',title:'고려의 동전',body:'고려 때 만든 쇠 동전 한 닢. 996년에 처음 만든 ‘건원중보’다.',src:'궁궐 뒷문 근처',trust:3,note:'927년의 일과 시대가 맞을까요?'}
 ];
+Object.entries({H1:927,H2:927,H3:927,H4:927,H5:900,H6:867,H7:927,H8:935,H9:936,H10:935,H11:935,H13:927,H14:927,HD2:996}).forEach(([k,y])=>{ const e=EVIDENCE4.find(x=>x.id===k); if(e) e.y=y; });
+EVIDENCE4.find(x=>x.id==='H7').tag='disputed'; EVIDENCE4.find(x=>x.id==='H13').tag='imagined';
 const LOCS4=[
   {id:'poseok',name:'포석정',time:'겨울 오후',intro:'굽이진 돌 물길이 남은 포석정이다. 927년 겨울, 이곳에서 무슨 일이 있었을까.',
    miss:['얼어붙은 흙이다.','마른 낙엽이다.','돌 틈에 이끼가 끼었다.','아무것도 없다.','찬 바람이 분다.'],
@@ -62,7 +67,11 @@ const LOCS4=[
        {id:'cl-guest',t:'그날의 손님',lock:'H2',must:true,lockSay:'(궁녀는 입을 다물었다. 포석정에서 찾은 무언가를 보여 주면 기억을 떠올릴지도 모른다.)',
         lines:[['courtlady','base','그 붉은 깃털… 기억하오. 그 깃털을 투구에 꽂은 사람은 [[나이 든 장수]]였소.'],['courtlady','base','다른 장수들이 모두 그 앞에서 고개를 숙였지. 그 사람이 손을 들자…'],['ME','think','(나이 든 장수. 그날 군대를 이끈 사람이야.)']]}],
       present:{H2:{lines:[['courtlady','shock','이, 이 깃털은…!']],unlock:'cl-guest'},H4:{lines:[['courtlady','base','왕께서 고려에 사람을 보내셨지. 하지만 너무 늦었소.']]}},
-      def:[['courtlady','base','늙은이가 알아볼 물건이 아니오.']]}]},
+      def:[['courtlady','base','늙은이가 알아볼 물건이 아니오.']]},
+     {who:'malsun',expr:'base',place:{x:50,h:60,b:2},from:2,topics:[
+      {id:'ms4-feast',t:'포석정의 그날',lines:[['malsun','base','내가 다 봤다니까! 왕이 포석정에서 술잔을 띄우고 [[노래를 부르다가]]…!'],['ME','think','직접 보셨어요?'],['malsun','sweat','…아니, 이웃 마을 떡집 할멈이 봤대. 그 할멈의 시누이의…'],['ttolbang','base','할머니, 그 시누이는 또 몇 백 년 전 사람이에요?'],['ME','think','(또 전해 들은 말이야. 잔치였는지 제사였는지는 기록과 해석을 맞대 봐야 해.)']]}],
+      present:{MUK:{lines:[['malsun','base','어머, 메밀묵! 신라에도 이게 있나? 한 그릇 두 냥이오.']]}},
+      def:[['malsun','base','그건 모르는 물건이네. 그런데 내가 들은 얘기로는…']]}]},
     {id:'gj-hall',name:'불탄 전각',intro:'불에 탄 전각이다. 기둥이 검게 그을려 있다.',
      miss:['재가 쌓여 있다.','숯이 된 나무다.','아무것도 없다.'],
      spots:[
@@ -134,35 +143,51 @@ const TERMS4=[
   {w:'참작',d:'벌을 정할 때 피고에게 있었던 딱한 사정을 헤아리는 것이에요. 죄가 없어지는 것은 아니에요.',ic:'⚖️'},
   {w:'숨은 피고',d:'처음에는 증인처럼 나왔지만, 증언 속 실수로 진짜 피고임이 드러난 사람이에요.',ic:'🕵️'}
 ];
-const C4SUS=()=>[{t:'김 아찬',st:'sus'},{t:'능문',st:'sus'},{t:'견 노인',st:'sus'}];
+const C4SUS=()=>[{t:'김 아찬',st:'sus'},{t:'능문',st:'sus'},{t:'늙은 사신',st:'sus'}];
 const C4CH=()=>[{t:'① 경주를 짓밟고 경애왕을 죽음으로 몬 죄'},{t:'② 자기가 세운 나라를 무너뜨리는 데 앞장선 죄'}];
-const unmask4=on=>{ NAMES.gyeonhwon=on?'피고 견훤':'증인 견 노인'; CAST.gyeonhwon.name=on?'견훤':'견 노인'; };
+const unmask4=on=>{ NAMES.gyeonhwon='피고 견훤'; };
+/* 김 아찬은 ‘이의 있습니다!’만 들리면 기절한다. 하인 갑·을·병이 차례로 부채질, 네 번째에는 기절하지 않는다 */
+const achanName=()=>{ const n=S.flags.faint||0; NAMES.achan=`증인 김 아찬 (기절 ${n}회${n?'':', 아직은'})`; };
+const FAINT=[
+  [['guide','normal','(김 아찬이 그대로 뒤로 넘어갔다. 하인 갑이 달려와 부채질을 한다.)'],['achan','sweat','…으음, 여, 여기가 어디요?']],
+  [['guide','normal','(또 기절했다. 이번에는 하인 을이 [[더 큰 부채]]를 들고 달려온다.)'],['achan','sweat','…부, 부채질은 그만…']],
+  [['guide','normal','(세 번째 기절! 하인 병이 곡식 까부는 [[키]]로 부채질을 한다. 바람에 김 아찬의 관모가 날아가… 해치의 뿔에 걸렸다.)'],['judge','stern','…누가 내 뿔에 관모를 걸었소.'],['ttolbang','shock','죄, 죄송합니다! 제가 떼어 드릴게요!']]];
+function achanFaint(base){ return ()=>{ S.flags.faint=(S.flags.faint||0)+1; const n=S.flags.faint; if(n>3) return base||[]; Music.sting('thud'); achanName(); return (base||[]).concat(FAINT[n-1]); }; }
+async function achanTruth(){
+  while((S.flags.faint||0)<3){ await shout('objection'); for(const x of achanFaint()()) await say(x[0],x[1],x[2]); }
+  await say('judge','normal','증인 김 아찬, 마지막으로 묻겠소. 그날 뒷문에서 무엇을 보았소?');
+  await shout('objection'); S.flags.faint=3; achanName();
+  await say('guide','normal','(모두가 하인들을 바라보았다. 그런데… 김 아찬이 [[쓰러지지 않는다]].)'); Music.stop(0.05);
+  await say('achan','base','…이건, 내가 [[진짜 봤으니까요]].');
+  await say('achan','base','뒷문으로 빠져나갈 때, 투구에 붉은 깃털 [[둘]]을 꽂은 나이 든 장수가 포석정 쪽에서 오고 있었소. 다른 장수들이 모두 그 앞에서 고개를 숙였지.');
+  await gotEv('H14'); bgm('testimony');
+}
 
 const T4achan=()=>({key:'김 아찬',who:'achan',allReveal:true,lines:[
-  {text:'나는 신라의 아찬이오. 그날 궁궐에 있었지.',expr:'base',press:[['player','normal','그날 무엇을 보셨죠?'],['achan','base','적이 들이닥치는 것을 보았소.']]},
+  {text:'나는 신라의 아찬이오. 그날 궁궐에 있었지.',expr:'base',press:achanFaint([['player','normal','그날 무엇을 보셨죠?'],['achan','base','적이 들이닥치는 것을 보았소.']])},
   {text:'적이 그렇게 가까이 온 줄은 아무도 몰랐소. 하늘에서 뚝 떨어진 것 같았지.',expr:'base',lie:true,ev:'H4',press:[['player','normal','아무도 몰랐다고요?'],['achan','base','그렇소. 아무도!']],
-   hit:[['player','present','경애왕이 고려에 보낸 구원 요청입니다. 왕은 이미 [[적이 오는 것을 알고]] 도움을 청했어요!'],['achan','sweat','그, 그건 왕께서만 아셨던 일이오…!']]},
-  {text:'나는 끝까지 왕을 지키려 했소.',expr:'base',reveal:3,press:[['player','normal','끝까지요? 그날 어디에 계셨죠?'],['achan','sweat','그, 그건…'],['judge','stern','증인, 있었던 곳을 그대로 증언하시오.']]},
+   hit:achanFaint([['player','present','경애왕이 고려에 보낸 구원 요청입니다. 왕은 이미 [[적이 오는 것을 알고]] 도움을 청했어요!'],['achan','sweat','그, 그건 왕께서만 아셨던 일이오…!']])},
+  {text:'나는 끝까지 왕을 지키려 했소.',expr:'base',reveal:3,press:achanFaint([['player','normal','끝까지요? 그날 어디에 계셨죠?'],['achan','sweat','그, 그건…'],['judge','stern','증인, 있었던 곳을 그대로 증언하시오.']])},
   {text:'…나는 무서워서 뒷문으로 빠져나갔소.',expr:'sweat',hidden:true}
 ]});
 const T4neung=()=>({key:'능문',who:'neungmun',allReveal:true,lines:[
-  {text:'나는 후백제의 장수 능문이오. 그날 경주에 들어갔소.',expr:'base',press:[['player','normal','무엇을 하러요?'],['neungmun','base','명을 받았으니 갔소.']]},
+  {text:'나는 백제의 장수 능문이오. 견훤 대왕의 군대지. 그날 경주에 들어갔소.',expr:'base',press:[['player','normal','무엇을 하러요?'],['neungmun','base','명을 받았으니 갔소.']]},
   {text:'우리는 궁궐을 하나도 건드리지 않았소.',expr:'base',lie:true,ev:'H3',press:[['player','normal','하나도요?'],['neungmun','base','군사들은 얌전했소.']],
    hit:[['player','present','불탄 전각입니다. 그날 궁궐은 [[불에 탔어요]]!'],['neungmun','sweat','크윽…!']]},
   {text:'나는 명을 따랐을 뿐이오.',expr:'base',reveal:3,press:[['player','normal','누구의 명이죠?'],['neungmun','sweat','그건… 말할 수 없소.'],['judge','stern','증인, 명을 내린 사람을 증언하시오.']]},
   {text:'…왕을 포석정에서 궁으로 데려오라는 명은 위에서 내려왔소. 나는 그 어른의 [[깃털]]만 보고 따랐소.',expr:'sweat',hidden:true,gives:['H13']}
 ]});
-const T4old=()=>({key:'견 노인',who:'gyeonhwon',allReveal:true,lines:[
-  {text:'나는 후백제 대왕께서 보낸 늙은 사신이오. 경주에는 심부름으로 왔을 뿐이지.',expr:'disguise',press:[['player','normal','어떤 심부름이었죠?'],['gyeonhwon','disguise','허허, 늙은이의 심부름이 다 그렇지.']]},
-  {text:'나는 모든 일이 끝난 뒤에 경주에 왔소. 그날 일은 들은 것밖에 모르오.',expr:'disguise',reveal:2,press:[['player','think','들은 것밖에요? 그럼 새 왕이 어떻게 정해졌는지도 들으셨겠네요.'],['gyeonhwon','disguise','허허, 그거야…']]},
-  {text:'새 왕으로 김부를 세운 것은 신라를 위한 일이었소. 그 사람이 [[가장 온순했으니까]].',expr:'disguise',hidden:true,lie:true,ev:'H1',
-   hit:[['player','present','927년 그날의 기록입니다. 새 왕을 고른 것은 [[그날 군대를 이끌고 들어온 사람]]이에요.'],['player','confident','늦게 온 사신이 ‘누가 가장 온순한지’ 보고 골랐다고요? 그건 고른 사람만 할 수 있는 말입니다!'],['gyeonhwon','disguise','…허허. 말이 헛나왔구먼.'],['judge','normal','그리고 검사, 증인의 [[모자]]도 살펴보시오.']]},
-  {text:'포석정? 나는 그 근처에 가 본 적도 없소.',expr:'disguise',lie:true,ev:'H2',press:[['player','normal','한 번도요?'],['gyeonhwon','disguise','없다니까.']],
-   hit:[['player','present','포석정 물길에 걸려 있던 [[붉은 꿩 깃털]]입니다.'],['player','confident','증인의 모자를 보세요. 이 깃털과 똑같은 붉은 꿩 깃털이 꽂혀 있어요. 그날 포석정에 선 장수의 투구에는 깃털이 [[두 개]]였는데, 증인의 것은 [[하나뿐]]이에요!'],['gyeonhwon','disguise','……'],['judge','normal','그리고 검사, 증인은 ‘들은 것밖에 모른다’면서 [[너무 많이]] 알고 있지 않소?']]},
-  {text:'다른 증인들을 보시오. 하나는 겁쟁이, 하나는 졸개요. 나무랄 사람은 그들이지.',expr:'disguise',press:[['player','think','(다른 증인을 꾸짖는다… 왜 저렇게 자신만만하지?)'],['gyeonhwon','disguise','허허.']]}
+const T4old=()=>({key:'늙은 사신',who:'envoy',allReveal:true,lines:[
+  {text:'나는 백제 대왕께서 보낸 늙은 사신이오. 대왕은 오실 수 없어 나를 대신 보내셨지.',expr:'old',press:[['player','normal','어떤 심부름이었죠?'],['envoy','old','허허, 늙은이의 심부름이 다 그렇지.']]},
+  {text:'나는 모든 일이 끝난 뒤에 경주에 왔소. 그날 일은 들은 것밖에 모르오.',expr:'old',reveal:2,press:[['player','think','들은 것밖에요? 그럼 새 왕이 어떻게 정해졌는지도 들으셨겠네요.'],['envoy','old','허허, 그거야…']]},
+  {text:'새 왕으로 김부를 세운 것은 신라를 위한 일이었소. 그 사람이 [[가장 온순했으니까]].',expr:'old',hidden:true,lie:true,ev:'H1',
+   hit:[['player','present','927년 그날의 기록입니다. 새 왕을 고른 것은 [[그날 군대를 이끌고 들어온 사람]]이에요.'],['player','confident','늦게 온 사신이 ‘누가 가장 온순한지’ 보고 골랐다고요? 그건 고른 사람만 할 수 있는 말입니다!'],['envoy','old','…허허. 말이 헛나왔구먼.'],['judge','normal','그리고 검사, 증인의 [[모자]]도 살펴보시오.']]},
+  {text:'포석정? 나는 그 근처에 가 본 적도 없소.',expr:'old',lie:true,ev:'H2',press:[['player','normal','한 번도요?'],['envoy','old','없다니까.']],
+   hit:[['player','present','포석정 물길에 걸려 있던 [[붉은 꿩 깃털]]입니다.'],['player','confident','증인의 모자를 보세요. 이 깃털과 똑같은 붉은 꿩 깃털이 꽂혀 있어요. 그날 포석정에 선 장수의 투구에는 깃털이 [[두 개]]였는데, 증인의 것은 [[하나뿐]]이에요!'],['envoy','old','……'],['judge','normal','그리고 검사, 증인은 ‘들은 것밖에 모른다’면서 [[너무 많이]] 알고 있지 않소?']]},
+  {text:'다른 증인들을 보시오. 하나는 겁쟁이, 하나는 졸개요. 나무랄 사람은 그들이지.',expr:'old',press:[['player','think','(다른 증인을 꾸짖는다… 왜 저렇게 자신만만하지?)'],['envoy','old','허허.']]}
 ]});
 const T4king=()=>({key:'견훤',who:'gyeonhwon',lines:[
-  {text:'나는 백제를 잇는 후백제의 왕, 견훤이다.',expr:'base',press:[['player','normal','백제를 잇는다고요?'],['gyeonhwon','base','그렇다. 의자왕의 원한을 씻으려고.']]},
+  {text:'나는 옛 백제를 다시 일으킨 왕, 견훤이다.',expr:'base',press:[['player','normal','백제를 잇는다고요?'],['gyeonhwon','base','그렇다. 의자왕의 원한을 씻으려고.'],['defendant','base','(…나의 원한이라. 나를 핑계로 삼지는 마시오.)',{tag:'지난 피고 · 의자왕 (상상)'}],['player','think','(사건 1의 의자왕… 240년 뒤에 그 이름을 내건 사람이 있었구나.)']]},
   {text:'나는 백제 땅에서 태어난 백제 사람이오. 그래서 백제의 원한을 갚으려 한 것이지.',expr:'base',lie:true,ev:'H6',press:[['player','normal','백제 땅에서요?'],['gyeonhwon','angry','그렇다!']],
    hit:[['player','present','견훤의 출신 기록입니다. 피고는 [[상주 가은]]에서 태어나…'],['player','confident','자라서 [[신라의 서남해를 지키던 군인]]이었습니다!'],['gyeonhwon','angry','크윽…!']]},
   {text:'백성들은 백제를 잇는 나를 반겼소.',expr:'base',press:[['player','think','(반긴 사람도 있었겠지. 하지만…)'],['gyeonhwon','base','그것이 사실이다.']]},
@@ -208,36 +233,50 @@ async function runPros4(from){
 async function d1_4(){
   await courtOpen(1);
   await say('guide','normal','방청석 맨 뒤, 붓을 든 [[기록관]] 하나가 조용히 무언가를 적고 있다.');
-  await say('judge','normal','오늘은 [[범인 찾기]]요. 세 증인의 말을 듣고, 말해서는 안 될 것을 아는 사람을 찾으시오.');
+  await say('judge','normal','오늘은 [[범인 찾기]]요. 나는 [[그날 군대를 이끈 자]]를 증인으로 불렀소. 그런데 세 사람이 왔구려.');
+  await say('judge','normal','세 증인의 말을 듣고, 말해서는 안 될 것을 아는 사람을 찾으시오.');
   setCharges(C4SUS(),'용의 증인');
   await say('judge','normal','화면 위에 세 증인의 카드를 두겠소. 증언을 들을 때마다 카드에 표시가 쌓일 것이오.');
   // 증인 ① 김 아찬
-  bgm('testimony'); await say('achan','base','신라의 아찬, 김가요. 그날 궁궐에 있었소.');
-  if(!await testimony(T4achan(),'나는 왕을 지키려 했소')) return false;
+  S.flags.faint=S.flags.faint||0; achanName();
+  bgm('testimony'); await say('achan','base','신라의 아찬, 김가요. 그날 궁궐에 있었소. …큰 소리만 안 내 주시면 좋겠소.');
+  if(!await testimony(T4achan(),'나는 왕을 지키려 했소','“이의 있습니다!”가 들리면… 증인을 잘 지켜보세요')) return false;
+  await achanTruth();
   chargeSt(0,'clear','도망침 · 왕을 죽음으로 몬 사람은 아님');
   await say('judge','normal','비겁했지만, 왕을 죽음으로 몬 사람은 아니군. 다음 증인.');
   // 증인 ② 능문
-  bgm('testimony'); await say('neungmun','base','후백제의 장수, 능문이오.');
+  bgm('testimony'); await say('neungmun','base','백제의 장수, 능문이오. …여기서는 뒷날 이름으로 ‘후백제’라 부른다지?');
   if(!await testimony(T4neung(),'나는 명을 따랐을 뿐')) return false;
   chargeSt(1,'clear','명을 받음 · 명을 내린 사람이 따로 있음');
   await say('judge','normal','명을 내린 사람이 따로 있다… 마지막 증인.');
-  // 증인 ③ 견 노인
-  bgm('testimony'); await say('gyeonhwon','disguise','허허, 후백제 대왕께서 보낸 늙은 사신이오. 아이들 놀이에 늙은이까지 불렀구먼.');
+  // 증인 ③ 늙은 사신
+  bgm('testimony'); await say('envoy','old','허허, 백제 대왕께서 보낸 늙은 사신이오. 아이들 놀이에 늙은이까지 불렀구먼.');
+  await say('judge','normal','증인, 이름이 무엇이오?');
+  await say('envoy','old','[[이름 없는 늙은이]]요. 그냥 사신이라 부르시오.');
+  await say('player','think','(이름을 숨긴다… 왜지?)');
   const T=T4old(); T.onHit=async()=>{ Music.stop(0.05); Music.sting('realize'); };
   if(!await testimony(T,'나는 늦게 도착한 사신일 뿐')) return false;
   chargeSt(2,'sus','너무 많이 앎 · 깃털 하나가 빠짐');
-  S.flags.firstClue=firstHit('견 노인')==='H2'?'feather':'word';
-  const c=await choose('누구를 피고로 세우겠습니까?',[
-    {t:'김 아찬. 왕을 버리고 도망쳤습니다.',ok:false,fb:'비겁했지만, 왕을 죽음으로 몬 사람은 아니오.'},
-    {t:'능문. 군사를 이끌고 왕을 데려왔습니다.',ok:false,fb:'명을 받은 사람이오. 명을 내린 사람이 따로 있다고 하지 않았소?'},
-    {t:'견 노인. 늦게 온 사신이 알 수 없는 일을 알고, 그날 떨어진 깃털은 그의 모자에 꽂힌 깃털과 짝입니다.',ok:true}],{hint:'세 사람 가운데 ‘들은 것밖에 모른다’면서 너무 많이 아는 사람이 있소.'});
-  if(!c) return false;
+  S.flags.firstClue=firstHit('늙은 사신')==='H2'?'feather':'word';
+  /* 엉뚱한 사람을 지목하면 방울 −2, 해치가 그 사람이 그날 한 일을 다시 정리해 주고 다시 고름 (막히지 않음) */
+  const PICK=[{t:'김 아찬. 왕을 버리고 도망쳤습니다.',ok:false,tag:'achan',fb:'김 아찬은 그날 무서워 [[뒷문으로 도망쳤소]]. 비겁했지만, 왕을 죽음으로 몬 사람은 아니오.'},
+    {t:'능문. 군사를 이끌고 왕을 데려왔습니다.',ok:false,tag:'neung',fb:'능문은 [[명을 받은 사람]]이오. 그 명을 내린 어른의 깃털만 보고 따랐다 하지 않았소?'},
+    {t:'늙은 사신. 늦게 온 사신이 알 수 없는 일을 알고, 그날 떨어진 깃털은 그의 모자에 꽂힌 깃털과 짝입니다.',ok:true,tag:'envoy'}];
+  for(let k=0;;k++){
+    const c=await choiceSheet('누구를 피고로 세우겠습니까?',PICK);
+    if(k===0) track('first_pick',{pick:c.tag,ok:c.ok});
+    if(c.ok){ await gainTrust(); break; }
+    await say('judge','stern',c.fb); await say('judge','stern','엉뚱한 사람을 피고로 세우면 그 사람의 이름이 다치오. 방울 [[두 개]]를 거두겠소.');
+    await loseTrust(); if(S.trust>0) await loseTrust(); if(S.trust<=0){ await loseTrial(); return false; }
+    await say('judge','normal','세 사람 가운데 ‘들은 것밖에 모른다’면서 [[너무 많이 아는]] 사람이 있소. 다시 고르시오.');
+  }
   Music.stop(0.02); await slam(); await shout('objection');
-  await say('player','present','피고는 당신입니다, 견 노인. 아니, [[그날 군대를 이끈 사람]]!',{action:true});
+  await say('player','present','피고는 당신입니다, 늙은 사신. 아니, [[그날 군대를 이끈 사람]]!',{action:true});
   Music.sting('thud'); flash(); shake('quake'); await wait(500);
   unmask4(true); S.flags.unmasked=true; chargeSt(2,'defendant','정체: 견훤');
   bgm('crisis');
   await say('gyeonhwon','angry','…그래. 내가 [[견훤]]이다.',{action:true});
+  await say('judge','normal','…그대가 바로 [[내가 부른 사람]]이었구려.');
   await say('gyeonhwon','angry','그러나 나는 죄인이 아니라 [[백제의 복수자]]다! 의자왕의 원한을 갚으러 왔을 뿐이다!');
   Music.sting('murmur'); await wait(900); await gavel();
   await say('judge','stern','검사, 피고를 세우시오.');
@@ -277,10 +316,17 @@ async function d3_4(){
   Music.sting('murmur'); await wait(800); await gavel();
   bgm('testimony'); await say('singeom','base','…신검이오.');
   if(!await testimony(T4sin(),'아버지가 먼저 우리를 버렸다')) return false;
+  bgm('crisis'); Music.stop(0.4);
+  await say('guide','normal','(피고석의 견훤이 천천히 일어섰다. 아버지와 아들이 같은 법정에서 마주 섰다.)');
+  await say('gyeonhwon','angry','…신검아. 네가 나를 가두었지.');
+  await say('singeom','sweat','아버지가 먼저 금강을 고르셨소.');
+  await say('gyeonhwon','breakdown','그래서 너는… 동생을…',{action:true});
+  await say('judge','stern','두 사람 모두 그만. 이 법정은 [[피고가 한 일]]을 따지는 곳이오.');
+  await say('player','think','(아들에게 배신당한 아버지, 그리고 아버지를 가둔 아들… 하지만 오늘 따질 것은 피고가 고른 길이야.)');
   bgm('open');
   await say('rival','normal','피고는 아들에게 갇히고, 아들을 잃었어요. 이 아픔은 판결에서 [[참작]]해 주세요.');
   await say('player','normal','그 아픔은 인정해요. 하지만 그 뒤에 피고가 고른 길도 봐야죠.');
-  await victim('oldsoldier',[['base','후백제의 늙은 병사요.'],['base','936년 일리천에서, 고려군 맨 앞줄을 보았소.'],['base','거기 [[우리를 세운 왕]]이 서 있었소.'],['base','…우리는 누구를 위해 싸웠던 거요?']]);
+  await victim('oldsoldier',[['base','견훤 대왕의 나라, 백제의 늙은 병사요. 여기서는 후백제라 부른다더군.'],['base','936년 일리천에서, 고려군 맨 앞줄을 보았소.'],['base','거기 [[우리를 세운 왕]]이 서 있었소.'],['base','…우리는 누구를 위해 싸웠던 거요?']]);
   await gavel(); await titleCard('― 3일차 끝 ―','명분과 행동');
   return true;
 }
@@ -300,12 +346,14 @@ async function d4_4(){
     await say('rival','think','(마당에 떨어져 있던 그 종이… 하람이 끝까지 내지 않았네.)');
     await say('guide','normal','방청석 맨 뒤의 기록관이, 붓을 멈추고 하람을 바라보았다.');
   }
-  await say('judge','normal','검사, 혐의마다 판결의 [[이유]]와 [[근거]]를 대시오.');
+  await say('judge','normal','검사, 혐의마다 판결의 종류와 [[이유]], [[근거]]를 대시오.');
+  if(!await verdictKind('혐의 ① 경주를 짓밟고 경애왕을 죽음으로 몬 죄','guilty',{q:'군대를 이끌고 들어와 왕을 죽음으로 몰았어요. 어떻게 판결할까요?',idx:0})) return false;
   if(!await reasonEv('혐의 ①(경주를 짓밟고 경애왕을 죽음으로 몬 죄)을 유죄로 보는 가장 알맞은 이유는?',[
     {t:'그날 군대를 이끌고 들어와 왕을 포석정에서 끌어오게 하고 새 왕까지 고른 사람이 피고다.',ok:true,ev:['H13','H1']},
     {t:'피고가 직접 칼을 들었다는 목격담이 있다.',ok:false,fb:'그 목격담은 누가 쓴 것인지 알 수 없소.'},
     {t:'경애왕이 잔치를 벌였기 때문이다.',ok:false,fb:'그것은 피해자를 탓하는 말이오.'}])) return false;
-  if(!await reasonEv('혐의 ②(자기가 세운 나라를 무너뜨리는 데 앞장선 죄)를 유죄로 보는 가장 알맞은 이유는?',[
+  if(!await verdictKind('혐의 ② 자기가 세운 나라를 무너뜨리는 데 앞장선 죄','resp',{q:'아들에게 갇혔다 빠져나와 고려군과 함께 후백제를 쳤어요. 전쟁 판단이에요. 어떻게 판결할까요?',idx:1,fb:{guilty:'고려군과 함께 싸운 것은 [[전쟁 판단]]이었소. 배신당한 아버지의 선택을 죄라 부르기는 어렵소. 그러나 그 결과는?',innocent:'자기가 세운 나라의 백성에게 칼을 돌린 일이오. 없던 일로 할 수는 없소.'}})) return false;
+  if(!await reasonEv('혐의 ②(자기가 세운 나라를 무너뜨리는 데 앞장선 죄)를 ‘책임 있음’으로 보는 가장 알맞은 이유는?',[
     {t:'936년 피고는 고려군 앞줄에 서서 자기가 세운 후백제를 쳤다.',ok:true,ev:['H9']},
     {t:'피고는 신라에서 태어났으므로 처음부터 백제의 왕이 될 수 없었다.',ok:false,fb:'태어난 곳으로 죄를 묻지 않소. 피고가 한 일을 따지시오.'},
     {t:'피고는 아들에게 배신당했으므로 아무 잘못이 없다.',ok:false,fb:'그것은 참작할 사정이지, 무죄의 이유가 아니오.'}])) return false;
@@ -314,13 +362,13 @@ async function d4_4(){
   bgm('verdict'); await gavel();
   await say('judge','normal','판결을 내리겠소.');
   chargeSt(0,'guilty'); await say('judge','stern','혐의 ①. 피고는 경주를 짓밟고 경애왕을 죽음으로 몰았으며, 새 왕까지 골랐소. [[유죄]].');
-  chargeSt(1,'guilty','아들의 배신은 참작'); await say('judge','stern','혐의 ②. 피고는 자기가 세운 나라를 치는 군대의 앞줄에 섰소. [[유죄]]. 다만 아들에게 갇히고 아들을 잃은 아픔은 참작하오.');
+  chargeSt(1,'resp','아들의 배신 크게 참작'); await say('judge','stern','혐의 ②. 배신당한 아버지의 선택을 죄라 부르지는 않겠소. 그러나 자기가 세운 나라의 백성에게 칼을 돌린 [[책임]]은 역사에 남소. [[책임 있음]].');
   await say('judge','normal','백제를 잇겠다는 이름은 컸소. 그러나 그 이름 아래 신라의 백성을 짓밟았고, 마지막엔 자기 백성을 쳤소.');
   await say('judge','normal','배신당한 아픔은 참작하되, [[그 길을 고른 것은 피고 자신]]이오.');
   await say('gyeonhwon','breakdown','…….');
   const pts=(S.flags.usedFake?0:1)+(S.trust>=3?1:0)+(S.plums&&S.plums.has('H12')?1:0);
   caseResult({grade:pts>=3?'날카로운 검사':pts===2?'성실한 검사':'견습 검사',lead:'증인 가운데 숨은 피고를 찾아내고, 명분과 행동을 맞대어 두 혐의를 증명했습니다.',
-    items:[`숨은 피고를 찾은 첫 단서: ${S.flags.firstClue==='feather'?'물건(깃털)':'말의 실수(새 왕)'}`,`목격담 종이: ${S.flags.usedFake?'근거로 냄 (가짜로 밝혀짐)':'내지 않음'}${S.plums&&S.plums.has('H12')?' · 확대해 매화 얼룩을 찾음':''}`],
+    items:[`숨은 피고를 찾은 첫 단서: ${S.flags.firstClue==='feather'?'물건(깃털)':'말의 실수(새 왕)'}`,`김 아찬 기절 ${S.flags.faint||0}회 · 기절하지 않은 단 한 번`,`목격담 종이: ${S.flags.usedFake?'근거로 냄 (가짜로 밝혀짐)':'내지 않음'}${S.plums&&S.plums.has('H12')?' · 확대해 매화 얼룩을 찾음':''}`],
     judge:'명분이 크다고 행동이 옳아지지 않소. 그것을 증거로 보인 검사요.',history:HIST4});
   return true;
 }
@@ -330,5 +378,19 @@ regCase(4,{title:'포석정의 그림자',desc:'숨은 피고 · 검사 · 난�
   locked:{def:'검사 사건',judge:'검사 사건'},
   openLine:'지금부터 [[역사 법정]]을 엽니다. 오늘은 피고가 정해지지 않았습니다.',history:HIST4,
   views:{prologue4:prologueView('#2a2e3e','#0b0c14'),poseok:prologueView('#2a2e3e','#0b0c14')},
-  gojeung:['견훤의 출신(상주 가은현)과 신라 서남해 방수 군인 경력','892년 거병, 900년 완산주 후백제 건국과 ‘의자왕의 원한’ 발언','927년 경주 공격과 경애왕의 죽음, 김부(경순왕) 옹립','경애왕의 고려 구원 요청과 왕건의 출병','포석정 겨울 연회 기록과 제사 장소 해석','935년 금산사 유폐(석 달)와 탈출, 936년 일리천 전투','신검이 금강을 죽인 기록','건원중보 주조 연도(996년) — 미끼 증거','김 아찬·능문·견 노인 변장은 게임 속 상상'],
+  goal:{pros:'증인 셋 가운데 숨은 피고를 찾아요. 그리고 좋은 명분 뒤의 행동을 증거로 따져요.'},
+  recall:{q:'지난 사건에서 진흥왕의 혐의 ①(동맹을 깨고 한강 하류를 빼앗음)은 어떻게 판결했나요?',opts:[{t:'책임 있음 — 나라의 판단이 남긴 결과라서',ok:true},{t:'유죄 — 사람에게 직접 해를 끼쳐서'},{t:'무죄 — 증거가 없어서'}],yes:'잘 기억하고 있구려. 원칙 카드는 이번에도 쓸 것이오.',no:'…동맹을 깬 것은 나라의 판단이었소. 그래서 ‘책임 있음’이었지. 원칙 카드를 다시 떠올려 보시오.'},
+  bgCards:{1:{ic:'🗺️',t:'백제가 무너지고 240년 뒤, 나라가 다시 셋으로 나뉘었어요(후삼국). 927년 겨울, 견훤의 군대가 신라의 수도 경주에 들어왔어요.'},2:{ic:'🔥',t:'견훤은 900년 완산주(전주)에 나라를 세우며 “의자왕의 원한을 씻겠다”고 했어요. 그 시대 사람들은 이 나라를 그냥 ‘백제’라 불렀어요.'},3:{ic:'⛩️',t:'935년 견훤은 맏아들 신검에게 금산사에 갇혔다가 빠져나와 고려로 갔어요.'},4:{ic:'⚖️',t:'판결하는 날이에요. 같은 시대에 다른 선택을 한 경순왕의 말도 들어요.'}},
+  record:['936년 일리천에서 자기 왕에게 맞선 후백제의 군사들','싸움 끝에 무너진 후백제의 백성들'],
+  lesson:{opts:[{t:'좋은 명분이 있어도, 한 일은 따로 따진다.',r:'그렇소. 이름이 크다고 행동이 옳아지지 않소.'},{t:'말해서는 안 될 것을 아는 사람이 숨은 피고였다.',r:'그렇소. 거짓은 늘 너무 많이 알거나, 너무 모르는 데서 드러나오.'},{t:'배신당한 아픔은 헤아리되, 고른 길의 책임은 남는다.',r:'그렇소. 헤아리는 것과 지우는 것은 다르오.'}]},
+  paper:{id:'H12',anach:'후백제'},
+  teaser:'1232년, 몽골이 쳐들어오자 텅 비어 버린 고려의 궁궐. 이번에는 [[네가 판사석]]에 앉는다.',
+  gag:{scene:'김 아찬 「네 번째 이의」',
+    inv:{1:[['ttolbang','bang','포석정이다! 증거 나와라, 뚝딱!'],['guide','normal','(방망이에서… 메밀묵이 아니라 [[붉은 깃털 부스러기]]가 팔랑 떨어졌다. 바람에 실려 포석정 물길 쪽으로 날아간다.)'],['ttolbang','shock','어, 어? 이번엔 메밀묵이 아니네요? 저도 처음 봐요!'],['ME','think','(물길 쪽으로 날아갔어… 그쪽을 꼼꼼히 살펴봐야겠어.)']],
+      2:[['ttolbang','base','오늘은 궁궐 마당에 말순 할머니가 와 계세요. 또 “내가 다 봤다니까!” 하실 거예요.']],
+      3:[['ttolbang','bang','금산사에서는 조용히! …증거 나와라, 뚝딱.'],['guide','normal','(작은 소리로 뚝딱. 메밀묵도 작은 것이 나왔다.)']]},
+    fix:{2:{say:'어제 법정 요약! 늙은 사신은 정말 모든 일이 끝난 뒤에 와서 [[아무것도 몰랐대요]]!',opts:[{t:'아니야. 새 왕을 누가 왜 골랐는지 알고 있었어. 그날 군대를 이끈 견훤이었어.',ok:true},{t:'맞아. 늦게 와서 아무것도 몰랐어.'}]},
+      3:{say:'어제 법정 요약! 견훤은 백제 땅에서 태어난 [[백제 사람]]이었대요!',opts:[{t:'아니야. 상주 가은에서 태어나 신라의 군인이 되었어.',ok:true},{t:'맞아. 백제 땅에서 태어났어.'}]}},
+    pun:[['judge','normal','포석정 사건이라 그런지… 오늘 재판은 [[물 흐르듯]] 하겠구려. 포석정 물길처럼.'],['ttolbang','joy','하하하! 물 흐르듯! 재판장님 오늘 기분 좋으시네요!'],['guide','normal','(아무도 웃지 않았다.)']],punDay:2},
+  gojeung:['견훤의 출신(상주 가은현)과 신라 서남해 방수 군인 경력','892년 거병, 900년 완산주 후백제 건국과 ‘의자왕의 원한’ 발언','927년 경주 공격과 경애왕의 죽음, 김부(경순왕) 옹립','경애왕의 고려 구원 요청과 왕건의 출병','포석정 겨울 연회 기록과 제사 장소 해석','935년 금산사 유폐(석 달)와 탈출, 936년 일리천 전투','신검이 금강을 죽인 기록','건원중보 주조 연도(996년) — 미끼 증거','김 아찬·능문·늙은 사신 변장은 게임 속 상상','‘후백제’라는 이름이 쓰이기 시작한 때(그 시대 사람들은 ‘백제’라 부름) — 가짜 목격담의 시대 안 맞는 말'],
   roles:{pros:runPros4}});

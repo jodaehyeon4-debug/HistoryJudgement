@@ -254,7 +254,15 @@ function scaleViz(title,out){
 }
 
 /* ---------- 결과 화면 앞: 가장 중요한 것 → 수상한 종이 → 등급 ---------- */
-async function caseFinale(){ const X=XD(S.case); if(X.lesson) await lessonPick(X.lesson); if(X.paper) await filePaper(X.paper); }
+async function caseFinale(){ const X=XD(S.case); if(X.lesson) await lessonPick(X.lesson); if(X.paper) await filePaper(X.paper); if(X.teaser) await teaserCard(X.teaser); }
+/* 4일차 끝: 다음 사건 예고 한 컷 */
+function teaserCard(t){
+  return new Promise(res=>{
+    Music.sting('title');
+    openSheet(`<h2>다음 사건 예고</h2><div class="bgcard teaser"><span class="bg-ic" aria-hidden="true">🔔</span><p>${t.replace(/\[\[(.*?)\]\]/g,'<b class="kw">$1</b>')}</p></div><div class="sheet-foot"><button class="abtn primary" type="button" id="sheetGo">재판 기록 보기</button></div>`,false);
+    $('#sheetGo').addEventListener('click',()=>{ closeSheet(); res(); });
+  });
+}
 
 /* ---------- 기록관 두 벌: 사건 1 법정은 원래 그림, 마지막 장면부터 매화 얼룩 그림(scribe2) ---------- */
 addCast('scribe2',{name:'기록관',label:'기록관',col:'#2f5a3c',spec:Object.assign({},CAST.scribe)});

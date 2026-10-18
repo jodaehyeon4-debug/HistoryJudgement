@@ -285,7 +285,7 @@ async function doPress(){
   if(S.busy||!CX) return; S.busy=true; controlsEl.hidden=true,$('#pips')&&($('#pips').hidden=true); S.presses++;
   const L=curLine();
   await shout('hold');
-  if(L.press) await line(L.press);
+  { const P=typeof L.press==='function'?L.press():L.press; if(P) await line(P); }
   if(L.endOnPress && !CX.T.lines.some(l=>l.lie&&!l.broken)){ controlsEl.hidden=true,$('#pips')&&($('#pips').hidden=true); S.busy=false; const res=CX.res; CX=null; res(); return; }
   track('press',{key:CX.T.key||'',line:CX.vis[CX.pos]+1,reveal:L.reveal!==undefined&&!CX.vis.includes(L.reveal)});
   if(L.reveal!==undefined && !CX.vis.includes(L.reveal)){
@@ -332,7 +332,7 @@ async function doPresent(id){
     await shout('objection');
     bgm('turnabout');
     showEvidence(id);
-    const hit=L.hit||[];
+    const hit=(typeof L.hit==='function'?L.hit():L.hit)||[];
     for(let k=0;k<hit.length;k++){ const x=hit[k]; await say(x[0],x[1],x[2],{action:k===0 && x[0]===ME()}); }
     hideEvidence();
     markUsed(L.need2?[id,...L.need2]:[id]);
