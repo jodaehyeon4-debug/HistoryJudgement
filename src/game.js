@@ -270,7 +270,7 @@ function crossStep(d){ if(!CX||S.busy) return; enterCross((CX.pos+d+CX.vis.lengt
 /* 버릇 살피기: 증인을 확대해 거짓말할 때만 나오는 버릇을 찾는다. 어느 문장이 수상한지만 알려 주고, 깰 증거는 알려 주지 않는다 */
 async function doObserve(){
   if(S.busy||!CX||!CX.T.habit) return; S.busy=true; controlsEl.hidden=true; $('#pips').hidden=true;
-  const L=curLine(), hit=!!(L.lie&&!L.broken); S.observes=(S.observes||0)+1;
+  const L=curLine(), hit=!!((L.lie||L.sus)&&!L.broken); S.observes=(S.observes||0)+1;
   track('observe',{key:CX.T.key||'',line:CX.vis[CX.pos]+1,hit:hit});
   Music.sting('zoom'); stageEl.classList.add('observe');
   if(hit){ L.habitSeen=true; Music.sting('realize'); await say(ME(),'shock',`(…지금! 증인이 [[${CX.T.habit}]]. 이 말을 할 때만 그래. 이 문장이 수상해!)`); }
@@ -658,7 +658,7 @@ async function examine(p0){
   }
   renderSpots(); renderInvBar(); S.busy=false;
 }
-function reqSpots(){ const out=[]; availLocs().forEach(l=>roomsOf(l).forEach(r=>{ const nm=l.name+(l.rooms?' · '+r.name:''); const np=npcOf(r); if(np){ (np.topics||[]).filter(avail).forEach(t=>{ (t.gives||[]).forEach(id=>out.push({id:id,loc:nm})); if(t.must) out.push({id:'talk:'+t.id,loc:nm}); }); Object.values(np.present||{}).forEach(x=>(x.gives||[]).forEach(id=>out.push({id:id,loc:nm}))); } r.spots.forEach(p0=>{ const p=(S.phase>=P2()&&p0.p2)?Object.assign({},p0,p0.p2):p0; if(p.only2&&S.phase<P2()) return; (p.gives||[]).concat(p.ev?[p.ev]:[]).forEach(id=>out.push({id:id,loc:nm})); }); })); return out; }
+function reqSpots(){ const out=[]; availLocs().forEach(l=>roomsOf(l).forEach(r=>{ if(r.need && !S.found.has(r.need)) return; const nm=l.name+(l.rooms?' · '+r.name:''); const np=npcOf(r); if(np){ (np.topics||[]).filter(avail).forEach(t=>{ (t.gives||[]).forEach(id=>out.push({id:id,loc:nm})); if(t.must) out.push({id:'talk:'+t.id,loc:nm}); }); Object.values(np.present||{}).forEach(x=>(x.gives||[]).forEach(id=>out.push({id:id,loc:nm}))); } r.spots.forEach(p0=>{ const p=(S.phase>=P2()&&p0.p2)?Object.assign({},p0,p0.p2):p0; if(p.only2&&S.phase<P2()) return; (p.gives||[]).concat(p.ev?[p.ev]:[]).forEach(id=>out.push({id:id,loc:nm})); }); })); return out; }
 function missingReq(){ return [...new Set(reqSpots().map(x=>x.id))].filter(id=>id.startsWith('talk:')?!(S.talked&&S.talked.has(id.slice(5))):!S.found.has(id)); }
 function locOf(id){ const x=reqSpots().find(s=>s.id===id); return x?x.loc:'다른 장소'; }
 async function toCourt(){
@@ -1054,4 +1054,4 @@ textEl.textContent='역사 법정에 오신 것을 환영합니다. 아래에서
 showTitle();
 
 if(location.hash==='#dbg') window.__dbg={setView:setView,setName:setName,titleCard:titleCard};
-window.__yj={S:S,get CX(){return CX;},get invLoc(){return invLoc;},get invParent(){return invParent;},LOCS:LOCS,availLocs:availLocs,roomsOf:roomsOf,npcOf:npcOf,missingReq:missingReq,get pickExpect(){return S.expect;}};
+window.__yj={S:S,CASE_DATA:CASE_DATA,npcRect:npcRect,get CX(){return CX;},get invLoc(){return invLoc;},get invParent(){return invParent;},LOCS:LOCS,availLocs:availLocs,roomsOf:roomsOf,npcOf:npcOf,missingReq:missingReq,get pickExpect(){return S.expect;}};

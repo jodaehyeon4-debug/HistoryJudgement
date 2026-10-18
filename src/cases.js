@@ -172,7 +172,7 @@ function startCaseX(n,role,resume){
   const D=CASE_DATA[n]; if(!D||!D.roles[role]) return;
   setCase(n); S.case=n; S.role=role;
   const sub=document.querySelector('.brand span'); if(sub) sub.textContent=`사건 ${n} 「${D.title}」`;
-  prepStory(); S.case=n; S.role=role; S.me=role==='def'?'rival':role==='judge'?'daon':'player'; S.p2at=99; S.day=1;
+  prepStory(); S.case=n; S.role=role; S.me=role==='def'?'rival':role==='judge'?'daon':'player'; S.p2at=D.p2at||99; S.day=1;
   document.body.classList.toggle('judge-mode',role==='judge');
   let from=0; const v=resume?hasSaveX(n,role):null;
   if(v){ S.found=new Set(v.found); S.seen=new Set(v.seen||[]); S.trust=v.trust||5; S.misses=v.misses||0; S.presses=v.presses||0; S.log=v.log||[]; S.used=new Set(v.used||[]); S.talked=new Set(v.talked||[]); S.unlocked=new Set(v.unlocked||[]);
