@@ -609,7 +609,7 @@ function talkTo(){
       const t=np.topics[+b.dataset.i]; onSheetClose=null; closeSheet(); Music.sting('click');
       track('talk',{who:np.who,topic:t.id,locked:!!(t.lock&&!S.unlocked.has(t.id))});
       if(t.lock && !S.unlocked.has(t.id)){ await say(ME(),'think',t.lockSay||'(지금은 말해 주지 않을 것 같다.)',{view:'inv'}); list(); return; }
-      await npcLines(np,t.lines); S.talked.add(t.id); await npcGives(t.gives); list();
+      await npcLines(np,t.lines); S.talked.add(t.id); await npcGives(t.gives); if(t.after){ await t.after(); showNpc(np); } list();
     }));
   };
   list();

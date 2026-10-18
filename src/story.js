@@ -54,7 +54,8 @@ async function reasonEv(q,opts,prompt){
   for(;;){
     const c=await choiceSheet(q,opts);
     if(!c.ok){ await say('judge','stern',c.fb||'그 이유로는 판결할 수 없소.'); await loseTrust(); if(S.trust<=0){ S.allowUsed=false; await loseTrial(); return false; } continue; }
-    S.expect=c.ev; const id=await pickEvidence(prompt||'그 이유를 뒷받침하는 증거를 고르세요.'); S.expect=null;
+    S.expect=c.ev; let id=await pickEvidence(prompt||'그 이유를 뒷받침하는 증거를 고르세요.'); S.expect=null;
+    while(c.soft && c.soft[id]){ track('soft_ev',{q:q,ev:id}); await line(c.soft[id]); S.expect=c.ev; id=await pickEvidence('함께 낼 다른 근거를 고르세요.'); S.expect=null; }
     track('reason',{q:q,a:c.t,ev:id,ok:c.ev.includes(id)});
     { const be=EV_BY_ID[id]; if(c.before!==undefined && be && typeof be.y==='number' && be.y>c.before && !c.ev.includes(id)){ track('time_order',{q:q,ev:id}); await say('judge','stern',`${yearTxt(be.y)}의 일이 ${yearTxt(c.before)}의 이유가 될 수는 없소. [[시간 순서]]를 보시오.`); await loseTrust(); if(S.trust<=0){ S.allowUsed=false; await loseTrial(); return false; } continue; } }
     if(EV_BY_ID[id]&&EV_BY_ID[id].gag&&!c.ev.includes(id)){ await line([['judge','stern','…판결의 근거로 [[메밀묵]]을 내는 사람은 처음 보오.'],['ttolbang','shock','앗, 그거 제 거예요!']]); await loseTrust(); if(S.trust<=0){ S.allowUsed=false; await loseTrial(); return false; } continue; }

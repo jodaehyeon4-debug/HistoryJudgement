@@ -668,6 +668,9 @@ pre.code{background:var(--surface2);color:var(--ink);border:2px solid var(--line
 .hud .muk{margin-left:8px;font-weight:900;font-size:clamp(10px,1.2vw,13px);color:#f3ead6;background:rgba(14,16,30,.7);border-radius:999px;padding:1px 8px}
 .hud .muk[hidden]{display:none}
 .laugh .abtn{padding:2px 8px;font-size:12px}.laugh .abtn.sel{background:var(--accent);color:var(--accent-ink)}
+.ladder{counter-reset:l;list-style:none;padding:0;margin:8px 0}.ladder li{position:relative;padding:8px 10px 8px 40px;margin:6px 0;background:var(--surface2);border:2px solid var(--line);border-radius:10px;font-weight:800;line-height:1.6}
+.ladder li::before{counter-increment:l;content:counter(l);position:absolute;left:10px;top:8px;width:22px;height:22px;border-radius:50%;background:var(--gold);color:#2a1a0e;text-align:center;font-weight:900;line-height:22px}
+.ladder li+li::after{content:'↓';position:absolute;left:16px;top:-14px;font-weight:900;color:var(--muted)}
 </style>
 </head>
 <body>

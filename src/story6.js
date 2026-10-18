@@ -1,7 +1,7 @@
 /* ===== 사건 6 「두 얼굴의 왕」: 변호인 누리 · 새 장치 ‘버릇 살피기’ =====
    혐의 ① 어머니(인목대비)를 가두고 어린 동생(영창대군)이 목숨을 잃게 한 죄 → 유죄(잠금, 변호인도 다툴 수 없음)
-   혐의 ② 명의 은혜를 저버리고 오랑캐(후금)와 몰래 통한 죄 → 무죄(나라를 지키려는 외교, 재평가)
-   혐의 ③ 무리한 궁궐 공사로 백성을 괴롭힌 죄 → 유죄 / 참작: 대동법, 「동의보감」
+   혐의 ② 명의 은혜를 저버리고 오랑캐(후금)와 몰래 통한 죄 → 무죄(외교 판단은 처음부터 죄가 아님, 근거 ‘두 나라 사이’+원칙 카드. ‘형세를 보아라’는 논쟁 있는 기록이라 혼자서는 근거가 못 됨)
+   혐의 ③ 무리한 궁궐 공사로 백성을 괴롭힌 죄 → 책임 있음(v3) / 참작: 대동법, 「동의보감」
    영창대군은 어린아이이므로 그림자 연출도 하지 않음(빈 방과 바람). 실존 인물의 대사는 상상. */
 addCast('gwanghae',{name:'광해군',label:'피고 광해군',col:'#a8322a',spec:{skin:'#eec8a2',robe:'#a8322a',robe2:'#7c221c',collar:'round',hat:'ikseon',hair:'#1c1a20',beard:'king',emblem:true,iris:'#3a2a20'}});
 addCast('inmok',{name:'인목대비',label:'피해자 인목대비',col:'#5a4a6a',spec:{skin:'#f0caa4',robe:'#6a5a7a',robe2:'#4a3a5a',collar:'cross',hat:'bun',hair:'#1c1a20',beard:'none',iris:'#3a2a20'}});
@@ -9,7 +9,8 @@ addCast('hongrip',{name:'강홍립',label:'증인 강홍립',col:'#3a3f5c',spec:
 addCast('sagwan',{name:'실록청 사관',label:'사관',col:'#2f5a3c',spec:{skin:'#ecc8a4',robe:'#3d6b4a',robe2:'#284a33',collar:'round',hat:'gat',hair:'#1c1a20',beard:'thin',iris:'#3a2a20'}});
 addCast('carpenter',{name:'공사에 불려 온 목수',label:'증인 목수',col:'#7a5a3a',spec:{skin:'#d9a77c',robe:'#8a6a48',robe2:'#5a4634',collar:'cross',hat:'short',hair:'#2a2220',beard:'thin',iris:'#3a2a20'}});
 addCast('farmer6',{name:'경기도 농부',label:'증인 농부',col:'#6a5038',spec:{skin:'#d9a77c',robe:'#7a6248',robe2:'#5a4634',collar:'cross',hat:'short',hair:'#2a2220',beard:'none',iris:'#3a2a20'}});
-addCast('soldier6',{name:'진영의 군졸',label:'군졸',col:'#4a3a2a',spec:{skin:'#e2b48a',robe:'#4a4a3a',robe2:'#2e2e24',collar:'cross',hat:'short',hair:'#1c1a20',beard:'none',iris:'#3a2a20'}});
+addCast('soldier6',{name:'진영의 소년병',label:'소년병',col:'#4a3a2a',spec:{skin:'#f0caa4',robe:'#4a4a3a',robe2:'#2e2e24',collar:'cross',hat:'short',hair:'#1c1a20',beard:'none',iris:'#3a2a20',blush:true}});
+if(ASSETS.sprites&&ASSETS.sprites.boysoldier) ASSETS.sprites.soldier6=ASSETS.sprites.boysoldier;
 
 const EVIDENCE6=[
   {id:'G1',reuse:true,type:'사료',icon:'prison',title:'서궁의 문',body:'1618년 조정은 인목대비를 경운궁(서궁)에 가두기로 정하고, 대비의 칭호까지 낮추었다. 왕의 허락이 있어야 할 수 있는 일이었다.',src:'「광해군일기」를 바탕으로 정리',trust:3,note:'어머니를 가둔 결정이에요.'},
@@ -17,17 +18,19 @@ const EVIDENCE6=[
   {id:'G3',reuse:true,type:'증언',icon:'scroll',title:'왕의 고백',body:'“…그래, 내가 허락했소. 왕위를 지키려고.”',src:'접견에서 들은 피고의 말 (사실 바탕, 대사는 상상)',trust:3,note:'의뢰인이 처음엔 숨긴 말이에요.'},
   {id:'G4',reuse:true,type:'사료',icon:'map',title:'두 나라 사이',body:'1619년 명나라가 후금을 치려고 조선에 군사를 요구했다. 조선은 1만 명이 넘는 군사를 보냈다. 북쪽에서는 후금이 빠르게 강해지고 있었다.',src:'「광해군일기」 · 「책중일록」을 바탕으로 정리',trust:3,note:'두 큰 나라 사이에 낀 조선의 처지예요.'},
   {id:'G5',reuse:true,type:'증언',icon:'scroll',title:'장수의 편지',body:'“강홍립 장군이 떠나기 전, 왕께 무언가를 따로 받았다던데…”',src:'압록강 진영 군졸의 이야기 (상상)',trust:2,note:'장군이 왕께 받은 것은 무엇이었을까요?'},
-  {id:'G6',type:'증언',icon:'scroll',title:'형세를 보아라',body:'“왕께서 떠나기 전에 말씀하셨소. ‘형세를 보아 움직이라’고.”',src:'3일차 법정, 강홍립의 숨은 말 (기록과 해석 바탕)',trust:3,note:'전쟁을 피하려던 왕의 뜻이에요. 학자들 사이에 해석이 엇갈려요.'},
+  {id:'G6',type:'증언',icon:'scroll',tag:'disputed',title:'형세를 보아라',body:'“왕께서 떠나기 전에 말씀하셨소. ‘형세를 보아 움직이라’고.”',src:'3일차 법정, 강홍립의 숨은 말 (기록과 해석 바탕)',trust:3,note:'전쟁을 피하려던 왕의 뜻이에요. 학자들 사이에 해석이 엇갈려요.'},
   {id:'G7',reuse:true,type:'사료',icon:'scroll',title:'일기를 쓴 사람들',body:'「광해군일기」는 광해군을 쫓아낸 인조 때 쓰였다. 원고에는 붉은 먹으로 지우고 고친 자리가 많이 남아 있다.',src:'「광해군일기」 중초본·정초본',trust:3,note:'기록을 쓴 사람이 누구인지 보세요.'},
   {id:'G8',type:'증언',icon:'scroll',title:'쌀로 내는 세금',body:'1608년 경기도에서 대동법을 시작해, 지방 특산물로 내던 공물을 쌀로 내게 했다. 땅이 적은 농민의 부담이 줄었다.',src:'4일차 법정, 농부의 증언 · 사료 바탕',trust:3,note:'참작할 만한 일이에요.'},
   {id:'G9',type:'사료',icon:'scroll',title:'「동의보감」',body:'1613년 허준이 엮은 의학책 「동의보감」을 펴냈다.',src:'실록 편찬청 사관의 방',trust:3,note:'혐의와는 다르지만, 참작할 사정이 될 수 있어요.'},
   {id:'G10',type:'사료',icon:'scroll',title:'앞장선 신하들',body:'이이첨 등 신하들이 대비를 몰아내자고 여러 차례 앞장섰다. 영창대군을 맡았던 강화부사도 기록에 남아 있다.',src:'「광해군일기」를 바탕으로 정리',trust:3,note:'신하들에게도 책임이 있었어요. 그렇다면 왕은?'},
-  {id:'GF',type:'문서',icon:'scroll',fake:true,title:'끼워 넣은 종이',body:'“광해군이 오랑캐에게 조선을 바치려 했다.” 원고 더미 사이에 끼워져 있던 종이 한 장.',src:'실록 편찬청 원고 더미',trust:1,note:'다른 원고와 같은 종이일까요?',
-   zoom:{say:['종이를 크게 확대해 보았다.','귀퉁이에 [[매화 모양 먹 얼룩]]. 그리고 다른 원고는 거친 종이인데, 이 종이만 결이 매끈하다.','붉은 먹으로 고친 자국도 없다. 원고 더미에 [[나중에 끼워 넣은]] 종이 같다.'],plum:true,note:'매화 얼룩, 원고와 다른 매끈한 종이. 나중에 끼워 넣었다.'}},
+  {id:'GF',type:'문서',icon:'scroll',fake:true,y:1619,title:'끼워 넣은 종이',body:'“1619년 3월, 광해군이 [[청나라]]에 조선을 바치려 했다.” 원고 더미 사이에 끼워져 있던 종이 한 장.',src:'실록 편찬청 원고 더미',trust:1,note:'다른 원고와 같은 종이일까요? 나라 이름도 보세요.',
+   zoom:{say:['종이를 크게 확대해 보았다.','귀퉁이에 [[매화 모양 먹 얼룩]]. 그리고 다른 원고는 거친 종이인데, 이 종이만 결이 매끈하다.','1619년이라 적혔는데 [[‘청나라’]]라고 쓴다. 그때 북쪽 나라의 이름은 아직 [[후금]]이었고, ‘청’은 1636년부터인데…'],plum:true,note:'매화 얼룩, 원고와 다른 매끈한 종이. 1619년 종이에 1636년부터 쓴 나라 이름 ‘청나라’.'}},
   {id:'GD1',type:'물건',icon:'censer',title:'명나라 비단',body:'명나라에서 들어온 비단 한 필.',src:'실록 편찬청',trust:3,note:'쟁점과 이어질까요?'},
   {id:'GD2',type:'물건',icon:'army',title:'후금의 화살',body:'후금 군사가 쓰던 화살.',src:'압록강 진영',trust:3,note:'후금이 강했다는 것은 다들 알아요.'},
   {id:'GD3',type:'물건',icon:'censer',title:'빈 옥새 상자',body:'옥새를 넣어 두던 빈 상자.',src:'경운궁 마당',trust:2,note:'무엇을 말해 줄까요?'}
 ];
+Object.entries({G1:1618,G2:1615,G3:1618,G4:1619,G5:1619,G6:1619,G7:1633,G8:1608,G9:1613,G10:1613}).forEach(([k,y])=>{ const e=EVIDENCE6.find(x=>x.id===k); if(e) e.y=y; });
+EVIDENCE6.find(x=>x.id==='G5').tag='hearsay'; EVIDENCE6.find(x=>x.id==='G3').tag='imagined';
 const LOCS6=[
   {id:'exile',name:'유배지 접견실',time:'아침',kind:'meet',intro:'광해군을 만나는 방이다. 의뢰인은 지쳐 보인다.',miss:['…'],spots:[],
    npcs:[{who:'gwanghae',expr:'base',place:{x:52,h:74,b:0},topics:[
@@ -57,18 +60,18 @@ const LOCS6=[
    miss:['얼어붙은 땅이다.','천막 줄이다.','아무것도 없다.'],
    spots:[{x:56,y:20,w:28,h:34,label:'장수의 천막에 걸린 지도',ev:'G4',say:['천막 안에 지도가 걸려 있다.','서쪽에는 명, 북쪽에는 새로 세진 후금. 조선은 명의 요구로 [[1만 명이 넘는 군사]]를 보냈다.']},{x:8,y:66,w:16,h:18,label:'꽂힌 화살',ev:'GD2',say:['땅에 후금의 화살이 꽂혀 있다.','후금이 강하다는 건 누구나 안다.']},{x:84,y:70,w:14,h:16,label:'모닥불 자리',say:['꺼진 모닥불이다.']}],
    npcs:[{who:'soldier6',expr:'base',place:{x:38,h:58,b:2},topics:[
-     {id:'sd-hi',t:'싸움은 어땠나요?',lines:[['soldier6','base','명나라 장수들은 서둘렀고, 후금은 빨랐소.']]},
+     {id:'sd-hi',t:'싸움은 어땠나요?',lines:[['soldier6','base','이건 [[비밀]]인데요! (진영이 다 들리는 목소리로) 명나라 장수들은 서둘렀고, 후금은 빨랐어요!'],['ME','think','(…비밀이 아닌 것 같은데.)']]},
      {id:'sd-letter',t:'장수의 편지',lock:'G4',must:true,lockSay:'(군졸은 강 건너만 본다. 그때의 형편을 보여 주면 무언가 떠올릴지도 모른다.)',
-      lines:[['soldier6','base','그 지도… 떠나기 전 생각이 나는구려.'],['soldier6','base','강홍립 장군이 떠나기 전 [[왕께 무언가를 따로 받았다]]던데. 편지였는지 말이었는지는 모르오.'],['ME','think','(왕이 장군에게 따로 준 것… 법정에서 물어봐야 해.)']],gives:['G5']}],
+      lines:[['soldier6','base','그 지도… 떠나기 전 생각이 나요.'],['soldier6','base','이건 비밀인데요! 강홍립 장군님이 떠나기 전 [[왕께 무언가를 따로 받았다]]던데요. 편지였는지 말이었는지는 저도 몰라요.'],['ME','think','(왕이 장군에게 따로 준 것… 법정에서 물어봐야 해.)']],gives:['G5']}],
     present:{G4:{lines:[['soldier6','base','그때 우리 처지가 딱 그랬소.']],unlock:'sd-letter'}},def:[['soldier6','base','모르는 물건이오.']]}]},
   {id:'sillok',name:'실록 편찬청',time:'밤',from:3,rooms:[
     {id:'sl-room',name:'사관의 방',intro:'「광해군일기」를 엮는 사관의 방이다.',miss:['책상이다.','먹 냄새가 난다.','아무것도 없다.'],
      spots:[{x:60,y:20,w:24,h:36,label:'책장의 의학책',ev:'G9',say:['책장에 두꺼운 의학책이 꽂혀 있다.','1613년 펴낸 [[「동의보감」]]이다. 광해군 때 나온 책이다.']},{x:10,y:60,w:22,h:22,label:'벼루',say:['먹이 말라 있다.']}],
      npcs:[{who:'sagwan',expr:'base',place:{x:40,h:62,b:2},topics:[
       {id:'sg-hi',t:'무엇을 쓰시나요?',lines:[['sagwan','base','지난 임금의 일기요. 날마다 있었던 일을 적지.']]},
-      {id:'sg-mark',t:'고친 자국',lock:'G7',must:true,lockSay:'(사관은 붓만 놀린다. 이 일기를 누가 썼는지에 대한 기록을 보여 주면 대답할지도 모른다.)',
-       lines:[['sagwan','base','원고마다 [[붉은 먹으로 지우고 고친]] 자리가 많소.'],['sagwan','base','…지금 임금께서 지난 임금을 쫓아내셨으니, 쓰는 손도 조심스러울 수밖에.'],['ME','think','(기록을 쓴 사람이 피고를 쫓아낸 쪽이라면…)']]}],
-      present:{G7:{lines:[['sagwan','sweat','그, 그 이야기를 어디서…']],unlock:'sg-mark'}},def:[['sagwan','base','글이 아니면 모르오.']]}]},
+      {id:'sg-mark',t:'고친 자국',lock:'G5',must:true,lockSay:'(사관은 붓만 놀린다. 어제 압록강 진영에서 들은 이야기를 꺼내 보면 대답할지도 모른다.)',
+       lines:[['sagwan','sweat','장수가 떠나기 전 왕께 따로 받은 것… 그 대목 말이오?'],['sagwan','base','원고에는 그 대목이 있었소. 그런데 [[붉은 먹으로 지우고 고친]] 자리가 많소.'],['sagwan','base','…지금 임금께서 지난 임금을 쫓아내셨으니, 쓰는 손도 조심스러울 수밖에.'],['ME','think','(기록을 쓴 사람이 피고를 쫓아낸 쪽이라면… 원고 더미도 살펴봐야겠어.)']]}],
+      present:{G5:{lines:[['sagwan','sweat','그, 그 이야기를 어디서 들었소…?']],unlock:'sg-mark'},G7:{lines:[['sagwan','base','그 원고를 보았구려. 고친 자국이 많지.']]}},def:[['sagwan','base','글이 아니면 모르오.']]}]},
     {id:'sl-pile',name:'원고를 쌓은 곳',intro:'원고가 산처럼 쌓여 있다.',miss:['종이 더미다.','아무것도 없다.','먼지다.'],
      spots:[{x:20,y:24,w:30,h:40,label:'붉은 먹이 묻은 원고',ev:'G7',say:['붉은 먹으로 줄을 긋고 고친 원고다.','이 일기는 [[광해군을 쫓아낸 인조 때]] 쓰였다. 고친 자리가 많다.']},
       {x:62,y:56,w:16,h:16,label:'더미 사이의 종이',ev:'GF',say:['원고 더미 사이에 종이 한 장이 삐죽 나와 있다.','“광해군이 오랑캐에게 [[조선을 바치려 했다]].” …다른 원고와 느낌이 다르다.']}]},
@@ -162,14 +165,45 @@ async function d1_6(){
   await gavel(); await titleCard('― 1일차 끝 ―','의뢰인의 말은 진실인가');
   return true;
 }
+async function boySecrets(){
+  await say('player','confident','그 군대에 있던 증인을 하나 더 부를게요. 압록강 진영의 [[소년병]]입니다.');
+  bgm('testimony'); Music.sting('murmur');
+  await say('soldier6','base','열여섯 살 소년병이에요! 이건 [[비밀]]인데요…! (법정이 다 들리는 목소리로)');
+  await say('judge','stern','증인, [[조용히]] 말하시오.');
+  await say('guide','normal','(소년병이 증언대를 넘어와 해치의 귀에 대고 속삭였다. “비! 밀! 인! 데! 요!”)'); Music.sting('ding'); shake('quake');
+  await say('guide','normal','(해치가 깜짝 놀라 고개를 흔들자, 목에 단 [[방울]]이 떨어져 데굴데굴 굴러갔다.)');
+  Music.sting('clap'); await say('clapper','base','오오! 짝짝짝짝!',{view:'witness'});
+  await say('judge','stern','방청석, 박수 칠 때가 아…  (방울을 흔들려다 손이 허공을 젓는다) …쉿.');
+  await say('ttolbang','joy','재판장님 방울 찾았어요! …어? 방울 안에서 [[메밀묵 조각]]이 나와요. 언제 들어갔지?');
+  await say('judge','stern','……이번 달 메밀묵은 나중에 따지겠소. 증인, 그 비밀들을 하나씩 말하시오. 판단은 재판부가 하오.');
+  await say('rival','think','(비밀이라고 한 말 가운데 [[직접 본 것]]과 [[들은 소문]]을 갈라내야 해.)');
+  const SEC=[
+    {t:'강홍립 장군님이 떠나기 전날 밤, 왕께 따로 불려 가는 걸 제가 봤어요!',a:'saw',why:'증인이 그 자리에서 직접 본 일이에요.'},
+    {t:'장군님이 오랑캐 왕이랑 형님 아우 하기로 했대요!',a:'heard',why:'“했대요” — 누군가에게 들은 소문이에요.'},
+    {t:'우리 군사가 1만 명도 넘게 강을 건넜어요. 저도 그중 하나였고요!',a:'saw',why:'증인이 직접 겪은 일이에요.'},
+    {t:'왕이 처음부터 싸울 생각이 없었대요!',a:'heard',why:'“없었대요” — 왕의 속마음을 들은 말이에요. 직접 볼 수 없는 일이죠.'}];
+  let right=0;
+  for(const x of SEC){
+    await say('soldier6','base',`이건 비밀인데요! ${x.t}`,{tag:'소년병의 비밀'});
+    for(let k=0;;k++){
+      const c=await choiceSheet(`“${x.t}” — 이 말은?`,[{t:'직접 본 것',ok:x.a==='saw',k:'saw'},{t:'전해 들은 말 (소문)',ok:x.a==='heard',k:'heard'}]);
+      track('secret',{t:x.t.slice(0,30),pick:c.k,ok:c.ok});
+      if(c.ok){ if(k===0) right++; await say('judge','normal',x.why); break; }
+      await say('judge','normal','다시 보시오. 그 말을 한 사람이 [[그 자리에 있었는지]] 생각해 보시오.');
+    }
+  }
+  S.flags.secrets=right;
+  await say('judge','normal','본 것은 증언으로 듣고, 들은 소문은 소문으로 두겠소. 증인, 수고했소.');
+  await say('soldier6','base','이건 비밀인데요… 저 오늘 엄청 떨었어요!');
+}
 async function d2_6(){
   await courtOpen(2);
-  await say('judge','normal','판결에 앞서 피해를 입은 사람의 말을 듣겠소. [[인목대비]]이오.');
+  await say('judge','normal','판결에 앞서 피해를 입은 사람의 말을 듣겠소. 인목대비는 증인석에 서지 않고 [[편지]]를 보냈소. 검사가 읽으시오.');
   await playShadow('emptyroom');
   bgm('testimony');
-  await say('inmok','base','…나는 아들을 잃었소.',{tag:'피해자 진술'});
-  await say('inmok','base','어린 아들이 귀양 간 곳에서 목숨을 잃었다는 소식을, 갇힌 방에서 들었소.',{tag:'피해자 진술'});
-  await say('inmok','base','그 뒤로 나는 그 문 안에서 다섯 해를 지냈소.',{tag:'피해자 진술'});
+  await say('player','normal','“나는 아들을 잃었소.”',{tag:'인목대비의 편지 · 하람이 읽음'});
+  await say('player','normal','“어린 아들이 귀양 간 곳에서 목숨을 잃었다는 소식을, 갇힌 방에서 들었소. 그 뒤로 나는 그 문 안에서 다섯 해를 지냈소.”',{tag:'인목대비의 편지 · 하람이 읽음'});
+  await say('inmok','base','…그 문이 닫히던 소리를, 나는 아직도 듣소.',{tag:'편지 끝 한 줄 · 대비의 목소리'});
   const c=await choiceSheet('변호인은 어떻게 할까요?',[{t:'의뢰인 대신 사과의 말을 전한다.',ok:true,tag:'apology'},{t:'아무 말 없이 듣는다.',ok:true,tag:'silent'}]);
   S.flags.apology=c.tag==='apology'; track('apology',{v:c.tag});
   if(S.flags.apology) await say('rival','normal','…피고를 대신해, 깊이 사과드립니다. 변호인은 이 일을 다투지 않겠습니다.');
@@ -193,6 +227,8 @@ async function d2_6(){
   await say('judge','normal','이제 혐의 ②. 검사, 논고를 하시오.');
   await say('player','stand','좋아요.',{view:'witness'});
   if(!await testimony(T6ha(),'광해군은 오랑캐와 내통했다')) return false;
+  /* 빵 장면 ⑥ 「귓속말 대참사」: 비밀 넷 가운데 둘은 직접 본 것, 둘은 들은 소문 (무거운 장면과 떨어진 곳에 둠) */
+  await boySecrets();
   await say('player','confident','내일, 오랑캐에게 항복한 장수 [[강홍립]]을 부르겠습니다. 그가 직접 내통을 증언할 거예요.');
   await gavel(); await titleCard('― 2일차 끝 ―','항복한 장수');
   return true;
@@ -210,7 +246,11 @@ async function d3_6(){
     {t:'명을 도우러 군사를 보낸 것도 사실이고, 형세를 보아 전쟁을 피하려 한 것도 사실이다. 나라를 지키려는 외교를 ‘몰래 통했다’고 할 수는 없다.',ok:true},
     {t:'명은 나쁜 나라였으니 배신해도 된다.',ok:false,fb:'나라를 좋다·나쁘다로 나누는 것은 의견이오. 증거로 따지시오.'},
     {t:'후금이 이길 것을 알았으니 후금 편이 옳았다.',ok:false,fb:'결과를 알고 하는 말이오. 그때의 형편으로 따지시오.'}])) return false;
-  if(!await presentFor('그 답의 근거를 고르세요.',['G4','G6'],{allowUsed:true})) return false;
+  { const id=await presentFor('그 답의 근거를 고르세요.',['G4','G6'],{allowUsed:true}); if(!id) return false;
+    if(id==='G6'){ track('disputed_alone',{ev:'G6'}); await shout('objection'); await say('player','confident','이의 있습니다! ‘형세를 보아라’는 [[학자들 사이에 논쟁이 있는]] 기록이에요!',{action:true});
+      await say('judge','normal','그렇소. 논쟁 있는 기록은 [[혼자서는]] 근거가 되지 못하오. 다른 근거와 함께라면 받아들이겠소.');
+      if(!await presentFor('함께 낼 다른 근거를 고르세요.',['G4'],{allowUsed:true,say:()=>'‘두 나라 사이’입니다. 명은 군사를 요구하고 후금은 강해지던 때였어요. 위험을 알고 [[전쟁을 피하려 한]] 외교였습니다.'})) return false;
+      await say('judge','normal','두 근거를 함께 받아들이겠소.'); } }
   // 가짜 종이
   bgm('crisis');
   await say('player','confident','그럼 이건 어때요? 실록 편찬청의 원고 사이에서 나온 종이예요!');
@@ -245,16 +285,19 @@ async function d4_6(){
   else await say('gwanghae','base','변호인은 처음부터 나를 다그쳤지. …하지만 그 말이 맞았소.');
   await say('gwanghae','sweat','나는 나라를 전쟁에서 지키려 했소. 그리고… 왕위를 지키려 어머니를 가두었소.');
   if(S.flags.apology) await say('gwanghae','sweat','변호인이 대비께 사과를 전했다 들었소. …그 말은, 내가 했어야 했소.');
-  await say('judge','normal','변호인, 혐의마다 판결의 이유와 근거를 대시오.');
+  await say('judge','normal','변호인, 혐의마다 판결의 종류와 이유, 근거를 대시오.');
+  if(!await verdictKind('혐의 ① 어머니를 가두고 어린 동생이 목숨을 잃게 한 죄','guilty',{q:'왕이 허락해 어머니를 가두었어요. 사람에게 직접 해를 끼친 일이에요. 변호인도 이 판결은 막을 수 없어요.',idx:0})) return false;
   if(!await reasonEv('혐의 ①을 유죄로 보는 가장 알맞은 이유는?',[
     {t:'신하들이 앞장섰어도, 왕이 대비를 가두는 데 허락했고 그렇게 털어놓았다.',ok:true,ev:['G1','G3']},
     {t:'「광해군일기」는 반대편이 썼으니 혐의 ①도 믿을 수 없다. 무죄다.',ok:false,fb:'기록의 편향은 다른 증거로 확인된 사실을 지우지 못하오.'},
     {t:'이이첨이 앞장섰으니 이이첨만 유죄다.',ok:false,fb:'이 재판의 피고는 광해군이오. 허락한 책임은 남소.'}])) return false;
+  if(!await verdictKind('혐의 ② 명을 저버리고 후금과 몰래 통한 죄','innocent',{q:'두 나라 사이에서 위험을 알고 전쟁을 피하려 한 외교였어요. 원칙 카드로 판결해 보세요.',idx:1,fb:{resp:'위험을 알고 [[전쟁을 피했소]]. 경고를 무시해 백성이 고통받은 것이 아니니 책임을 물을 일이 아니오.',guilty:'외교 판단은 처음부터 죄로 볼 수 없소. 원칙 카드를 보시오.'}})) return false;
   if(!await reasonEv('혐의 ②가 무죄인 가장 알맞은 이유는?',[
-    {t:'명에 군사를 보내면서도 형세를 보아 전쟁을 피하려 한 외교였고, 몰래 통했다는 증거는 끼워 넣은 가짜 종이뿐이다.',ok:true,ev:['G6','G4']},
+    {t:'명에 군사를 보내면서도 위험을 알고 전쟁을 피하려 한 외교였다. 외교 판단은 처음부터 죄가 아니고, 몰래 통했다는 증거는 끼워 넣은 가짜 종이뿐이다.',ok:true,ev:['G4'],soft:{G6:[['player','confident','이의 있습니다! ‘형세를 보아라’는 학자들 사이에 [[논쟁이 있는]] 기록이에요!'],['judge','normal','논쟁 있는 기록은 혼자서는 판결의 근거가 되지 못하오. [[다른 근거]]와 함께 내시오. (방울은 깨지 않겠소.)']]}},
     {t:'명은 은혜를 갚을 필요가 없는 나라였다.',ok:false,fb:'그것은 의견이오.'},
     {t:'강홍립이 혼자 항복했으니 왕과는 관계가 없다.',ok:false,fb:'강홍립은 왕의 말을 증언했소. 증언을 다시 보시오.'}])) return false;
-  if(!await reasonEv('혐의 ③을 유죄로 보는 가장 알맞은 이유는?',[
+  if(!await verdictKind('혐의 ③ 무리한 궁궐 공사로 백성을 괴롭힌 죄','resp',{q:'궁궐 공사는 나라의 정책 판단이었지만, 전쟁 직후 백성의 고통이 컸어요. 어떻게 판결할까요?',idx:2,fb:{guilty:'궁궐 공사는 사람에게 직접 해를 끼친 행위가 아니라 [[정책 판단]]이었소. 그러나 그 결과는 무겁소.'}})) return false;
+  if(!await reasonEv('혐의 ③을 ‘책임 있음’으로 보는 가장 알맞은 이유는?',[
     {t:'전쟁이 끝난 지 얼마 안 된 때 세 궁궐을 짓고 고쳐 백성의 부담을 크게 했다.',ok:true,ev:['G2']},
     {t:'공사로 하루에 백 명씩 죽었다.',ok:false,fb:'그 숫자는 부풀린 말이었소.'},
     {t:'궁궐은 왕의 위엄이니 괜찮다.',ok:false,fb:'그것은 의견이오. 백성의 부담은 기록에 있소.'}])) return false;
@@ -262,12 +305,12 @@ async function d4_6(){
   bgm('verdict'); await gavel();
   await say('judge','normal','판결을 내리겠소.');
   chargeSt(0,'guilty'); await say('judge','stern','혐의 ①. 어머니를 가두고 어린 동생이 목숨을 잃게 한 일에 피고의 허락이 있었소. [[유죄]].');
-  chargeSt(1,'innocent'); await say('judge','normal','혐의 ②. 형세를 보아 전쟁을 피하려 한 외교를 ‘몰래 통했다’고 할 수 없소. [[무죄]].');
-  chargeSt(2,'guilty'); await say('judge','stern','혐의 ③. 전쟁 뒤 무리한 궁궐 공사로 백성의 부담을 키웠소. [[유죄]]. 대동법과 「동의보감」은 참작하오.');
+  chargeSt(1,'innocent'); await say('judge','normal','혐의 ②. 위험을 알고 전쟁을 피했소. 그런 외교를 ‘몰래 통했다’고 할 수 없소. [[무죄]].');
+  chargeSt(2,'resp'); await say('judge','stern','혐의 ③. 전쟁 뒤 무리한 궁궐 공사로 백성의 부담을 키웠소. [[책임 있음]]. 대동법과 「동의보감」은 참작하되, 그 무게는 역사에 기록하오.');
   await say('judge','normal','두 얼굴이라 했소. 그러나 [[한 사람]]이오. 나라를 전쟁에서 지키려 한 왕도, 어머니를 가둔 아들도 모두 광해군이오.');
   const pts=(S.flags.d1==='admit'?1:0)+(S.flags.apology?1:0)+(S.plums&&S.plums.has('GF')?1:0)+(S.trust>=3?1:0);
   caseResult({grade:pts>=4?'공정한 변호인':pts>=2?'노련한 변호인':'견습 변호인',lead:'의뢰인의 잘못은 인정하면서, 다시 평가받아야 할 외교를 증거로 지켰습니다.',
-    items:[`1일차 혐의 ①: ${S.flags.d1==='admit'?'처음부터 인정':'일단 다툼'}`,`인목대비에게: ${S.flags.apology?'사과의 말을 전함':'침묵'}`,`버릇 살피기를 쓴 횟수: ${S.observes||0}번`,`끼워 넣은 종이: ${S.plums&&S.plums.has('GF')?'매화 얼룩을 찾음':'—'}`],
+    items:[`1일차 혐의 ①: ${S.flags.d1==='admit'?'처음부터 인정':'일단 다툼'}`,`소년병의 비밀 가르기: 처음에 맞힌 것 ${S.flags.secrets||0}/4`,`인목대비에게: ${S.flags.apology?'사과의 말을 전함':'침묵'}`,`버릇 살피기를 쓴 횟수: ${S.observes||0}번`,`끼워 넣은 종이: ${S.plums&&S.plums.has('GF')?'매화 얼룩을 찾음':'—'}`],
     judge:'의뢰인의 잘못을 지우지 않고, 다시 볼 것만 다시 본 변호인이오.',history:HIST6});
   return true;
 }
@@ -277,5 +320,19 @@ regCase(6,{title:'두 얼굴의 왕',desc:'광해군 · 변호인 · 난이도 5
   locked:{pros:'변호인 사건',judge:'변호인 사건'},
   openLine:'지금부터 [[역사 법정]]을 엽니다. 피고는 쫓겨난 왕, 광해군.',history:HIST6,
   views:{prologue6:prologueView('#2a2620','#0c0a08')},
-  gojeung:['영창대군 사망(1614)과 인목대비 서궁 유폐(1618) 경위','1619년 사르후 전투 출병 규모(1만 명 이상)와 강홍립의 항복','‘형세를 보아 움직이라’는 지시의 기록 여부와 해석(학계 논쟁)','「광해군일기」 편찬 시기와 중초본·정초본','대동법 경기도 시행(1608), 「동의보감」 간행(1613)','궁궐 공사의 범위(창덕궁 재건, 경덕궁·인경궁)','이이첨 등 대북 세력의 폐모론','목수의 버릇, 끼워 넣은 종이는 게임 속 상상'],
+  goal:{def:'쫓겨난 왕 광해군을 변호해요. 의뢰인의 잘못은 인정하고, 다시 볼 것만 증거로 다시 봐요.'},
+  recall:{q:'지난 사건에서 판사가 공소장 변경을 허가한 근거는 무엇이었나요?',opts:[{t:'천도를 정한 회의가 최씨 댁에서 열렸다는 기록',ok:true},{t:'최우가 무서워 보였다는 것'},{t:'고종이 왕이라는 것'}],yes:'잘 기억하고 있구려. 이번에는 다시 변호인 자리요. 의뢰인의 말도 증거로 맞대 보시오.',no:'…‘최씨 댁의 회의’라는 기록이었소. 이번에는 변호인 자리요. 의뢰인의 말도 증거로 맞대 보시오.'},
+  bgCards:{1:{ic:'🏯',t:'임진왜란이 끝나고 10년 뒤 광해군이 왕이 되었어요. 1618년 왕의 어머니 인목대비가 서궁에 갇혔어요.'},2:{ic:'🤸',t:'서쪽의 명과 북쪽의 후금 사이에서, 조선은 줄 위에 선 처지였어요.'},3:{ic:'📚',t:'광해군은 1623년 쫓겨났어요. 그의 시대를 적은 「광해군일기」는 쫓아낸 쪽이 엮었어요.'},4:{ic:'⚖️',t:'판결하는 날이에요. 다시 평가할 것과 그대로인 것을 나눠요.'}},
+  record:['전쟁이 끝난 지 얼마 안 되어 궁궐 공사에 불려 간 백성들','나무와 돌 값을 떠안은 고을 사람들'],
+  lesson:{opts:[{t:'잘한 일과 잘못한 일이 한 사람 안에 함께 있을 수 있다.',r:'그렇소. 두 얼굴이 아니라 한 사람이오.'},{t:'기록을 쓴 사람이 누구인지 함께 본다.',r:'그렇소. 다만 편향이 확인된 사실까지 지우지는 못하오.'},{t:'논쟁 있는 기록은 다른 근거와 함께 쓴다.',r:'그렇소. 혼자 선 기록은 흔들리기 쉽소.'}]},
+  paper:{id:'GF',anach:'청나라'},
+  teaser:'1636년 겨울, 남한산성. 모두가 ‘독살’이라 믿는 일이 있다. 그 믿음은 [[증명될까]]?',
+  gag:{scene:'소년병 「귓속말 대참사」',
+    inv:{1:[['ttolbang','bang','변호인님 출동! 증거 나와라, 뚝딱!'],['guide','normal','(메밀묵이 나왔다. …그런데 오늘따라 크다.)'],['ttolbang','joy','오늘은 왕족용 메밀묵인가 봐요!']],
+      2:[['ttolbang','base','압록강 진영에 소년병이 있대요. 무슨 말이든 “이건 비밀인데요!” 하고 크게 말한대요.']],
+      3:[['ttolbang','base','실록 편찬청은 조용히 해야 해요. 붉은 먹이 묻은 원고가 많대요. 저는 먹물만 보면 재채기가… 에취!']]},
+    fix:{2:{say:'어제 법정 요약! 목수 아저씨 말로는 궁궐 공사로 [[하루에 백 명씩]] 죽었대요!',opts:[{t:'아니야. 부담이 컸던 건 사실이지만, 그 숫자는 부풀린 말이었어.',ok:true},{t:'맞아. 하루에 백 명씩 죽었어.'}]},
+      3:{say:'어제 법정 요약! 조선은 명을 돕는 척만 하고 [[군사를 한 명도]] 안 보냈대요!',opts:[{t:'아니야. 명의 요구로 1만 명이 넘는 군사를 보냈어.',ok:true},{t:'맞아. 한 명도 안 보냈어.'}]}},
+    pun:[['judge','normal','두 나라 사이 줄타기라… 오늘 재판도 [[줄줄이]] 이어지겠구려.'],['ttolbang','joy','줄타기, 줄줄이! 하하하!'],['guide','normal','(누리가 한숨을 쉬었다.)']],punDay:3},
+  gojeung:['영창대군 사망(1614)과 인목대비 서궁 유폐(1618) 경위','1619년 사르후 전투 출병 규모(1만 명 이상)와 강홍립의 항복','‘형세를 보아 움직이라’는 지시의 기록 여부와 해석(학계 논쟁)','「광해군일기」 편찬 시기와 중초본·정초본','대동법 경기도 시행(1608), 「동의보감」 간행(1613)','궁궐 공사의 범위(창덕궁 재건, 경덕궁·인경궁)','이이첨 등 대북 세력의 폐모론','목수의 버릇, 끼워 넣은 종이, 소년병은 게임 속 상상','‘청’이라는 나라 이름이 쓰인 때(1636) — 끼워 넣은 종이의 시대 안 맞는 말'],
   roles:{def:runDef6}});
