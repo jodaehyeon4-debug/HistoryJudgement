@@ -221,6 +221,7 @@ async function presentFor(lead,ids,o){
     if(ok){ if(!o.quiet){ showEvidence(id); await say(ME(),'present',o.say?o.say(EV_BY_ID[id]):`‘${EV_BY_ID[id].title}’입니다!`); hideEvidence(); } if(!o.noGain) await gainTrust(); return id; }
     const bad=EV_BY_ID[id]; miss++;
     if(bad&&bad.fake) await say('judge','stern','그 종이는 누가 썼는지 알 수 없소. 증거 수첩에서 [[확대해]] 보시오.');
+    else if(bad&&bad.trap) await say('judge','stern',bad.trap);
     else if(bad&&bad.trust===1&&!o.allowHearsay) await say('judge','stern','[[전해 들은 말]]은 근거가 약하오.');
     else await say('judge','stern',o.fb||'그 증거로는 보일 수 없소.');
     if(miss===2&&o.hint) await say('judge','normal',o.hint);

@@ -52,6 +52,7 @@ async function reasonEv(q,opts,prompt){
     const bad=EV_BY_ID[id];
     if(bad&&bad.fake&&S.zoomed&&S.zoomed.has(id)) await say('judge','stern','확대해 보고도 낸 그 종이에는 [[매화 얼룩]]이 있소. 누가 썼는지 알 수 없는 종이는 근거가 될 수 없소.');
     else if(bad&&bad.fake) await say('judge','stern','그 종이는 누가 썼는지 알 수 없소. [[근거에서 빼시오]].');
+    else if(bad&&bad.trap) await say('judge','stern',bad.trap);
     else if(bad&&bad.trust===1) await say('judge','stern','[[전해 들은 말]]은 근거가 약하오. 직접 본 사람의 말이나 기록으로 뒷받침하시오.');
     else await say('judge','stern','그 증거는 이 이유를 뒷받침하지 못하오.');
     await loseTrust(); if(S.trust<=0){ S.allowUsed=false; await loseTrial(); return false; }

@@ -46,6 +46,7 @@ async function solveCross(){
   if(target<0){ target=0; act='press'; }
   for(let i=0;i<10 && Y().CX && Y().CX.pos!==target;i++){ key(' '); await sleep(40); }
   const L=T.lines[vis[target]];
+  if(T.habit && !L.habitSeen && act==='present'){ key('s'); await sleep(60); await idle(); if(!L.habitSeen) log.push('observe did not mark line'); return; }
   if(act==='press'){ key('f'); await sleep(60); await idle(); return; }
   if(L.need2){ key('e'); await sleep(80); await pickEv(L.need2[0]); await idle(); await pickEv(L.need2[1]); await idle(); return; }
   const ev=[].concat(L.ev).find(id=>S.found.has(id)); key('e'); await sleep(80); await pickEv(ev); await idle();
@@ -57,6 +58,7 @@ async function run(start){
     if(!$('#invbar').hidden && Y().S.mode==='inv'){ log.push('inv day '+Y().S.phase+' places '+Y().availLocs().map(l=>l.id).join('+')); await solveInv(); continue; }
     if($('#pGo')){ days++; const im=$('[data-imp]'); if(im) im.click(); $('#pGo').click(); await sleep(80); continue; }
     if($('#sheetGo')){ $('#sheetGo').click(); await sleep(60); continue; }
+    if($('[data-act=zback]')){ $('[data-act=zback]').click(); await sleep(60); continue; }
     if(!$('#sheet').hidden){
       if($('#bJudge')){ d.querySelectorAll('.cl-row').forEach(r=>r.querySelector('.seg button').click()); $('#bJudge').click(); await sleep(60); continue; }
       const vb=[...d.querySelectorAll('#sheet button')].find(b=>/판결문/.test(b.textContent)); if(vb && !$('#vGo')){ vb.click(); await sleep(60); continue; }
