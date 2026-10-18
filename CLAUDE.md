@@ -21,7 +21,9 @@
 
 ## 고친 뒤 반드시 (Windows: `python`, Python·Node가 PATH에 없으면 `C:\Users\user\AppData\Local\Programs\Python\Python312\python.exe`, `C:\Program Files\nodejs\node.exe`)
 1. (`src` 폴더에서) 그림을 바꿨으면 `python make_assets.py` → `python build.py` → `python split_build.py`
-2. `node tests/solver.js c1`, `c2p`, `c2d`, `c3d`, `c3p` … 모두 `ERRORS: none`과 `RESULT`가 나와야 함 (jsdom은 저장소 맨 위 `npm install`로, 검사 때는 `window.__yjFast`로 연출을 건너뜀). 사건 3은 `c3d polite,reveal` `c3d sharp,hide` `c3p drop` `c3p keep` 네 갈래
+2. 자동 검사 20갈래가 모두 `ERRORS: none`과 `RESULT`가 나와야 함 (jsdom은 저장소 맨 위 `npm install`로, 검사 때는 `window.__yjFast`로 연출을 건너뜀. 막히면 `STUCK`과 상태를 출력):
+   `c1` `c2p` `c2d` · `c3d polite,reveal` `c3d sharp,hide` `c3p drop` `c3p keep` · `c4p` · `c5j switch` `c5j later` · `c6d admit,apology` `c6d fight,silent` · `c7p drop,both` `c7p keep,myeonggil` · `c8j` · `c9p` `c9d` `c9j held` · `c10p` `c10j`
+   그리고 `node tests/overlap.js` (단서 자리가 인물 그림에 가려지지 않았는지)
 3. `dist/index.html`을 저장소 맨 위 `index.html`로 복사해 커밋 (`assets/`는 `add_assets.py`가 이미 맨 위에 넣음)
 
 ## 지켜 온 원칙 (바꾸지 말 것)
@@ -50,10 +52,12 @@
 1. ~~하루 끝 요약 화면~~ (완료: 찾은 증거·깬 거짓·남은 방울·오늘 알게 된 것·피고 인상)
 2. ~~변호인 모드 '9/10'~~ (완료: 9/9)
 3. ~~교사용 화면: 학생별로 며칠째 어디서 막혔는지~~ (완료: 학습 데이터 표 + CSV)
-4. 판사 모드: 도구는 `cases.js`에 있음(주장 가르기·판결 저울·판단 보류). 사건 5에서 처음 씀
-5. 사건 4~10 (각 사건 문서와 「역사재판_사건4-10_종합검토」). 그림이 없는 인물은 코드 그림, 장소는 조사 물건을 스케치로 대신함
-6. 고증 확인 목록 정리 (사건마다 `regCase`의 `gojeung`, 교사용 화면에 나옴)
-7. 「역사재판_사건2_변호인모드_재설계」 반영 (문서를 아직 받지 못함)
+4. ~~판사 모드~~ (완료: 사건 5·8·9·10. 주장 가르기·판결 저울·판단 보류·피고 바꾸기)
+5. ~~사건 3~10~~ (완료, 자동 검사 통과). 사건 3 대사는 구현명세를 바탕으로 새로 씀(시나리오 초안 문서를 받지 못함)
+6. 그림이 오면 넣기: 사건 4 배경·증거, 경순왕·승려 / 사건 5~10 전부. 그림이 없는 인물은 코드 그림, 장소는 조사 물건을 스케치로 대신함. **새 배경이 오면 단서 자리(x,y,w,h)를 그림에 맞게 다시 잡을 것** (지금 좌표는 스케치용)
+7. 고증 확인 목록 정리 (사건마다 `regCase`의 `gojeung`, 교사용 화면에 나옴)
+8. 「역사재판_사건2_변호인모드_재설계」 반영 (문서를 아직 받지 못함)
+9. 사건 7의 판사 모드 선택 (문서에 ‘판사 모드 선택 가능’이라 적혀 있으나 지금은 검사만)
 
 ## 참고 문서
 「역사재판_기획초안_v0.2」, 「역사재판_사건후보_v2」, 「역사재판_시나리오_v3_날짜구성」, 「역사재판_사건2_시나리오_확정」, 「역사재판_자체점검_4일구성안」, 「역사재판_플레이테스트_개선기록」, 「역사재판_사건3_확정_구현명세」, 「역사재판_사건4~10」 각 문서, 「역사재판_사건4-10_종합검토」, 「역사재판_공통규칙_연출과데이터」, 「역사재판_역전재판1-6_분석_교차검증」, 「역사재판_그림제작목록」 (바탕화면 `assets/` 폴더)
