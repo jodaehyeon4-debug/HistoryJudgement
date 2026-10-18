@@ -13,20 +13,24 @@ async function idle(){ await sleep(10); for(let i=0;i<900;i++){ const sh=$('#sho
 const lensPos=()=>({x:parseFloat($('#lens').style.left),y:parseFloat($('#lens').style.top)});
 async function goTo(x,y){ for(let i=0;i<120;i++){ const p=lensPos(); if(Math.abs(p.x-x)<1.3&&Math.abs(p.y-y)<1.3) return; if(p.x<x-1.3) key('ArrowRight'); else if(p.x>x+1.3) key('ArrowLeft'); else if(p.y<y-1.3) key('ArrowDown'); else key('ArrowUp'); await sleep(3);} }
 const eff=p=>{ const S=Y().S; return (S.phase>=(S.p2at||2)&&p.p2)?Object.assign({},p,p.p2):p; };
-const avail=x=>{ const S=Y().S; return (!x.from||S.phase>=x.from)&&(!x.until||S.phase<=x.until)&&(!x.role||x.role===S.role); };
+const avail=x=>{ const S=Y().S; return (!x.from||S.phase>=x.from)&&(!x.until||S.phase<=x.until)&&(!x.role||x.role===S.role)&&(!x.cond||x.cond()); };
+/* 조사 중에 뜬 고르기 창(똘방의 요약 바로잡기 등)이나 안내 창을 닫는다 */
+async function settle(){ for(let i=0;i<30;i++){ await idle(); if($('#sheet').hidden) return; if($('#sheetGo')){ $('#sheetGo').click(); await sleep(60); continue; } if($('.choice')&&w.__yjOpts&&!$('[data-act=tend]')){ const O=w.__yjOpts; let k=O.findIndex(o=>o.ok&&o.tag&&PREF.includes(o.tag)); if(k<0) k=O.findIndex(o=>o.ok); const b=$(`.choice[data-i="${k}"]`); if(b){ b.click(); await sleep(60); continue; } } return; } }
 async function pickEv(id){ for(let i=0;i<80&&!( !$('#sheet').hidden && $(`button.ev[data-id="${id}"]`));i++) await sleep(25); const b=$(`button.ev[data-id="${id}"]`); if(!b) return false; b.click(); await sleep(15); $('[data-act=present]').click(); await sleep(40); return true; }
 async function solveInv(){
+  await settle();
   for(let pass=0;pass<5;pass++){
     const S=Y().S;
     for(const loc of Y().availLocs()){
       if(!Y().invParent||Y().invParent.id!==loc.id){ const lb=$(`[data-loc="${loc.id}"]`); if(!lb){ log.push('no loc btn '+loc.id); continue; } lb.click(); await sleep(700); await idle(); if(Y().invParent.id!==loc.id){ log.push('loc move failed '+loc.id+' busy='+Y().S.busy); } }
       for(const room of Y().roomsOf(loc)){
         if(Y().invLoc.id!==room.id){ if(room.need && !S.found.has(room.need)) continue; const rb=$(`[data-room="${room.id}"]`); if(!rb){ log.push('no room btn '+room.id+' at '+Y().invParent.id+'/'+Y().invLoc.id+' btns='+[...d.querySelectorAll('[data-room]')].map(b=>b.dataset.room)); continue; } rb.click(); await sleep(650); await idle(); }
-        for(const p0 of room.spots){ const p=eff(p0); if(p.only2 && S.phase<(S.p2at||2)) continue; const ids=(p.gives||[]).concat(p.ev?[p.ev]:[]); if(!ids.some(id=>!S.found.has(id))) continue; if(p.need && !S.found.has(p.need)) continue;
-          await goTo(p.x+p.w/2,p.y+p.h/2); const lp=lensPos(); key('Enter'); await sleep(60); await idle(); if(ids.some(id=>!S.found.has(id))) log.push('miss at '+p.label+' lens '+lp.x+','+lp.y+' busy='+S.busy+' adv='+(!$('#next').hidden)+' room='+Y().invLoc.id); }
+        await settle();
+        for(const p0 of room.spots){ const p=eff(p0); if(p.only2 && S.phase<(S.p2at||2)) continue; if(p.role && p.role!==S.role) continue; const ids=(p.gives||[]).concat(p.ev?[p.ev]:[]); if(!ids.some(id=>!S.found.has(id))) continue; if(p.need && !S.found.has(p.need)) continue;
+          await goTo(p.x+p.w/2,p.y+p.h/2); const lp=lensPos(); key('Enter'); await sleep(60); await idle(); await settle(); if(ids.some(id=>!S.found.has(id))) log.push('miss at '+p.label+' lens '+lp.x+','+lp.y+' busy='+S.busy+' adv='+(!$('#next').hidden)+' room='+Y().invLoc.id); }
         const np=Y().npcOf(room);
         if(np){ S.unlocked=S.unlocked||new Set(); S.talked=S.talked||new Set();
-          for(const t of np.topics){ if(!avail(t)) continue; if(t.lock && !S.unlocked.has(t.id)){ const ev=Object.keys(np.present||{}).find(k=>np.present[k].unlock===t.id && S.found.has(k)); if(ev){ key('p'); await sleep(120); await pickEv(ev); await idle(); log.push('showed '+ev+' to '+np.who); } } }
+          for(const t of np.topics){ if(!avail(t)) continue; if(t.lock && !S.unlocked.has(t.id)){ const ev=Object.keys(np.present||{}).find(k=>np.present[k].unlock===t.id && S.found.has(k)); if(ev){ const R=np.present[ev], list=(R.need||[ev]).filter(k=>S.found.has(k)); for(const e of list){ key('p'); await sleep(120); await pickEv(e); await idle(); await settle(); log.push('showed '+e+' to '+np.who); } } } }
           key('t'); await sleep(150);
           for(let i=0;i<np.topics.length;i++){ const t=np.topics[i]; if(!avail(t)||S.talked.has(t.id)|| (t.lock&&!S.unlocked.has(t.id))) continue; const b=$(`.choice[data-i="${i}"]`); if(!b) continue; b.click(); await sleep(80); await idle(); await sleep(120); }
           const te=$('[data-act=tend]'); if(te){ te.click(); await sleep(80); }

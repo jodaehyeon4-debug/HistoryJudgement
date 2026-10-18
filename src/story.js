@@ -5,11 +5,19 @@ EV_BY_ID.E13=EVIDENCE[EVIDENCE.length-1];
 EVIDENCE.push({id:'E14',type:'사료',title:'황산벌의 5천 결사대',body:'660년 계백 장군이 5천 결사대를 이끌고 황산벌에서 신라군과 네 번 싸워 모두 이겼으나, 끝내 패하고 전사하였다.',src:'「삼국사기」 열전 (계백)',trust:3,note:'같은 시대에 끝까지 싸운, 다른 선택이에요.',icon:'army'});
 EV_BY_ID.E14=EVIDENCE[EVIDENCE.length-1];
 EV_BY_ID.E3.reuse=true;
+EVIDENCE.push({id:'E15',type:'증언',tag:'hearsay',title:'전해 들은 말: 3천 궁녀',body:'말순 할머니: “궁녀 3천 명이 강으로 뛰어드는 걸 봤다니까! …아니, 옆집 개똥이 할아버지가 봤대. 그 할아버지의 사촌의 사돈이…”',src:'사비성 터 강가에서 들은 이야기 (상상)',trust:1,note:'직접 본 사람이 없는 이야기예요. 이런 카드를 ‘전해 들은 말’이라고 불러요.',icon:'scroll'});
+EV_BY_ID.E15=EVIDENCE[EVIDENCE.length-1];
+Object.entries({E1:642,E2:660,E3:656,E4:656,E5:643,E7:660,E8:660,E9:660,E10:656,E11:1145,E13:660,E14:660}).forEach(([k,y])=>{ if(EV_BY_ID[k]) EV_BY_ID[k].y=y; });
 Object.assign(PHASE_NAME,{1:'1일차 조사',2:'1일차 법정',3:'2일차 조사',4:'2일차 법정',5:'3일차 조사',6:'3일차 법정',7:'4일차 법정'});
 (function(){
   const L=id=>LOCS.find(l=>l.id===id);
   const ru=L('ruins'); const gate=ru.rooms.find(r=>r.id==='ruins'); const cliff=ru.rooms.find(r=>r.id==='ruins-cliff');
   cliff.from=2;
+  cliff.npcs=[{who:'malsun',expr:'base',place:{x:30,h:60,b:2},from:2,topics:[
+    {id:'ms-saw',t:'무엇을 보셨나요?',must:true,lines:[['malsun','base','내가 다 봤다니까! 궁녀 [[3천 명]]이 이 강으로 뛰어드는 걸!'],['ME','normal','직접 보셨어요?'],['malsun','base','그럼! …아니, 우리 옆집 개똥이 할아버지가 봤대.'],['ME','think','그 할아버지는 직접 보셨대요?'],['malsun','sweat','…그 할아버지의 사촌의, 사돈의, 옆집 사람이…'],['guide','normal','(말순 할머니의 손가락이 하늘에 가계도를 그린다. 한 칸, 또 한 칸… 끝이 없다.)'],['ttolbang','base','그럼 그 사돈을 증인으로 부를까요?'],['judge','normal','(어디선가 해치의 목소리) …그 사돈은 1,400년 전 사람이오. 딸랑.'],['ME','think','(본 사람은 아무도 없고, 들은 사람만 줄줄이 있네. 이런 건 [[전해 들은 말]]이야.)']],gives:['E15']},
+    {id:'ms-who',t:'할머니는 누구세요?',lines:[['malsun','base','이 근처에서 주막을 하는 말순이오. 소문이라면 내가 제일 빠르지!']]}],
+    present:{E7:{lines:[['malsun','base','낙화암! 거기서 3천 명이… 응? 기록에는 숫자가 없다고? 이상하네, 다들 그러던데.']]},MUK:{lines:[['malsun','base','어머, 메밀묵! 우리 주막에도 있는데. 한 그릇 두 냥이오.']]}},
+    def:[['malsun','base','그건 처음 보는 물건이네. 그런데 내가 들은 얘기로는…']]}];
   gate.npcs=[{who:'citizen',expr:'base',place:{x:47,h:60,b:2},topics:[
     {id:'c-night',t:'그날의 사비성',lines:[['citizen','base','그날 해 질 녘, 강 쪽에서 북소리가 들렸어요.'],['citizen','plea','성 안은 아수라장이었지요. 다들 어디로 가야 할지 몰랐어요.']]},
     {id:'c-cliff',t:'강가 절벽',lines:[['citizen','base','성 뒤 강가에 큰 바위가 있어요. 궁녀들이 거기서 몸을 던졌다는 이야기가 전해지지요.'],['citizen','base','그런데… 몇 명이었는지 똑똑히 아는 사람은 없어요.']]},
@@ -48,6 +56,8 @@ async function reasonEv(q,opts,prompt){
     if(!c.ok){ await say('judge','stern',c.fb||'그 이유로는 판결할 수 없소.'); await loseTrust(); if(S.trust<=0){ S.allowUsed=false; await loseTrial(); return false; } continue; }
     S.expect=c.ev; const id=await pickEvidence(prompt||'그 이유를 뒷받침하는 증거를 고르세요.'); S.expect=null;
     track('reason',{q:q,a:c.t,ev:id,ok:c.ev.includes(id)});
+    { const be=EV_BY_ID[id]; if(c.before!==undefined && be && typeof be.y==='number' && be.y>c.before && !c.ev.includes(id)){ track('time_order',{q:q,ev:id}); await say('judge','stern',`${yearTxt(be.y)}의 일이 ${yearTxt(c.before)}의 이유가 될 수는 없소. [[시간 순서]]를 보시오.`); await loseTrust(); if(S.trust<=0){ S.allowUsed=false; await loseTrial(); return false; } continue; } }
+    if(EV_BY_ID[id]&&EV_BY_ID[id].gag&&!c.ev.includes(id)){ await line([['judge','stern','…판결의 근거로 [[메밀묵]]을 내는 사람은 처음 보오.'],['ttolbang','shock','앗, 그거 제 거예요!']]); await loseTrust(); if(S.trust<=0){ S.allowUsed=false; await loseTrial(); return false; } continue; }
     if(c.ev.includes(id)){ showEvidence(id); await say(ME(),'present',`근거는 ‘${EV_BY_ID[id].title}’입니다.`); hideEvidence(); await say('judge','normal','이유와 근거가 맞소.'); await gainTrust(); S.allowUsed=false; return true; }
     const bad=EV_BY_ID[id];
     if(bad&&bad.fake&&S.zoomed&&S.zoomed.has(id)) await say('judge','stern','확대해 보고도 낸 그 종이에는 [[매화 얼룩]]이 있소. 누가 썼는지 알 수 없는 종이는 근거가 될 수 없소.');
@@ -62,14 +72,14 @@ async function reasonEv(q,opts,prompt){
 function dayStart(){ S.dayMark={found:new Set(S.found||[]),log:(S.log||[]).length,t:Date.now()}; }
 function dayPause(n,learned){
   const M=S.dayMark||{found:new Set(),log:0,t:Date.now()};
-  const newEv=[...(S.found||[])].filter(id=>!M.found.has(id)&&EV_BY_ID[id]);
+  const newEv=[...(S.found||[])].filter(id=>!M.found.has(id)&&realEv(id));
   const hits=(S.log||[]).slice(M.log).filter(x=>x.ok).length, wrongs=(S.log||[]).slice(M.log).filter(x=>!x.ok).length;
   const D=CASE_DATA[S.case], L=learned||(D&&D.learned&&D.learned[n])||null, who=(D&&D.defName)||(S.case===2?'위만':'의자왕');
   const mins=Math.max(1,Math.round((Date.now()-M.t)/60000));
   track('day_end',{day:n,newEv:newEv.length,hits:hits,wrongs:wrongs,trust:S.trust,mins:mins});
   return new Promise(res=>{
     openSheet(`<h2>${n}일차가 끝났습니다</h2>
-      <div class="stats day-sum"><div class="stat">오늘 찾은 증거<b>${newEv.length}개</b></div><div class="stat">깬 거짓<b>${hits}개</b></div><div class="stat">헛 제시<b>${wrongs}번</b></div><div class="stat">남은 해치 방울<b>${S.trust}/5</b></div></div>
+      <div class="stats day-sum"><div class="stat">오늘 찾은 증거<b>${newEv.length}개</b></div><div class="stat">깬 거짓<b>${hits}개</b></div><div class="stat">헛 제시<b>${wrongs}번</b></div><div class="stat">남은 해치 방울<b>${S.storyMode?'—':S.trust+'/'+bellsMax()}</b></div></div>
       ${newEv.length?`<p class="day-ev">${newEv.map(id=>`<span class="chip">${esc(EV_BY_ID[id].title)}</span>`).join(' ')}</p>`:''}
       ${L?`<h3>오늘 알게 된 것</h3><ol class="learned">${L.map(x=>`<li>${esc(x)}</li>`).join('')}</ol>`:''}
       <h3>지금 ${esc(who)}에 대한 내 생각은?</h3>
@@ -86,7 +96,7 @@ function dayPause(n,learned){
 /* ===== 사건 1 본편: 프롤로그 → 의뢰 → 조사 1 → 1일차 → 조사 2 → 2일차 → 판결 → 결말 ===== */
 function hasSave(){ try{ const v=JSON.parse(store.get(SAVE_KEY)||'null'); return v&&v.phase?v:null; }catch(e){ return null; } }
 function saveAt(phase){
-  store.set(SAVE_KEY,JSON.stringify({phase:phase,found:[...(S.found||[])],seen:[...(S.seen||[])],trust:S.trust,variant:S.variant,misses:S.misses||0,presses:S.presses||0,log:S.log||[],used:[...(S.used||[])],talked:[...(S.talked||[])],unlocked:[...(S.unlocked||[])],when:Date.now()}));
+  store.set(SAVE_KEY,JSON.stringify({phase:phase,found:[...(S.found||[])],seen:[...(S.seen||[])],trust:S.trust,variant:S.variant,misses:S.misses||0,presses:S.presses||0,log:S.log||[],used:[...(S.used||[])],talked:[...(S.talked||[])],unlocked:[...(S.unlocked||[])],flags:S.flags||{},verdicts:S.verdicts||[],when:Date.now()}));
 }
 function clearSave(){ try{ localStorage.removeItem(SAVE_KEY); }catch(e){} }
 
@@ -94,17 +104,21 @@ function prepStory(){
   { const sub=document.querySelector('.brand span'); if(sub && (S.case||1)===1) sub.textContent='사건 1 「백제는 왜 무너졌나」'; }
   S.p2at=3; S.talked=new Set(); S.unlocked=new Set(); S.hist=[]; S.allowUsed=false; S.expect=null;
   S.flags={}; S.terms=new Set(); S.zoomed=new Set(); S.plums=new Set(); S.observes=0; S.charges=null; setCharges(null); dayStart();
+  S.verdicts=[]; S.vkMiss=0; S.stamps=0; S.gagDone={}; S.clicks={}; S.shown=new Set(); S.mukN=0;
   closeSheet(); Music.resume(); titleEl.hidden=true; rolesEl.hidden=true; controlsEl.hidden=true;
   $('#invbar').hidden=true; $('#lens').hidden=true; stageEl.classList.remove('inv');
   resetState(); S.story=true; S.inTrial=true; S.found=new Set(); S.seen=new Set(); S.misses=0;
+  gagEv(); paintMuk();
 }
-function startStory(){ clearSave(); prepStory(); runStory(0); }
+function startStory(){ S.storyMode=false; S.case=1; S.role='pros'; adaptEnter(1); clearSave(); prepStory(); (async()=>{ await caseIntro(); runStory(0); })(); }
 function resumeStory(){
+  S.storyMode=false; S.case=1; S.role='pros';
   const v=hasSave(); if(!v){ startStory(); return; }
   prepStory();
   if(v.variant!==undefined){ S.variant=v.variant; S.lines=buildLines(v.variant); }
-  S.found=new Set(v.found); S.seen=new Set(v.seen||[]); S.trust=v.trust||5; S.misses=v.misses||0; S.presses=v.presses||0; S.log=v.log||[]; S.used=new Set(v.used||[]); S.talked=new Set(v.talked||[]); S.unlocked=new Set(v.unlocked||[]); S.p2at=3;
-  renderGauge(); runStory(v.phase);
+  S.found=new Set(v.found); S.seen=new Set(v.seen||[]); S.trust=v.trust||bellsMax(); S.misses=v.misses||0; S.presses=v.presses||0; S.log=v.log||[]; S.used=new Set(v.used||[]); S.talked=new Set(v.talked||[]); S.unlocked=new Set(v.unlocked||[]); S.p2at=3;
+  if(v.flags) S.flags=v.flags; if(v.verdicts) S.verdicts=v.verdicts;
+  gagEv(); renderGauge(); runStory(v.phase);
 }
 
 async function runStory(from){
@@ -135,7 +149,9 @@ async function storyPrologue(){
   await say('voice','normal','역사가 묻는다. 이 나라가 무너진 것은, [[누구의 책임]]인가.',{view:'prologue'});
   await titleCard('사건 1','백제는 왜 무너졌나');
   bgm('investigate');
-  await say('judge','normal','하람 검사, 이번에 맡을 사건이오. 피고는 백제의 마지막 왕, [[의자왕]].',{view:'lobby'});
+  await say('judge','normal','이 법정은 [[시간 밖]]에 있소. 기록 속 사람은 누구든 부를 수 있지.',{view:'lobby'});
+  await say('judge','normal','그리고 기록 속 이름을 지키고 싶은 마음은, 왕이나 백성이나 [[같소]]. 그래서 증인도 피고도 때로 거짓을 말하오.',{view:'lobby'});
+  await say('judge','normal','하람 검사, 이번에 맡을 사건이오. 피고는 백제의 마지막 왕, [[의자왕]]. 오늘은 신참 법관이 그대 옆자리에서 함께하오.',{view:'lobby'});
   await say('judge','stern','재판은 내일 열리오. 그 전에 [[증거]]를 모아 오시오. 증거 없이는 아무것도 증명할 수 없소.',{view:'lobby'});
   await say('rival','confident','변호인 누리예요. 이번 재판, 쉽게 이기진 못할 거예요.',{view:'lobby'});
   await say('rival','smug','백제가 망한 이야기에는 [[부풀려진 소문]]이 많거든요.',{view:'lobby'});
@@ -144,12 +160,12 @@ async function storyPrologue(){
 
 /* ---------- 법정 1일차 ---------- */
 async function courtOpen(day){
-  S.day=day; await titleCard(day+'일차','법정');
+  S.day=day; adaptDay(day); await bgCard(day); await titleCard(day+'일차','법정');
   bgm('open'); Music.sting('murmur'); await wait(900);
-  if(day>1 && S.trust<5){ S.trust=5; S.slip=false; renderGauge(); Music.sting('heal'); }
+  if(day>1 && S.trust<bellsMax()){ S.trust=bellsMax(); S.slip=false; renderGauge(); Music.sting('heal'); }
   const D=CASE_DATA[S.case];
   await say('judge','normal',day===1?(D?D.openLine:S.case===2?'지금부터 [[역사 법정]]을 엽니다. 피고는 고조선의 왕위를 차지한 위만.':'지금부터 [[역사 법정]]을 엽니다. 피고는 백제의 마지막 왕, 의자왕.'):'어제에 이어 재판을 엽니다. 해치 방울이 모두 돌아왔습니다.');
-  await gavel();
+  await gavel(); await gagCourt(day);
 }
 async function storyDay1(){
   await courtOpen(1);
@@ -157,7 +173,7 @@ async function storyDay1(){
   await say('player','confident','혐의는 두 가지입니다. 첫째, [[나라를 지키지 못한 책임]]. 둘째, [[향락에 빠져 나라를 망친 죄]]입니다.');
   await say('defendant','smug','흥. 터무니없는 소리.');
   await say('rival','confident','변호인 누리입니다. 피고에 대한 소문 가운데에는 부풀려진 것이 많습니다.');
-  await say('judge','stern','엉뚱한 증거를 내면 [[해치 방울]]이 하나씩 깨집니다. 다섯 개가 모두 깨지면 검사가 집니다.');
+  await say('judge','stern','엉뚱한 증거를 내면 [[해치 방울]]이 하나씩 깨집니다. 처음 재판이니 방울을 [[일곱 개]] 주겠소. 모두 깨지면 검사가 집니다.');
   await say('judge','normal','먼저 혐의 ①부터 다룹니다. 피고, 증언하시오.');
 
   // 증언 1 (거짓 위치는 판마다 바뀜)
@@ -238,7 +254,7 @@ async function storyDay2c(){
 
   // 1일차 끝 반전
   await say('judge','normal','이제 혐의 ②, [[향락에 빠져 나라를 망친 죄]]입니다. 검사, 근거를 대시오.');
-  await say('player','confident','피고는 [[3천 궁녀]]를 거느리고 놀기만 했습니다. 낙화암 이야기가 그 증거입니다!');
+  await say('player','confident','피고는 [[3천 궁녀]]를 거느리고 놀기만 했습니다. 낙화암 이야기, 그리고 강가에서 들은 이야기가 그 증거입니다!');
   Music.stop(0.02); await wait(200);
   await shout('objection');
   bgm('crisis');
@@ -247,7 +263,7 @@ async function storyDay2c(){
   await say('rival','smug','오히려 이런 기록이 있습니다. 「삼국사기」 656년, ‘왕이 궁녀들과 술과 놀이에 빠졌다.’');
   hideEvidence();
   await say('guide','normal','증거 수첩에 [[656년의 향락 기록]]이 들어왔다.');
-  await say('rival','smug','그런데 검사는 이 기록이 아니라, [[근거 없는 숫자]]로 혐의를 세웠어요.');
+  await say('rival','smug','그런데 검사는 이 기록이 아니라, [[근거 없는 숫자]]로 혐의를 세웠어요. 강가의 그 이야기도 [[옆집 사람에게 들은 말]]이잖아요? 직접 본 사람은 아무도 없어요.');
   await say('player','sweat','윽…!');
   await say('judge','stern','검사, [[증거 없는 혐의는 세울 수 없습니다]].');
   if(S.trust>1) await loseTrust();
@@ -371,13 +387,20 @@ async function storyDay4(){
      hit:[['player','present','계백 장군과 [[5천 결사대]]는 황산벌에서 끝까지 싸웠습니다!'],['player','confident','같은 때, 다른 선택을 한 사람들이 있었습니다. 누가 했어도 마찬가지였다는 말은 틀렸습니다!'],['defendant','breakdown','…!']]}
   ],onHit:async()=>{ Music.sting('murmur'); await wait(1000); await gavel(); bgm('open'); }};
   bgm('cross'); if(!await runCross(T5)) return false;
-  await say('judge','normal','이제 판결의 이유를 세웁니다. 검사, 혐의마다 [[이유]]와 그 [[근거가 되는 증거]]를 함께 대시오.');
+  await say('judge','normal','이제 판결합니다. 그 전에 신참 법관에게 줄 것이 있소.');
+  Music.sting('realize');
+  await say('judge','normal','모든 잘못이 [[죄]]는 아니오. 그러나 죄가 아니라고 [[책임]]까지 사라지는 것도 아니오.');
+  await infoCard('원칙 카드 「죄와 책임은 다르다」',`${principleHTML()}<p>판결은 네 갈래예요. <b>유죄</b>(사람에게 직접 해를 끼친 행위) · <b>책임 있음</b>(나라를 위한 판단이 낳은 큰 고통, 벌하지 않고 역사에 기록) · <b>무죄</b> · <b>증명 부족·판단 보류</b>.</p><p>이 카드는 앞으로 모든 판결 화면에 늘 나와요.</p>`);
+  store.set('yj-principle','1'); track('principle',{});
+  await say('judge','normal','검사, 혐의마다 [[판결의 종류]]를 먼저 고르고, 그 [[이유]]와 [[근거가 되는 증거]]를 대시오.');
   bgm('investigate');
-  if(!await reasonEv('혐의 ①(나라를 지키지 못한 책임)을 유죄로 보는 가장 알맞은 이유는?',[
+  if(!await verdictKind('혐의 ① 나라를 지키지 못한 책임','resp',{q:'나라를 지키는 판단을 잘못해 백성이 큰 고통을 겪었어요. 어떻게 판결할까요?'})) return false;
+  if(!await reasonEv('혐의 ①을 ‘책임 있음’으로 보는 가장 알맞은 이유는?',[
     {t:'피고는 같은 길목을 막으라는 신하들의 경고를 여러 번 듣고도 따르지 않았다.',ok:true,ev:['E3','E9','E4']},
-    {t:'피고는 나라를 잃은 왕이므로 무조건 책임이 있다.',ok:false,fb:'결과만으로 벌할 수는 없소. 피고가 무엇을 선택했는지를 따져야 하오.'},
-    {t:'당나라와 신라의 군대가 너무 많았다.',ok:false,fb:'그것은 피고에게 유리한 참작 사유이지, 유죄의 이유가 아니오.'}])) return false;
-  if(!await reasonEv('혐의 ②(향락으로 나라를 망친 죄)를 증명 부족으로 보는 가장 알맞은 이유는?',[
+    {t:'피고는 나라를 잃은 왕이므로 무조건 유죄다.',ok:false,fb:'결과만으로 죄를 물을 수는 없소. 피고가 무엇을 선택했는지를 따져야 하오.'},
+    {t:'당나라와 신라의 군대가 너무 많았다.',ok:false,fb:'그것은 피고에게 유리한 참작 사유이지, 책임의 이유가 아니오.'}])) return false;
+  if(!await verdictKind('혐의 ② 향락에 빠져 나라를 망친 죄','unproven',{q:'‘3천 궁녀’는 근거가 없고, 656년 기록에는 쓴 사람의 평가가 섞여 있어요. 어떻게 판결할까요?'})) return false;
+  if(!await reasonEv('혐의 ②를 증명 부족으로 보는 가장 알맞은 이유는?',[
     {t:'‘3천 궁녀’는 옛 기록에 없고, 656년 기록에는 고려 때 쓴 사람의 평가가 섞여 있다.',ok:true,ev:['E12','E11']},
     {t:'의자왕은 훌륭한 왕이었으므로 향락에 빠졌을 리 없다.',ok:false,fb:'그것은 증거가 아니라 믿음이오.'},
     {t:'너무 오래된 일이라 아무것도 알 수 없다.',ok:false,fb:'기록이 남은 부분도 있소. 무엇이 증명되고 무엇이 안 되는지 가려야 하오.'}])) return false;
@@ -418,14 +441,14 @@ function pickEvidence(lead){
 function openVerdictStory(){
   const A=shuffle(VERDICT_A), B=shuffle(VERDICT_B);
   const C=shuffle([
-    {t:'무죄: ‘3천 궁녀’는 근거가 없고, 656년 기록 하나로는 향락이 나라를 망하게 했다는 것까지 증명되지 않는다.',ok:true,fb:'맞아요. 기록이 있다는 것과, 그 기록으로 혐의가 증명된다는 것은 달라요.'},
+    {t:'증명 부족: ‘3천 궁녀’는 근거가 없고, 656년 기록 하나로는 향락이 나라를 망하게 했다는 것까지 증명되지 않는다.',ok:true,fb:'맞아요. 기록이 있다는 것과, 그 기록으로 혐의가 증명된다는 것은 달라요.'},
     {t:'유죄: 「삼국사기」에 술과 놀이에 빠졌다고 적혀 있다.',ok:false,fb:'그 대목에는 편찬자의 평가가 섞여 있고, 나라를 망하게 했다는 인과까지 보여 주지는 못해요.'},
     {t:'유죄: 낙화암 이야기가 지금까지 전해진다.',ok:false,fb:'낙화암 이야기에는 ‘3천 명’이 없고, 향락을 증명하는 기록도 아니에요.'}
   ]);
   let a=null,b=null,c=null;
   openSheet(`<h2>판결문 쓰기</h2>
     <p class="lead">혐의마다 따로 판결합니다. 판결은 처벌이 아니라, 증거로 책임을 따지는 일입니다.</p>
-    <div class="vpart"><h3>혐의 ① 나라를 지키지 못한 책임 — 유죄</h3>
+    <div class="vpart"><h3>혐의 ① 나라를 지키지 못한 책임 — 책임 있음</h3>
       <p class="lead">재판부는 ㉠을 피고가 어쩔 수 없었던 시대 상황으로 인정합니다. 그러나 ㉡은 피고 자신의 선택이었습니다.</p>
       <p><b>㉠ 참작할 시대 상황</b></p><div class="opts" id="oa">${A.map((x,i)=>`<button class="opt" type="button" data-i="${i}">${esc(x.t)}</button>`).join('')}</div>
       <p><b>㉡ 피고의 선택</b></p><div class="opts" id="ob">${B.map((x,i)=>`<button class="opt" type="button" data-i="${i}">${esc(x.t)}</button>`).join('')}</div></div>
@@ -441,9 +464,9 @@ async function deliverVerdictStory(){
   closeSheet(); bgm('open');
   await titleCard('― 판결 ―','혐의마다 따로 판결합니다');
   await say('judge','normal',`혐의 ①. 재판부는 ${S.A.t}을, 피고가 어쩔 수 없었던 시대 상황으로 인정합니다.`);
-  await say('judge','stern',`그러나 ${S.B.t}은 피고 자신의 선택이었습니다. 혐의 ①은 [[유죄]]입니다.`);
+  await say('judge','stern',`그러나 ${S.B.t}은 피고 자신의 선택이었습니다. 혐의 ①은 [[책임 있음]]입니다. 벌하지는 않지만, 역사에 [[영원히 기록]]합니다.`);
   await say('judge','normal','사비성 백성의 진술처럼, 그 선택의 무게는 백성이 짊어졌습니다.');
-  await say('judge','normal','혐의 ②. ‘3천 궁녀’는 근거가 없고, 656년 기록 하나로는 향락이 나라를 망하게 했다는 것까지 증명되지 않습니다. [[증명 부족으로 무죄]]입니다.');
+  await say('judge','normal','혐의 ②. ‘3천 궁녀’는 근거가 없고, 656년 기록 하나로는 향락이 나라를 망하게 했다는 것까지 증명되지 않습니다. [[증명 부족]]입니다.');
   await say('judge','stern','다만 판결 이유에 남깁니다. 656년의 향락 기록은 있으며, 그것이 고려 때 쓴 기록이라는 점을 함께 따졌습니다.');
   bgm('verdict'); await gavel();
   await say('defendant','sweat','…….');
@@ -455,5 +478,20 @@ async function storyEnding(){
   await say('rival','normal','혐의 ①은 졌지만, 혐의 ②를 지킨 건 저예요.',{view:'courtyard'});
   await say('player','confident','덕분에 증거로 따진다는 게 뭔지 알았어.',{view:'courtyard'});
   await say('judge','normal','역사 법정에서 이기는 쪽은 언제나 [[증거]]요.',{view:'courtyard'});
+  await scribeArchive();
+  await caseFinale();
   S.done=true; S.inTrial=false; clearSave(); openResult();
+}
+/* 재판이 끝난 빈 법정: 기록관이 붓을 줍다 소매에 매화 모양 먹이 번진다. 해치가 서고를 맡긴다 */
+async function scribeArchive(){
+  Music.stop(1); await wait(600);
+  await say('guide','normal','(모두가 돌아간 빈 법정. 기록관이 바닥에 떨어진 붓을 천천히 줍는다.)',{view:'witness'});
+  await say('scribe2','sweat','…내 붓이.');
+  Music.sting('drip'); flash();
+  await say('guide','normal','(붓끝에 남은 먹이 소매에 번졌다. 작은 [[매화 모양]]이다.)');
+  await say('judge','normal','그대는 기록을 아끼는 사람이오. 오늘은 그대를 몰아세웠지만, 그 마음까지 틀린 것은 아니오.');
+  await say('judge','normal','이제부터 이 법정의 [[서고]]를 지키시오. 모든 사건의 증거 보관함이 그곳에 있소.');
+  await say('scribe2','base','…분부대로 하겠소.');
+  await say('scribe2','base','(…기록이 틀릴 수 있다면… 기록은 [[무엇이든 될 수 있는]] 것 아니오?)',{tag:'혼잣말'});
+  Music.sting('thud'); await wait(500);
 }

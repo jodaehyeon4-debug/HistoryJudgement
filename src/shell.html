@@ -633,6 +633,41 @@ pre.code{background:var(--surface2);color:var(--ink);border:2px solid var(--line
 .tbl-sm td,.tbl-sm th{font-size:13px}
 .stage.meet .lens{display:none !important}
 .judge-mode #bPresent{display:none}
+/* ===== v4: 원칙 카드, 판결 네 갈래, 수상한 종이, 역할 카드, 연표, 개그 ===== */
+.principle{background:linear-gradient(135deg,#fff6dc,#f3e2b8);color:#2a1a0e;border:3px solid #b8892e;border-radius:14px;padding:10px 14px;margin:6px 0 10px;box-shadow:0 3px 0 #8a6420}
+.principle b{display:block;font-family:var(--display);font-weight:400;font-size:19px;color:#7a3a14}
+.principle p{margin:4px 0;font-weight:900;font-size:17px}
+.principle small{display:block;font-weight:700;line-height:1.6;color:#4a3a20}
+.choices.vk{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:8px}
+.choices.vk .choice{display:flex;align-items:flex-start;gap:8px}
+.vk-t{display:flex;flex-direction:column;gap:2px}.vk-t b{font-size:18px}.vk-t small{font-weight:700;color:var(--muted);line-height:1.45}
+.vk-guilty b{color:#c0392b}.vk-resp b{color:#b06a1f}.vk-innocent b{color:#2f7a52}.vk-unproven b{color:#5a4a8e}
+.cards .ch.s-resp i{background:#b06a1f}.cards .ch.s-unproven i{background:#5a4a8e}
+.papers{display:grid;gap:8px}
+.paper{background:#f5ecd6;color:#2a1a0e;border:2px dashed #8a6a3a;border-radius:10px;padding:8px 12px}
+.paper b{font-weight:900}.paper p{margin:4px 0;line-height:1.6;font-family:var(--serif)}.paper small{font-weight:800;color:#6a4a2a}
+.v4s{margin-top:8px}.v4s .stat small{display:block;font-size:12px;font-weight:700;color:var(--muted)}
+.record-book{margin:10px 0;background:#2a2230;color:#f3ead6;border:2px solid #b8892e;border-radius:12px;padding:10px 14px}
+.record-book b{font-family:var(--display);font-weight:400;font-size:20px;color:#ffd36a}.record-book p{margin:4px 0;line-height:1.6}.record-book li{line-height:1.7;font-weight:700}
+.rolecard{background:var(--surface2);border:3px solid var(--line);border-radius:14px;padding:12px 16px}
+.rolecard .rc-role{display:inline-block;font-family:var(--display);font-size:28px;color:var(--accent);margin-bottom:4px}
+.rolecard.r-def .rc-role{color:#2f7a7e}.rolecard.r-judge .rc-role{color:#7a5ab8}
+.rolecard p{font-weight:800;line-height:1.7;margin:4px 0}.rolecard .rc-goal{color:var(--accent)}.rolecard small{font-weight:700;color:var(--muted)}
+.bgcard{display:flex;align-items:center;gap:14px;background:var(--surface2);border:2px solid var(--line);border-radius:14px;padding:14px 16px}
+.bgcard .bg-ic{font-size:46px}.bgcard p{font-weight:900;font-size:18px;line-height:1.6;margin:0}
+.ybar{display:flex;align-items:center;gap:8px;margin:2px 0 8px;font-size:12px;font-weight:800;color:var(--muted)}
+.yb-line{position:relative;flex:1;height:4px;border-radius:2px;background:var(--line)}
+.yb-line i{position:absolute;top:50%;width:11px;height:11px;margin:-5.5px 0 0 -5.5px;border-radius:50%;background:var(--gold);border:2px solid #2a1a0e}
+.chip.yr{background:#3a3f5c;color:#f3ead6}.chip.tag-hearsay{background:#8a5a1a;color:#fff}.chip.tag-disputed{background:#7a3a6a;color:#fff}.chip.tag-imagined{background:#4a5a6a;color:#fff}
+.case-tab .yr{display:block;font-style:normal;font-size:12px;font-weight:900;color:var(--gold);margin-top:2px}
+.go-gag{display:flex;align-items:center;gap:12px;background:var(--surface2);border-radius:12px;padding:6px 12px;margin:6px 0}
+.go-gag .go-tb svg{width:90px;height:auto}.go-gag p{font-weight:800;line-height:1.6;margin:0}
+.scalev{display:grid;place-items:center}.scalev svg{width:min(360px,80vw);height:auto}
+.scalev .beam{transform-origin:200px 38px;animation:beamTilt 1.6s ease-in-out forwards}
+@keyframes beamTilt{0%{transform:rotate(0)}35%{transform:rotate(6deg)}60%{transform:rotate(-4deg)}100%{transform:rotate(-9deg)}}
+.hud .muk{margin-left:8px;font-weight:900;font-size:clamp(10px,1.2vw,13px);color:#f3ead6;background:rgba(14,16,30,.7);border-radius:999px;padding:1px 8px}
+.hud .muk[hidden]{display:none}
+.laugh .abtn{padding:2px 8px;font-size:12px}.laugh .abtn.sel{background:var(--accent);color:var(--accent-ink)}
 </style>
 </head>
 <body>
@@ -645,6 +680,7 @@ pre.code{background:var(--surface2);color:var(--ink);border:2px solid var(--line
     <button class="tbtn" id="tSpeed" type="button">글자 보통</button>
     <button class="tbtn" id="tJuke" type="button">BGM 주크박스</button>
     <button class="tbtn" id="tWorkshop" type="button">인물 갤러리</button>
+    <button class="tbtn" id="tPapers" type="button" hidden>수상한 종이</button>
     <button class="tbtn" id="tTeacher" type="button">교사용</button>
   </header>
 
@@ -655,7 +691,7 @@ pre.code{background:var(--surface2);color:var(--ink);border:2px solid var(--line
     <div class="layer glow"></div>
     <div class="layer vig"></div>
     <div class="layer grain"></div>
-    <div class="hud" id="hud"><span class="hud-l">재판부 신뢰 <span id="gaugeNum">5/5</span></span><div class="bells" id="bells"></div></div>
+    <div class="hud" id="hud"><span class="hud-l">재판부 신뢰 <span id="gaugeNum">5/5</span></span><div class="bells" id="bells"></div><span class="muk" id="muk" hidden title="똘방의 남은 메밀묵">🥣 <b>12</b></span></div>
     <div class="cards" id="cards" hidden></div>
     <div class="shadow" id="shadow" hidden></div>
     <div class="toast" id="toast" hidden></div>

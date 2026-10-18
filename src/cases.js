@@ -170,18 +170,20 @@ function saveAtX(phase){
   store.set(SAVEX(S.case,S.role),JSON.stringify({phase:phase,found:[...S.found],seen:[...(S.seen||[])],trust:S.trust,misses:S.misses||0,presses:S.presses||0,log:S.log||[],used:[...(S.used||[])],talked:[...(S.talked||[])],unlocked:[...(S.unlocked||[])],
     flags:S.flags||{},terms:[...(S.terms||[])],zoomed:[...(S.zoomed||[])],plums:[...(S.plums||[])],observes:S.observes||0,charges:S.charges,when:Date.now()}));
 }
-function startCaseX(n,role,resume){
+function startCaseX(n,role,resume,opt){
   const D=CASE_DATA[n]; if(!D||!D.roles[role]) return;
-  setCase(n); S.case=n; S.role=role;
+  setCase(n); S.case=n; S.role=role; S.storyMode=!!(opt&&opt.story); adaptEnter(n);
   const sub=document.querySelector('.brand span'); if(sub) sub.textContent=`사건 ${n} 「${D.title}」`;
   prepStory(); S.case=n; S.role=role; S.me=role==='def'?'rival':role==='judge'?'daon':'player'; S.p2at=D.p2at||99; S.day=1;
+  NAMES.daon=judgeName()+' 판사';
   document.body.classList.toggle('judge-mode',role==='judge');
   let from=0; const v=resume?hasSaveX(n,role):null;
   if(v){ S.found=new Set(v.found); S.seen=new Set(v.seen||[]); S.trust=v.trust||5; S.misses=v.misses||0; S.presses=v.presses||0; S.log=v.log||[]; S.used=new Set(v.used||[]); S.talked=new Set(v.talked||[]); S.unlocked=new Set(v.unlocked||[]);
     S.flags=v.flags||{}; S.terms=new Set(v.terms||[]); S.zoomed=new Set(v.zoomed||[]); S.plums=new Set(v.plums||[]); S.observes=v.observes||0; if(v.charges) setCharges(v.charges.list,v.charges.label); renderGauge(); from=v.phase; }
   else clearSaveX(n,role);
-  dayStart(); track('start',{resume:!!v,from:from});
-  D.roles[role](from);
+  gagEv(); renderGauge(); paintMuk();
+  dayStart(); track('start',{resume:!!v,from:from,story:S.storyMode});
+  (async()=>{ if(!from) await caseIntro(); D.roles[role](from); })();
 }
 /* 4일 진행: 날마다 [조사] → [법정] → 하루 끝. days[i] = {inv, court, learned} */
 async function playDays(days,from){
@@ -251,10 +253,11 @@ async function victim(who,lines,intro){
 const CLAIM_OPTS={ok:'증거로 확인됨',no:'확인 안 됨',op:'의견일 뿐',bad:'받아들일 수 없는 주장 (원칙에 어긋남)'};
 const CLAIM_FB={ok:'증거가 있는 주장을 확인 안 된 것으로 보았소.',no:'그 주장을 뒷받침하는 증거는 아직 없소. 오히려 반대되는 증거가 있지 않소?',op:'그것은 사실이 아니라 말하는 사람의 생각이오. 확인할 수 있는 일이 아니오.',bad:'이 주장은 증거 문제가 아니라, 법의 원칙에 어긋나오.'};
 async function sortClaims(list,o){
-  o=o||{};
+  o=o||{}; const stage=o.stage||3;
   for(const C of list){
     await say(C.who,C.expr||'confident',C.text,{tag:'주장'});
-    const keys=['ok','no','op'].concat(C.ans==='bad'||o.withBad?['bad']:[]);
+    if(stage===1&&C.ans==='op'){ await say('judge','normal',C.demo||'이런 말은 좋다·나쁘다를 말하는 [[생각]]이오. 내일부터는 이런 주장을 ‘의견일 뿐’으로 가르게 될 것이오.'); if(C.after) await line(C.after); continue; }
+    const keys=(stage===1?['ok','no']:['ok','no','op']).concat(C.ans==='bad'||o.withBad?['bad']:[]);
     let miss=0;
     for(;;){
       const c=await choiceSheet(`주장 가르기: “${plain(C.text)}”`,keys.map(k=>({t:CLAIM_OPTS[k],ok:k===C.ans,k:k})));
@@ -265,7 +268,9 @@ async function sortClaims(list,o){
       if(miss===2) await say('judge','normal','…판사, 하나만 일러 주겠소. [[확인됨]]은 증거가 있을 때, [[확인 안 됨]]은 증거가 없거나 반대 증거가 있을 때, [[의견일 뿐]]은 좋다·나쁘다 같은 생각을 말할 때요.');
       await loseTrust(); if(S.trust<=0){ await loseTrial(); return false; }
     }
-    if(C.ev){ const id=await presentFor(C.ans==='ok'?'이 주장을 확인해 주는 증거를 고르세요.':C.ans==='bad'?'이 주장을 막는 원칙 카드를 고르세요.':'이 주장이 확인되지 않는 까닭을 보여 줄 증거를 고르세요.',C.ev,{noGain:true}); if(!id) return false; }
+    if(C.ev){ const id=await presentFor(C.ans==='ok'?'이 주장을 확인해 주는 증거를 고르세요.':C.ans==='bad'?'이 주장을 막는 원칙 카드를 고르세요.':'이 주장이 확인되지 않는 까닭을 보여 줄 증거를 고르세요.',C.ev,{noGain:true,allowUsed:true}); if(!id) return false; }
+    else if(stage>=3&&C.ans==='no'){ const w=await choose('왜 ‘확인 안 됨’인가요?',[{t:'이것을 증명할 기록이 아직 없다.',ok:true},{t:'반대되는 증거가 이미 있다.',ok:false,fb:'반대 증거가 있는 것이 아니라, 증명할 기록이 아직 없는 것이오. 빠진 것이 무엇인지 보시오.'}],{noGain:true}); if(!w) return false; }
+    if(stage>=3&&C.ans==='op'&&C.opPhrase){ const parts=plain(C.text).split(C.opPhrase); const opts=[{t:C.opPhrase,ok:true}].concat(parts.map(x=>x.trim()).filter(x=>x.length>1).map(x=>({t:x,ok:false,fb:'그 부분은 확인할 수 있는 일이오. 말하는 사람의 생각이 담긴 말을 찾으시오.'}))); const w=await choose('이 주장에서 ‘생각(의견)’이 담긴 말은 어디인가요?',opts,{noGain:true}); if(!w) return false; }
     if(C.after) await line(C.after);
     await gainTrust();
   }
@@ -278,6 +283,7 @@ async function scale(title,rows){
   const out={};
   for(const R of rows){ const c=await choose(`판결 저울 · ${R.k}: ${R.q}`,R.opts,{hint:R.hint}); if(!c) return false; out[R.k]=c.t; }
   S.flags.scale[title]=out; track('scale',{title:title,out:out});
+  await scaleViz(title,out);
   return true;
 }
 /* 연표 화면 */
@@ -303,13 +309,15 @@ async function withdrawChoice(i,q,keepTxt,dropTxt){
   return c.tag==='drop';
 }
 /* 결과 화면 */
-function caseResult(o){
+async function caseResult(o){
+  await caseFinale();
   const n=S.case, D=CASE_DATA[n], wrongs=(S.log||[]).filter(x=>!x.ok).length;
   track('case_end',{grade:o.grade,trust:S.trust,wrongs:wrongs});
   clearSaveX(n,S.role); S.done=true; S.inTrial=false;
   openSheet(`<h2>사건 ${n} 결과 · ${ROLE_KO[S.role]||''}</h2>
     <div class="tier">${esc(o.grade)}</div><p class="lead">${esc(o.lead)}</p>
-    <ul class="res-list"><li>남은 해치 방울 ${S.trust}/5</li><li>헛 제시 ${wrongs}번</li><li>조사에서 헛짚음 ${S.misses||0}번</li>${(o.items||[]).map(x=>`<li>${esc(x)}</li>`).join('')}</ul>
+    ${v4ResultHTML(o.record||D.record)}
+    <ul class="res-list"><li>남은 해치 방울 ${S.storyMode?'(이야기 모드)':S.trust+'/'+bellsMax()}</li><li>헛 제시 ${wrongs}번</li><li>조사에서 헛짚음 ${S.misses||0}번</li>${(o.items||[]).map(x=>`<li>${esc(x)}</li>`).join('')}</ul>
     ${o.judge?`<p class="grade-note">해치: “${esc(o.judge)}”</p>`:''}
     <h3>실제 역사에서는</h3><p>${esc(o.history||D.history||'')}</p>
     <div class="sheet-foot"><button class="abtn" type="button" id="rTeach">교사용 기록</button><button class="abtn primary" type="button" id="r2back">처음 화면으로</button></div>`,false);

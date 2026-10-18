@@ -52,7 +52,7 @@ const TRACKS={
     intro:{buk:'X.X.XXXX', snare:'....xxXX', crash:'x.......'}, fill:{snare:'....xxXX', buk:'x...x.xX'}}
 };
 const TRACK_ORDER=['open','investigate','testimony','cross','crisis','turnabout','verdict'];
-const STINGS=[['objection','이의 있습니다!'],['whoosh','외침 직전 휙'],['zoom','근접 화면'],['murmur','방청석 웅성거림'],['realize','깨달음'],['crack','방울 깨짐'],['get','증거 획득'],['heal','방울 회복'],['miss','헛짚음'],['step','구역 이동'],['tick','증언 넘김'],['click','고르기'],['slam','책상 내려치기'],['hold','잠깐만요!'],['evidence','증거 제시'],['breakdown','피고 무너짐'],['wrong','헛 제시'],['gavel','의사봉'],['title','장 전환'],['gasp','컥!'],['cough','기침'],['thud','쿵 (무거운)'],['clash','칼 부딪는 소리'],['door','큰 문 닫힘'],['shovel','삽질'],['cheer','군중의 함성'],['boo','방청석 야유'],['wind','빈 방의 바람']];
+const STINGS=[['objection','이의 있습니다!'],['whoosh','외침 직전 휙'],['zoom','근접 화면'],['murmur','방청석 웅성거림'],['realize','깨달음'],['crack','방울 깨짐'],['get','증거 획득'],['heal','방울 회복'],['miss','헛짚음'],['step','구역 이동'],['tick','증언 넘김'],['click','고르기'],['slam','책상 내려치기'],['hold','잠깐만요!'],['evidence','증거 제시'],['breakdown','피고 무너짐'],['wrong','헛 제시'],['gavel','의사봉'],['title','장 전환'],['gasp','컥!'],['cough','기침'],['thud','쿵 (무거운)'],['clash','칼 부딪는 소리'],['door','큰 문 닫힘'],['shovel','삽질'],['cheer','군중의 함성'],['boo','방청석 야유'],['wind','빈 방의 바람'],['clap','박수 아저씨'],['ding','해치 방울 딸랑'],['ttukttak','뚝딱!'],['drip','먹 한 방울'],['splash','물 튐'],['coins','엽전 쏟아짐']];
 
 const Music=(function(){
   let ctx=null, master=null, bus=null, timer=null, cur=null, curId=null, step=0, nextT=0, noiseBuf=null;
@@ -220,6 +220,13 @@ const Music=(function(){
       case 'cheer': { for(let k=0;k<70;k++){ const w=t+Math.random()*2.2, d=0.4+Math.random()*0.6, f=380+Math.random()*900; const sN=ctx.createBufferSource(); sN.buffer=noiseBuf; const bp=F('bandpass',f,8), g=G(0); g.gain.setValueAtTime(0.0001,w); g.gain.exponentialRampToValueAtTime(0.5,w+0.08); g.gain.exponentialRampToValueAtTime(0.0001,w+d); sN.connect(bp); bp.connect(g); g.connect(out); sN.start(w,Math.random()*1.5); sN.stop(w+d+0.02); } nz(out,t,'bandpass',600,0.5,2.6,0.25); break; }
       case 'boo': { for(let k=0;k<30;k++){ const w=t+Math.random()*1.2, d=0.35+Math.random()*0.4, o=O('sawtooth',110+Math.random()*90,w), g=G(0), lp=F('lowpass',500,1); o.frequency.linearRampToValueAtTime(80,w+d); g.gain.setValueAtTime(0.0001,w); g.gain.exponentialRampToValueAtTime(0.06,w+0.08); g.gain.exponentialRampToValueAtTime(0.0001,w+d); o.connect(lp); lp.connect(g); g.connect(out); o.start(w); o.stop(w+d+0.02); } break; }
       case 'wind': { const sN=ctx.createBufferSource(); sN.buffer=noiseBuf; const bp=F('bandpass',500,0.8), g=G(0); bp.frequency.setValueAtTime(400,t); bp.frequency.linearRampToValueAtTime(900,t+1.4); bp.frequency.linearRampToValueAtTime(350,t+3); g.gain.setValueAtTime(0.0001,t); g.gain.exponentialRampToValueAtTime(0.3,t+1); g.gain.exponentialRampToValueAtTime(0.0001,t+3.2); sN.connect(bp); bp.connect(g); g.connect(out); sN.start(t,Math.random()); sN.stop(t+3.3); break; }
+      /* 개그용 (공통 규칙 12장) */
+      case 'clap': for(let k=0;k<9;k++){ const w=t+k*0.13+Math.random()*0.03; nz(out,w,'bandpass',1500+Math.random()*700,1.4,0.05,0.7); } break;
+      case 'ding': bell(out,t,nm('E6'),1,0.9); bell(out,t+0.16,nm('E6'),1,0.6); break;
+      case 'ttukttak': DRUM.tak(out,t,1); DRUM.tak(out,t+0.16,1); ['C6','G6','C7'].forEach((n,i)=>bell(out,t+0.32+i*0.06,nm(n),1,0.45)); break;
+      case 'drip': bell(out,t,nm('A4'),1,0.5); nz(out,t,'lowpass',900,0.7,0.12,0.25); break;
+      case 'splash': nz(out,t,'bandpass',2200,0.8,0.35,0.7); nz(out,t+0.1,'highpass',4000,0.7,0.25,0.35); thump(out,t,220,90,0.15,0.4); break;
+      case 'coins': for(let k=0;k<16;k++) bell(out,t+k*0.05+Math.random()*0.03,nm(['C7','D7','E7','G7','A7'][k%5]),1,0.25); break;
     }
     setTimeout(()=>{ try{ out.disconnect(); }catch(e){} },4500);
   }

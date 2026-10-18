@@ -23,7 +23,7 @@ assets=open('assets.js',encoding='utf-8').read() if os.path.exists('assets.js') 
 # 사건 3부터: cases.js(공통 틀) 뒤에 story3.js, story4.js … 차례로
 later=sorted(glob.glob('story[0-9]*.js'),key=lambda p:int(re.search(r'(\d+)',p).group(1)))
 later=[p for p in later if int(re.search(r'(\d+)',p).group(1))>=3]
-script=utils+assets+open('music.js',encoding='utf-8').read()+'\n'+open('art.js',encoding='utf-8').read()+'\n'+open('bg.js',encoding='utf-8').read()+'\n'+game+'\n'+open('story.js',encoding='utf-8').read()+'\n'+open('story2.js',encoding='utf-8').read()+'\n'+open('cases.js',encoding='utf-8').read()+'\n'+''.join(open(p,encoding='utf-8').read()+'\n' for p in later)+'renderRoles();\n})();'
+script=utils+assets+open('music.js',encoding='utf-8').read()+'\n'+open('art.js',encoding='utf-8').read()+'\n'+open('bg.js',encoding='utf-8').read()+'\n'+game+'\n'+open('story.js',encoding='utf-8').read()+'\n'+open('story2.js',encoding='utf-8').read()+'\n'+open('cases.js',encoding='utf-8').read()+'\n'+open('v4.js',encoding='utf-8').read()+'\n'+''.join(open(p,encoding='utf-8').read()+'\n' for p in later)+'renderRoles();\n})();'
 html=open('shell.html',encoding='utf-8').read().replace('/*SCRIPT*/',script)
 open('v03.html','w',encoding='utf-8').write(html)
 print('ok', len(html), 'bytes', html.count('\n'),'lines', 'cases:', [os.path.basename(p) for p in later])
