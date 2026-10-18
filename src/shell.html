@@ -572,6 +572,66 @@ pre.code{background:var(--surface2);color:var(--ink);border:2px solid var(--line
 .lens.drag svg{transform:scale(1.18)}
 .lens svg{transition:transform .12s}
 .stage.inv{touch-action:none}
+
+/* ===== 사건 3~10 공통 장치 ===== */
+.case-tabs{grid-template-columns:repeat(auto-fill,minmax(170px,1fr))}
+.case-tab{padding:8px 12px;font-size:14px}
+.case-tab b{font-size:17px}
+.sid-row{display:flex;flex-wrap:wrap;align-items:center;gap:8px;margin:2px 0 8px;font-weight:800;color:var(--muted);font-size:14px}
+.sid-row input{font:inherit;font-weight:900;color:var(--ink);background:var(--surface);border:2px solid var(--line);border-radius:10px;padding:6px 10px;width:12em;max-width:60vw}
+.role .lock.main{background:var(--accent);color:var(--accent-ink);border-color:var(--accent)}
+/* 혐의·용의 카드: 법정 화면 왼쪽 위에 늘 띄움 */
+.cards{position:absolute;left:1.6%;top:2.2%;z-index:4;display:flex;flex-direction:column;gap:4px;max-width:46%;pointer-events:none}
+.cards[hidden]{display:none}
+.cards .ch-h{font-size:clamp(10px,1.2vw,12.5px);font-weight:900;color:var(--lac-ink);text-shadow:0 1px 2px #000}
+.cards .ch{display:flex;align-items:center;gap:6px;font-size:clamp(10px,1.25vw,13px);font-weight:800;color:#f7f2e6;background:rgba(14,16,30,.78);border:1px solid rgba(232,220,192,.5);border-radius:8px;padding:2px 8px;line-height:1.35}
+.cards .ch i{font-style:normal;font-weight:900;font-size:.9em;padding:0 6px;border-radius:999px;background:#3a3f5c;white-space:nowrap}
+.cards .ch.s-guilty i{background:#a83a2f}.cards .ch.s-partial i{background:#b06a1f}.cards .ch.s-innocent i,.cards .ch.s-dropped i{background:#2f7a52}.cards .ch.s-held i{background:#5a4a8e}
+.cards .ch.s-sus{border-color:#ffd36a}.cards .ch.s-sus i{background:#8a6a1a}
+.cards .ch small{opacity:.8;font-weight:700}
+@media (max-width:600px){.cards{max-width:62%}.cards .ch small{display:none}}
+/* 그림자 연출: 실루엣과 소리만, 끝은 검은 화면으로 끊김 */
+.shadow{position:absolute;inset:0;z-index:7;background:#120c10;overflow:hidden}
+.shadow[hidden]{display:none}
+.shadow svg{position:absolute;inset:0;width:100%;height:100%}
+.shadow .sh-cap{position:absolute;left:0;right:0;bottom:6%;text-align:center;color:#e8dcc0;font-weight:800;font-size:clamp(12px,1.6vw,16px);opacity:.75}
+.shadow.cut::after{content:"";position:absolute;inset:0;background:#000;animation:shCut .35s ease-in forwards}
+@keyframes shCut{from{opacity:0}to{opacity:1}}
+.shadow .fig{transition:transform 1.4s ease,opacity 1s ease}
+/* 알림 */
+.toast{position:absolute;left:50%;top:12%;transform:translateX(-50%);z-index:8;font-weight:900;font-size:clamp(12px,1.5vw,15px);color:#20180a;background:#ffd36a;border:2px solid #20180a;border-radius:999px;padding:4px 14px;animation:toastIn 2.2s ease-out forwards;pointer-events:none}
+.toast[hidden]{display:none}
+@keyframes toastIn{0%{opacity:0;transform:translate(-50%,-8px)}12%{opacity:1;transform:translate(-50%,0)}80%{opacity:1}100%{opacity:0}}
+/* 버릇 살피기 */
+.cbtn.observe svg{width:26px;height:26px}
+.stage.observe .char{transform:scale(1.18);transform-origin:50% 30%;transition:transform .35s ease}
+.pip.habit{border-color:#ff9f6a;box-shadow:0 0 0 2px #ff9f6a}
+/* 증거 확대·용어 카드 */
+.zoomb{margin-top:8px}
+.zoombig{position:relative;display:grid;place-items:center;background:var(--surface2);border:2px solid var(--line);border-radius:12px;padding:12px;margin:8px 0}
+.zoombig .evimg,.zoombig svg{width:min(420px,80vw);height:auto;max-height:52vh;object-fit:contain}
+.zoombig .plum{position:absolute;right:16%;bottom:14%;font-size:30px;color:#3a2a40;opacity:.75;transform:rotate(-12deg)}
+.zoomtxt p{font-weight:700;line-height:1.7;margin:4px 0}
+.zoomnote{font-weight:800;color:var(--accent);margin:4px 0}
+.terms{display:grid;grid-template-columns:repeat(auto-fill,minmax(210px,1fr));gap:10px}
+.term{background:var(--surface2);border:2px solid var(--line);border-radius:12px;padding:10px 12px}
+.term b{font-size:18px}.term p{margin:4px 0 0;font-weight:700;line-height:1.6}
+.term-ic{font-size:22px;margin-right:6px}
+/* 하루 끝 요약 */
+.day-sum .stat b{font-size:22px}
+.day-ev{line-height:2}
+.learned{font-weight:800;line-height:1.8}
+.seg.imp{max-width:420px;margin-bottom:6px}
+/* 주장 가르기·판결 저울·연표 */
+.claim-q{font-family:var(--serif);font-weight:800;font-size:17px;padding:10px 12px;border-left:5px solid var(--accent);background:var(--surface2);border-radius:8px;margin:6px 0 10px}
+.tl{display:flex;flex-wrap:wrap;gap:8px;align-items:stretch;margin:10px 0}
+.tl-i{flex:1 1 150px;background:var(--surface2);border:2px solid var(--line);border-top:6px solid var(--gold);border-radius:10px;padding:8px 10px}
+.tl-i b{display:block;font-family:var(--display);font-weight:400;font-size:22px;color:var(--gold)}
+.tl-i span{font-weight:800;line-height:1.5}
+.grade-note{font-weight:800;line-height:1.7}
+.hl .replay{margin-left:8px;padding:2px 10px;font-size:13px}
+.tbl-sm td,.tbl-sm th{font-size:13px}
+.stage.meet .lens{display:none !important}
 </style>
 </head>
 <body>
@@ -595,6 +655,9 @@ pre.code{background:var(--surface2);color:var(--ink);border:2px solid var(--line
     <div class="layer vig"></div>
     <div class="layer grain"></div>
     <div class="hud" id="hud"><span class="hud-l">재판부 신뢰 <span id="gaugeNum">5/5</span></span><div class="bells" id="bells"></div></div>
+    <div class="cards" id="cards" hidden></div>
+    <div class="shadow" id="shadow" hidden></div>
+    <div class="toast" id="toast" hidden></div>
     <div class="fade" id="fade" aria-hidden="true"><span id="fadeT"></span></div>
       <button class="pickhint" id="pickHint" type="button" hidden>증거 수첩을 열어 제시하기 <span class="ckey">E</span></button>
 <div class="npcl" id="npcl" hidden></div>
@@ -622,6 +685,7 @@ pre.code{background:var(--surface2);color:var(--ink);border:2px solid var(--line
     <button class="cbtn" id="bPrev" type="button" aria-label="이전 증언"><svg viewBox="0 0 30 30" aria-hidden="true"><path d="M20,5 L8,15 L20,25" fill="none" stroke="#d9a93f" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/></svg>이전<span class="ckey">←</span></button>
     <button class="cbtn press" id="bPress" type="button"><svg viewBox="0 0 30 30" aria-hidden="true"><path d="M4,6 H26 V20 H14 L8,26 V20 H4 Z" fill="#3f6fa8" stroke="#cfe0ff" stroke-width="2" stroke-linejoin="round"/><text x="15" y="18" font-size="13" font-weight="900" text-anchor="middle" fill="#fff" font-family="Noto Sans KR,sans-serif">?</text></svg><span><b class="bl">잠깐만요! <span class="ckey">F</span></b><small>더 묻기</small></span></button>
     <button class="cbtn present" id="bPresent" type="button"><svg viewBox="0 0 30 30" aria-hidden="true"><rect x="6" y="5" width="18" height="21" rx="2" fill="#f6edd8" stroke="#d9a93f" stroke-width="2"/><path d="M10,11 H20 M10,15 H20 M10,19 H16" stroke="#8a7350" stroke-width="2"/></svg><span><b class="bl">증거 제시 <span class="ckey">E</span></b><small class="risk">틀리면 방울 −1</small></span></button>
+    <button class="cbtn observe" id="bObserve" type="button" hidden><svg viewBox="0 0 30 30" aria-hidden="true"><circle cx="13" cy="13" r="8" fill="none" stroke="#f6d77a" stroke-width="3"/><path d="M19,19 L26,26" stroke="#f6d77a" stroke-width="4" stroke-linecap="round"/><circle cx="13" cy="13" r="3" fill="#f6d77a"/></svg><span><b class="bl">살피기 <span class="ckey">S</span></b><small>버릇 찾기</small></span></button>
     <button class="cbtn" id="bNext" type="button" aria-label="다음 증언">다음<span class="ckey">Space</span><svg viewBox="0 0 30 30" aria-hidden="true"><path d="M10,5 L22,15 L10,25" fill="none" stroke="#d9a93f" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
   </div>
 

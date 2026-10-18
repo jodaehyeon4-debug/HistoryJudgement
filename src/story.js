@@ -47,17 +47,39 @@ async function reasonEv(q,opts,prompt){
     const c=await choiceSheet(q,opts);
     if(!c.ok){ await say('judge','stern',c.fb||'그 이유로는 판결할 수 없소.'); await loseTrust(); if(S.trust<=0){ S.allowUsed=false; await loseTrial(); return false; } continue; }
     S.expect=c.ev; const id=await pickEvidence(prompt||'그 이유를 뒷받침하는 증거를 고르세요.'); S.expect=null;
+    track('reason',{q:q,a:c.t,ev:id,ok:c.ev.includes(id)});
     if(c.ev.includes(id)){ showEvidence(id); await say(ME(),'present',`근거는 ‘${EV_BY_ID[id].title}’입니다.`); hideEvidence(); await say('judge','normal','이유와 근거가 맞소.'); await gainTrust(); S.allowUsed=false; return true; }
-    await say('judge','stern','그 증거는 이 이유를 뒷받침하지 못하오.'); await loseTrust(); if(S.trust<=0){ S.allowUsed=false; await loseTrial(); return false; }
+    const bad=EV_BY_ID[id];
+    if(bad&&bad.fake&&S.zoomed&&S.zoomed.has(id)) await say('judge','stern','확대해 보고도 낸 그 종이에는 [[매화 얼룩]]이 있소. 누가 썼는지 알 수 없는 종이는 근거가 될 수 없소.');
+    else if(bad&&bad.fake) await say('judge','stern','그 종이는 누가 썼는지 알 수 없소. [[근거에서 빼시오]].');
+    else if(bad&&bad.trust===1) await say('judge','stern','[[전해 들은 말]]은 근거가 약하오. 직접 본 사람의 말이나 기록으로 뒷받침하시오.');
+    else await say('judge','stern','그 증거는 이 이유를 뒷받침하지 못하오.');
+    await loseTrust(); if(S.trust<=0){ S.allowUsed=false; await loseTrial(); return false; }
   }
 }
-function dayPause(n){
+/* 하루 끝 요약: 찾은 증거, 깬 거짓, 남은 방울, 오늘 알게 된 것, 피고에 대한 인상 */
+function dayStart(){ S.dayMark={found:new Set(S.found||[]),log:(S.log||[]).length,t:Date.now()}; }
+function dayPause(n,learned){
+  const M=S.dayMark||{found:new Set(),log:0,t:Date.now()};
+  const newEv=[...(S.found||[])].filter(id=>!M.found.has(id)&&EV_BY_ID[id]);
+  const hits=(S.log||[]).slice(M.log).filter(x=>x.ok).length, wrongs=(S.log||[]).slice(M.log).filter(x=>!x.ok).length;
+  const D=CASE_DATA[S.case], L=learned||(D&&D.learned&&D.learned[n])||null, who=(D&&D.defName)||(S.case===2?'위만':'의자왕');
+  const mins=Math.max(1,Math.round((Date.now()-M.t)/60000));
+  track('day_end',{day:n,newEv:newEv.length,hits:hits,wrongs:wrongs,trust:S.trust,mins:mins});
   return new Promise(res=>{
     openSheet(`<h2>${n}일차가 끝났습니다</h2>
+      <div class="stats day-sum"><div class="stat">오늘 찾은 증거<b>${newEv.length}개</b></div><div class="stat">깬 거짓<b>${hits}개</b></div><div class="stat">헛 제시<b>${wrongs}번</b></div><div class="stat">남은 해치 방울<b>${S.trust}/5</b></div></div>
+      ${newEv.length?`<p class="day-ev">${newEv.map(id=>`<span class="chip">${esc(EV_BY_ID[id].title)}</span>`).join(' ')}</p>`:''}
+      ${L?`<h3>오늘 알게 된 것</h3><ol class="learned">${L.map(x=>`<li>${esc(x)}</li>`).join('')}</ol>`:''}
+      <h3>지금 ${esc(who)}에 대한 내 생각은?</h3>
+      <div class="seg imp" role="group" aria-label="피고에 대한 인상">${[['good','좋다'],['unsure','모르겠다'],['bad','나쁘다']].map(x=>`<button type="button" data-imp="${x[0]}" aria-pressed="false">${x[1]}</button>`).join('')}</div>
       <p class="lead">여기까지 자동으로 저장했어요. 수업을 여기서 끊어도, 다음 시간에 첫 화면의 <b>이어 하기</b>로 ${n+1}일차부터 이어 갈 수 있어요.</p>
       <div class="sheet-foot"><button class="abtn" id="pStop" type="button">여기서 멈추기</button><button class="abtn primary" id="pGo" type="button">${n+1}일차 시작</button></div>`,false);
-    $('#pGo').addEventListener('click',()=>{ closeSheet(); res(true); });
-    $('#pStop').addEventListener('click',()=>{ closeSheet(); backToRoles(); res(false); });
+    let imp=null;
+    sheetCard.querySelectorAll('[data-imp]').forEach(b=>b.addEventListener('click',()=>{ imp=b.dataset.imp; Music.sting('click'); sheetCard.querySelectorAll('[data-imp]').forEach(x=>{ x.classList.toggle('sel',x===b); x.setAttribute('aria-pressed',x===b?'true':'false'); }); }));
+    const done=go=>{ track('impression',{day:n,v:imp||'skip'}); closeSheet(); if(!go) backToRoles(); else dayStart(); res(go); };
+    $('#pGo').addEventListener('click',()=>done(true));
+    $('#pStop').addEventListener('click',()=>done(false));
   });
 }
 /* ===== 사건 1 본편: 프롤로그 → 의뢰 → 조사 1 → 1일차 → 조사 2 → 2일차 → 판결 → 결말 ===== */
@@ -68,8 +90,9 @@ function saveAt(phase){
 function clearSave(){ try{ localStorage.removeItem(SAVE_KEY); }catch(e){} }
 
 function prepStory(){
-  { const sub=document.querySelector('.brand span'); if(sub && S.case!==2) sub.textContent='사건 1 「백제는 왜 무너졌나」'; }
+  { const sub=document.querySelector('.brand span'); if(sub && (S.case||1)===1) sub.textContent='사건 1 「백제는 왜 무너졌나」'; }
   S.p2at=3; S.talked=new Set(); S.unlocked=new Set(); S.hist=[]; S.allowUsed=false; S.expect=null;
+  S.flags={}; S.terms=new Set(); S.zoomed=new Set(); S.plums=new Set(); S.observes=0; S.charges=null; setCharges(null); dayStart();
   closeSheet(); Music.resume(); titleEl.hidden=true; rolesEl.hidden=true; controlsEl.hidden=true;
   $('#invbar').hidden=true; $('#lens').hidden=true; stageEl.classList.remove('inv');
   resetState(); S.story=true; S.inTrial=true; S.found=new Set(); S.seen=new Set(); S.misses=0;
@@ -120,10 +143,11 @@ async function storyPrologue(){
 
 /* ---------- 법정 1일차 ---------- */
 async function courtOpen(day){
-  await titleCard(day+'일차','법정');
+  S.day=day; await titleCard(day+'일차','법정');
   bgm('open'); Music.sting('murmur'); await wait(900);
   if(day>1 && S.trust<5){ S.trust=5; S.slip=false; renderGauge(); Music.sting('heal'); }
-  await say('judge','normal',day===1?(S.case===2?'지금부터 [[역사 법정]]을 엽니다. 피고는 고조선의 왕위를 차지한 위만.':'지금부터 [[역사 법정]]을 엽니다. 피고는 백제의 마지막 왕, 의자왕.'):'어제에 이어 재판을 엽니다. 해치 방울이 모두 돌아왔습니다.');
+  const D=CASE_DATA[S.case];
+  await say('judge','normal',day===1?(D?D.openLine:S.case===2?'지금부터 [[역사 법정]]을 엽니다. 피고는 고조선의 왕위를 차지한 위만.':'지금부터 [[역사 법정]]을 엽니다. 피고는 백제의 마지막 왕, 의자왕.'):'어제에 이어 재판을 엽니다. 해치 방울이 모두 돌아왔습니다.');
   await gavel();
 }
 async function storyDay1(){
@@ -261,7 +285,7 @@ async function storyDay3(){
   await say('scribe','smug','고려 조정의 기록관이오. 우리가 엮은 기록에는 한 치의 틀림도 없소.');
   await titleCard('― 증언 ―','기록은 모두 정확하다');
   const T4={key:'기록관',who:'scribe',lines:[
-    {text:'우리는 옛 기록을 하나도 빼지 않고 옮겼소.',expr:'smug',press:[['player','normal','하나도요?'],['scribe','smug','물론이오. 붓 끝이 떨린 적도 없소.']]},
+    {text:'우리는 옛 기록을 하나도 빼지 않고 옮겼소.',expr:'smug',press:[['player','normal','하나도요?'],['scribe','smug','물론이오. 붓 끝이 떨린 적도 없소.'],['scribe','sweat','기록은… 쓰인 그대로요. [[쓰인 그대로]].'],['player','think','(손목에 먹물이 묻어 있네. 꽃 모양 같기도 하고…)']]},
     {text:'백제의 기록도 신라의 기록만큼 [[많이 남아 있었소]].',expr:'smug',lie:true,ev:'E11',
       press:[['player','normal','두 나라 기록이 비슷하게 남아 있었다고요?'],['scribe','smug','그렇소. 공평하게 옮겼지.']],
       hit:[['player','present','「삼국사기」를 엮은 사정입니다. 그때 남아 있던 옛 기록은 [[신라 쪽 자료가 훨씬 많았습니다]].'],['player','confident','백제의 일은, 백제를 무너뜨린 쪽의 눈으로 남은 부분이 많습니다!']]},
@@ -371,8 +395,9 @@ function choiceSheet(q,opts){
   return new Promise(res=>{
     const o=shuffle(opts); window.__yjOpts=o;
     openSheet(`<h2>답하기</h2><p class="lead">${esc(q)}</p><div class="choices">${o.map((x,i)=>`<button class="choice" type="button" data-i="${i}"><span class="ck">${i+1}</span>${esc(x.t)}</button>`).join('')}</div>`,false);
-    sheetCard.querySelectorAll('.choice').forEach(b=>b.addEventListener('click',()=>{ Music.sting('click'); closeSheet(); res(o[+b.dataset.i]); }));
-    recNav=k=>{ const n=parseInt(k,10); if(n>=1&&n<=o.length){ closeSheet(); res(o[n-1]); } };
+    const fin=x=>{ track('choice',{q:q,a:x.t,ok:x.ok===undefined?'':!!x.ok,tag:x.tag||''}); res(x); };
+    sheetCard.querySelectorAll('.choice').forEach(b=>b.addEventListener('click',()=>{ Music.sting('click'); closeSheet(); fin(o[+b.dataset.i]); }));
+    recNav=k=>{ const n=parseInt(k,10); if(n>=1&&n<=o.length){ closeSheet(); fin(o[n-1]); } };
   });
 }
 function pickEvidence(lead){

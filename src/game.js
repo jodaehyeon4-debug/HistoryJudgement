@@ -117,14 +117,15 @@ function logLine(who,text,o){
 function openHistory(back){
   const H=S.hist||[];
   openSheet(`<h2>대화 기록</h2><p class="lead">지금까지 나온 말을 다시 볼 수 있어요. 증언은 초록, 속마음은 하늘색이에요.</p>
-    <div class="hist" id="histBox">${H.length?H.map(e=>`<div class="hl ${e.c}"><b>${esc(e.n)}</b><span>${esc(e.t)}</span></div>`).join(''):'<p>아직 기록이 없어요.</p>'}</div>
+    <div class="hist" id="histBox">${H.length?H.map(e=>`<div class="hl ${e.c}"><b>${esc(e.n)}</b><span>${esc(e.t)}${e.shadow?` <button class="abtn replay" type="button" data-shadow="${e.shadow}">▶ 다시 보기</button>`:''}</span></div>`).join(''):'<p>아직 기록이 없어요.</p>'}</div>
     <div class="sheet-foot"><button class="abtn primary" type="button" data-act="hclose">${back?'증거 수첩으로 돌아가기':'닫기'}</button></div>`,true);
   const box=$('#histBox'); if(box) box.scrollTop=box.scrollHeight;
   sheetCard.querySelector('[data-act=hclose]').addEventListener('click',closeSheet);
+  sheetCard.querySelectorAll('[data-shadow]').forEach(b=>b.addEventListener('click',async()=>{ const k=b.dataset.shadow; onSheetClose=null; closeSheet(); track('shadow_replay',{scene:k}); await playShadow(k,true); openHistory(back); }));
   onSheetClose=back?()=>setTimeout(back,40):null;
 }
 async function say(who,expr,text,opts){
-  opts=opts||{}; logLine(who,text,opts);
+  opts=opts||{}; logLine(who,text,opts); noteTerms(text);
   if(opts.view!=='inv' && (opts.view||VIEW_OF[who])) setView(opts.view||VIEW_OF[who],who,expr,opts.action); setName(who,opts.tag);
   textEl.className='text'+(opts.testimony?' testimony':'');
   nextEl.hidden=true;
@@ -171,7 +172,9 @@ async function gavel(){ gavelEl.classList.remove('show'); void gavelEl.offsetWid
 const BELL=on=>`<svg class="bell${on?'':' off'}" viewBox="0 0 40 46" aria-hidden="true"><defs><linearGradient id="bg${on?1:0}" x1="0" y1="0" x2=".7" y2="1"><stop offset="0" stop-color="#fff1b8"/><stop offset=".5" stop-color="#e2b54e"/><stop offset="1" stop-color="#8a5f17"/></linearGradient></defs><path d="M20,2 C24,2 26,5 25,8 C32,10 35,17 35,25 L38,36 H2 L5,25 C5,17 8,10 15,8 C14,5 16,2 20,2 Z" fill="url(#bg${on?1:0})" stroke="#2a1a14" stroke-width="2.4"/><path d="M6,30 H34" stroke="#7a5414" stroke-width="2"/><circle cx="20" cy="40" r="4.4" fill="#5a3d10" stroke="#2a1a14" stroke-width="2"/><path d="M12,16 C13,12 16,10 19,10" stroke="#fff6d0" stroke-width="2" fill="none" stroke-linecap="round"/></svg>`;
 const S={trust:5};
 const ME=()=>S.me||'player';
-const ROLE_NAME=()=>S.me==='rival'?'변호인':'검사';
+const ROLE_NAME=()=>S.me==='rival'?'변호인':S.me==='daon'?'판사':'검사';
+/* 사건 3부터: 사건 데이터 등록부 (story3.js~가 채움). 첫 화면이 먼저 그려지므로 여기 둔다 */
+const CASE_DATA={};
 const SAVE_KEY='yj-story-1';
 const PHASE_NAME={1:'조사 1',2:'법정 1일차',3:'조사 2',4:'법정 2일차'};
 function renderGauge(){
@@ -255,7 +258,8 @@ function enterCross(pos){
   setView('witness',who,L.expr||'normal');
   setName(who,`추궁 ${pos+1}/${CX.vis.length}`);
   CX.seen=CX.seen||new Set(); CX.seen.add(CX.vis[pos]);
-  $('#pips').innerHTML=CX.vis.map((li,k)=>{ const l=CX.T.lines[li]; const st=l.broken?'broken':(l.pressed?'pressed':(CX.seen.has(li)?'seen':'')); return `<button class="pip ${st}${k===pos?' cur':''}" type="button" data-k="${k}" aria-label="${k+1}번째 증언${l.broken?' (깸)':l.pressed?' (물어봄)':''}">${l.broken?'✓':k+1}</button>`; }).join('');
+  { const ob=$('#bObserve'); if(ob) ob.hidden=!CX.T.habit; }
+  $('#pips').innerHTML=CX.vis.map((li,k)=>{ const l=CX.T.lines[li]; const st=l.broken?'broken':(l.pressed?'pressed':(CX.seen.has(li)?'seen':'')); return `<button class="pip ${st}${l.habitSeen&&!l.broken?' habit':''}${k===pos?' cur':''}" type="button" data-k="${k}" aria-label="${k+1}번째 증언${l.broken?' (깸)':l.pressed?' (물어봄)':''}">${l.broken?'✓':k+1}</button>`; }).join('');
   $('#pips').hidden=false;
   $('#pips').querySelectorAll('.pip').forEach(b=>b.addEventListener('click',()=>{ if(!S.busy && CX) enterCross(+b.dataset.k); }));
   textEl.className='text testimony'; nextEl.hidden=true;
@@ -263,6 +267,16 @@ function enterCross(pos){
   controlsEl.hidden=false;
 }
 function crossStep(d){ if(!CX||S.busy) return; enterCross((CX.pos+d+CX.vis.length)%CX.vis.length); }
+/* 버릇 살피기: 증인을 확대해 거짓말할 때만 나오는 버릇을 찾는다. 어느 문장이 수상한지만 알려 주고, 깰 증거는 알려 주지 않는다 */
+async function doObserve(){
+  if(S.busy||!CX||!CX.T.habit) return; S.busy=true; controlsEl.hidden=true; $('#pips').hidden=true;
+  const L=curLine(), hit=!!(L.lie&&!L.broken); S.observes=(S.observes||0)+1;
+  track('observe',{key:CX.T.key||'',line:CX.vis[CX.pos]+1,hit:hit});
+  Music.sting('zoom'); stageEl.classList.add('observe');
+  if(hit){ L.habitSeen=true; Music.sting('realize'); await say(ME(),'shock',`(…지금! 증인이 [[${CX.T.habit}]]. 이 말을 할 때만 그래. 이 문장이 수상해!)`); }
+  else await say(ME(),'think','(증인을 자세히 살펴봤다. 이 말을 할 때는 특별한 버릇이 보이지 않는다.)');
+  stageEl.classList.remove('observe'); S.busy=false; enterCross(CX.pos);
+}
 async function doPress(){
   if(CX){ const l=curLine(); if(l) l.pressed=true; }
   if(S.busy||!CX) return; S.busy=true; controlsEl.hidden=true,$('#pips')&&($('#pips').hidden=true); S.presses++;
@@ -270,17 +284,23 @@ async function doPress(){
   await shout('hold');
   if(L.press) await line(L.press);
   if(L.endOnPress && !CX.T.lines.some(l=>l.lie&&!l.broken)){ controlsEl.hidden=true,$('#pips')&&($('#pips').hidden=true); S.busy=false; const res=CX.res; CX=null; res(); return; }
+  track('press',{key:CX.T.key||'',line:CX.vis[CX.pos]+1,reveal:L.reveal!==undefined&&!CX.vis.includes(L.reveal)});
   if(L.reveal!==undefined && !CX.vis.includes(L.reveal)){
     Music.sting('realize'); flash();
     CX.vis.splice(CX.pos+1,0,L.reveal);
     await say('judge','stern','증언에 [[새 문장]]이 더해졌습니다.');
+    const NL=CX.T.lines[L.reveal];
+    if(NL.gives && CX.T.solve!=='reveal'){ await say(CX.T.who,NL.expr||'normal',NL.text,{testimony:true,tag:'새 증언'}); for(const id of NL.gives){ if(S.found.has(id)) continue; S.found.add(id); Music.sting('get'); showEvidence(id); await say('guide','normal',`증거 수첩에 [[${EV_BY_ID[id].title}]]을(를) 넣었다.`); hideEvidence(); track('ev_found',{id:id,from:'testimony'}); } }
     if(CX.T.solve==='reveal'){ CX.pos=CX.pos+1; S.idx=CX.vis[CX.pos]; const R=curLine();
       await say(CX.T.who,R.expr||'normal',R.text,{testimony:true,tag:'새 증언'});
       controlsEl.hidden=true,$('#pips')&&($('#pips').hidden=true); S.busy=false; const T=CX.T, res=CX.res; CX=null; if(T.onReveal) await T.onReveal(); res(); return; }
+    if(CX.T.allReveal && !crossLeft(CX)){ controlsEl.hidden=true; $('#pips').hidden=true; S.busy=false; const T=CX.T, res=CX.res; CX=null; if(T.onHit) await T.onHit(); res(); return; }
     S.busy=false; enterCross(CX.pos+1); return;
   }
   S.busy=false; enterCross(CX.pos);
 }
+/* 아직 깰 거짓이 남았는가. allReveal이면 숨은 말을 다 끌어낼 때까지 끝나지 않는다 */
+function crossLeft(cx){ const T=cx.T; return T.lines.some(l=>l.lie&&!l.broken) || (!!T.allReveal && T.lines.some(l=>l.reveal!==undefined && !cx.vis.includes(l.reveal))); }
 async function doPresent(id){
   const pend=S.combo; onSheetClose=null; closeSheet(); S.combo=pend; if(S.busy||!CX) return; S.busy=true; controlsEl.hidden=true,$('#pips')&&($('#pips').hidden=true);
   const L=curLine(), card=EV_BY_ID[id];
@@ -295,13 +315,14 @@ async function doPresent(id){
     const pair=S.combo; S.combo=null; onSheetClose=null;
     const ok2=pair && pair!==id && L.need2.includes(id) && L.need2.includes(pair);
     S.log.push({line:(CX.T.key?CX.T.key+' ':'')+(CX.vis[CX.pos]+1), card:(pair?pair+'+':'')+id, ok:ok2});
-    if(!ok2){ await wrongPresent(card); return; }
+    if(!ok2){ track('present',{key:CX.T.key||'',line:CX.vis[CX.pos]+1,ev:(pair?pair+'+':'')+id,ok:false}); await wrongPresent(card); return; }
   }
   const ok=!!L.lie && (L.need2?true:(Array.isArray(L.ev)?L.ev.includes(id):L.ev===id));
   if(!L.need2) S.log.push({line:(CX.T.key?CX.T.key+' ':'')+(CX.vis[CX.pos]+1), card:id, ok:ok});
+  { const lg=S.log[S.log.length-1]; track('present',{key:CX.T.key||'',line:CX.vis[CX.pos]+1,ev:lg.card,ok:lg.ok}); }
   if(ok){
     const cx=CX, T=CX.T, res=CX.res; CX=null; L.broken=true;
-    const left=T.lines.some(l=>l.lie&&!l.broken);
+    const left=crossLeft(cx);
     Music.stop(0.02); Music.sting('realize'); await wait(420);
     await slam();
     await shout('objection');
@@ -329,6 +350,7 @@ async function wrongPresent(card){
   await loseTrust();
   if(CX){ CX.miss=(CX.miss||0)+1;
     if(CX.miss===2 && S.trust>0){ const k=CX.vis.findIndex(i=>CX.T.lines[i].lie&&!CX.T.lines[i].broken);
+      if(k>=0) track('hint_line',{key:CX.T.key||'',line:k+1});
       if(k>=0) await say('judge','normal',`…검사, 힌트를 하나 주겠소. 증언 가운데 [[${k+1}번째 말]]을 잘 살펴보시오. 그 말과 어긋나는 증거가 수첩에 있을 것이오.`.replace('검사',ROLE_NAME())); } }
   if(S.trust<=0){ CX=null; await loseTrial(); return; }
   await say(who,['defendant','wiman'].includes(who)?'smug':'base','…엉뚱한 증거로군.');
@@ -337,10 +359,10 @@ async function wrongPresent(card){
   S.busy=false; enterCross(CX.pos);
 }
 async function loseTrial(){
-  bgm('crisis');
-  await say('judge','stern','재판부는 더 이상 검사를 믿을 수 없습니다. 오늘 재판은 여기까지입니다.');
+  bgm('crisis'); track('lose',{});
+  await say('judge','stern',`재판부는 더 이상 ${ROLE_NAME()}의 말을 믿을 수 없습니다. 오늘 재판은 여기까지입니다.`);
   await gavel();
-  await say('judge','normal','다만 검사가 졌다고 피고의 책임이 사라지는 것은 아닙니다. 증거를 다시 갖춰 [[항소]]하시오.');
+  await say('judge','normal',S.me==='player'||!S.me?'다만 검사가 졌다고 피고의 책임이 사라지는 것은 아닙니다. 증거를 다시 갖춰 [[항소]]하시오.':'증거를 다시 살피고, 이어 하기로 이 날부터 다시 하시오.');
   S.busy=false; S.inTrial=false; openGameOver(); if(S.onLose){ const f=S.onLose; S.onLose=null; f(); }
 }
 async function quickHit(L,id){
@@ -416,7 +438,11 @@ const LOCS=[
 function locBG(id){
   const A=ASSETS.bg||{}; if(A[id]) return `<img class="bgimg" src="${A[id]}" alt="">`;
   const C={archive:['#1b2238','#3a2a20','#f0b860'],museum:['#141a26','#2a3040','#d8c890']}[id]||['#e8925a','#6a3a52','#4a3a2a'];
-  return SV+`<defs>${lg('lc',[[0,C[0]],[1,C[1]]])}</defs><rect width="1600" height="900" fill="url(#lc)"/><circle cx="800" cy="300" r="260" fill="${C[2]}" opacity=".12"/><rect y="700" width="1600" height="200" fill="#000" opacity=".25"/></svg>`;
+  /* 그림이 아직 없는 장소: 조사할 물건을 모두(단서·미끼 구별 없이) 스케치처럼 그려 둔다 */
+  let room=null; LOCS.forEach(l=>(l.rooms||[l]).forEach(r=>{ if(r.id===id) room=r; }));
+  const items=room&&room.spots?room.spots.map(p=>{ const x=p.x*16, y=p.y*9, w=p.w*16, h=p.h*9;
+    return `<g><rect x="${x}" y="${y}" width="${w}" height="${h}" rx="14" fill="#fff4dc" fill-opacity=".14" stroke="#fff4dc" stroke-opacity=".55" stroke-width="4" stroke-dasharray="14 10"/><text x="${x+w/2}" y="${y+h/2+12}" text-anchor="middle" font-size="${Math.max(24,Math.min(38,w/7))}" font-family="Noto Sans KR,sans-serif" font-weight="700" fill="#fff4dc" fill-opacity=".8">${esc(p.label)}</text></g>`; }).join(''):'';
+  return SV+`<defs>${lg('lc',[[0,C[0]],[1,C[1]]])}</defs><rect width="1600" height="900" fill="url(#lc)"/><circle cx="800" cy="300" r="260" fill="${C[2]}" opacity=".12"/><rect y="700" width="1600" height="200" fill="#000" opacity=".25"/>${items}${room?`<text x="1580" y="50" text-anchor="end" font-size="30" font-family="Noto Sans KR,sans-serif" fill="#fff4dc" fill-opacity=".6">${esc(room.name||'')} · 그림 준비 중</text>`:''}</svg>`;
 }
 let invLoc=null, invParent=null;
 const locSpots=l=>(l.rooms?l.rooms.flatMap(r=>r.spots):l.spots);
@@ -445,7 +471,7 @@ let textSpeed=+(store.get('yj-speed')||0)||0;
 const QUICK_EV=['E1','E2','E3','E4','E5','E6','E7','E8'];
 let moving=false;
 const P2=()=>S.p2at||2;
-const avail=x=>!!x && (!x.from||S.phase>=x.from) && (!x.until||S.phase<=x.until);
+const avail=x=>!!x && (!x.from||S.phase>=x.from) && (!x.until||S.phase<=x.until) && (!x.role||x.role===S.role);
 const availLocs=()=>LOCS.filter(avail);
 const roomsOf=l=>(l.rooms||[l]).filter(avail);
 /* 조사 중 대사가 나오는 동안 장소·구역을 누르면, 남은 대사를 건너뛰고 바로 옮긴다 */
@@ -479,6 +505,8 @@ function roomStep(d){
 function goRoom(room,silent,how){
   const id=room.id, from=invLoc; if(from&&from.id===id&&!silent) return;
   invLoc=room; if(!room.miss&&invParent.miss) room.miss=invParent.miss;
+  track('move',{to:id});
+  stageEl.classList.toggle('meet',room.kind==='meet');
   curView='loc:'+id; deskEl.innerHTML=''; charEl.innerHTML=''; charEl.dataset.key='';
   preloadBG();
   if(silent||!from){ putBG(bgEl,id); sceneEl.classList.remove('cut'); void sceneEl.offsetWidth; sceneEl.classList.add('cut'); }
@@ -523,13 +551,15 @@ function renderSpots(){ renderNpcLayer(); $('#lens').hidden=moving; stageEl.clas
 function moveLens(dx,dy){ lens.x=Math.max(1,Math.min(99,lens.x+dx)); lens.y=Math.max(3,Math.min(97,lens.y+dy)); placeLens(); }
 async function examineAt(){
   if(S.busy||S.mode!=='inv') return;
+  if(invLoc&&invLoc.kind==='meet'){ if(npcOf(invLoc)) talkTo(); return; }
   if(npcHit(lens.x,lens.y)){ Music.sting('click'); talkTo(); return; }
   const p=spotAt(lens.x,lens.y);
   if(p){ Music.sting('click'); examine(p); return; }
   Music.sting('miss');
   S.busy=true; const m=invLoc.miss; S.misses=(S.misses||0)+1; S.missStreak=(S.missStreak||0)+1;
+  track('inv_miss',{loc:invLoc.id,x:Math.round(lens.x),y:Math.round(lens.y)});
   await say(ME(),'normal',m[Math.floor(Math.random()*m.length)],{view:'inv'});
-  if(S.story && S.missStreak%10===0 && !S.invSkip){ const miss=missingReq(); if(miss.length) await say(ME(),'think',`(헛짚기만 하네… [[${locOf(miss[Math.floor(Math.random()*miss.length)])}]] 쪽을 다시 살펴볼까?)`,{view:'inv'}); }
+  if(S.story && S.missStreak%10===0 && !S.invSkip){ const miss=missingReq(); if(miss.length) track('hint_place',{to:locOf(miss[0])}); if(miss.length) await say(ME(),'think',`(헛짚기만 하네… [[${locOf(miss[Math.floor(Math.random()*miss.length)])}]] 쪽을 다시 살펴볼까?)`,{view:'inv'}); }
   S.busy=false;
 }
 /* ===== 조사 중 인물: 이야기하기·보여 주기 ===== */
@@ -552,14 +582,14 @@ function hideNpc(){ charEl.innerHTML=''; charEl.dataset.key=''; renderNpcLayer()
 async function npcLines(np,lines){
   for(const x of lines){ if(S.invSkip) break; const who=x[0]==='ME'?ME():x[0]; if(who===np.who) showNpc(np,x[1]); await say(who,x[1],x[2],{view:'inv'}); }
 }
-async function npcGives(ids){ for(const id of (ids||[])){ if(S.found.has(id)) continue; S.found.add(id); Music.sting('get'); S.missStreak=0; showEvidence(id); await say('guide','normal',`증거 수첩에 [[${EV_BY_ID[id].title}]]을(를) 넣었다.`,{view:'inv'}); hideEvidence(); } }
+async function npcGives(ids){ for(const id of (ids||[])){ if(S.found.has(id)) continue; S.found.add(id); Music.sting('get'); S.missStreak=0; track('ev_found',{id:id,from:'talk'}); showEvidence(id); await say('guide','normal',`증거 수첩에 [[${EV_BY_ID[id].title}]]을(를) 넣었다.`,{view:'inv'}); hideEvidence(); } }
 function talkTo(){
   const np=npcOf(invLoc); if(!np||S.busy||moving) return;
   S.talked=S.talked||new Set(); S.unlocked=S.unlocked||new Set();
   showNpc(np); S.busy=true;
   const list=()=>{
-    openSheet(`<h2>${esc(String(NAMES[np.who]||CAST[np.who].name).replace(/^증인 /,''))}에게 묻기</h2><p class="lead">물어볼 것을 고르세요. 🔒은 증거를 보여 줘야 열리는 이야기예요.</p>
-      <div class="choices">${np.topics.map((t,i)=>{ const lk=t.lock&&!S.unlocked.has(t.id); return `<button class="choice${S.talked.has(t.id)?' done':''}" type="button" data-i="${i}"><span class="ck">${lk?'🔒':S.talked.has(t.id)?'✓':i+1}</span>${esc(t.t)}</button>`; }).join('')}</div>
+    openSheet(`<h2>${esc(String(NAMES[np.who]||CAST[np.who].name).replace(/^(증인|피고|피해자) /,''))}에게 묻기</h2><p class="lead">물어볼 것을 고르세요. 🔒은 증거를 보여 줘야 열리는 이야기예요.</p>
+      <div class="choices">${np.topics.map((t,i)=>{ if(!avail(t)) return ''; const lk=t.lock&&!S.unlocked.has(t.id); return `<button class="choice${S.talked.has(t.id)?' done':''}" type="button" data-i="${i}"><span class="ck">${lk?'🔒':S.talked.has(t.id)?'✓':i+1}</span>${esc(t.t)}</button>`; }).join('')}</div>
       <div class="sheet-foot"><button class="abtn" type="button" data-act="tshow">증거 보여 주기 <span class="ckey">P</span></button><button class="abtn primary" type="button" data-act="tend">그만 묻기</button></div>`,true);
     onSheetClose=()=>{ hideNpc(); S.busy=false; renderInvBar(); };
     sheetCard.querySelector('[data-act=tend]').addEventListener('click',closeSheet);
@@ -567,6 +597,7 @@ function talkTo(){
     recNav=k=>{ const i=parseInt(k,10)-1; const b=sheetCard.querySelector(`.choice[data-i="${i}"]`); if(b) b.click(); };
     sheetCard.querySelectorAll('.choice').forEach(b=>b.addEventListener('click',async()=>{
       const t=np.topics[+b.dataset.i]; onSheetClose=null; closeSheet(); Music.sting('click');
+      track('talk',{who:np.who,topic:t.id,locked:!!(t.lock&&!S.unlocked.has(t.id))});
       if(t.lock && !S.unlocked.has(t.id)){ await say(ME(),'think',t.lockSay||'(지금은 말해 주지 않을 것 같다.)',{view:'inv'}); list(); return; }
       await npcLines(np,t.lines); S.talked.add(t.id); await npcGives(t.gives); list();
     }));
@@ -583,6 +614,7 @@ function showTo(back){
     S.allowUsed=false; onSheetClose=null; closeSheet(); showEvidence(id);
     await say(ME(),'present',`이걸 봐 주세요. ‘${EV_BY_ID[id].title}’예요.`,{view:'inv'}); hideEvidence();
     const r=(np.present||{})[id];
+    track('show',{who:np.who,ev:id,ok:!!r,unlock:r&&r.unlock||''});
     if(r){ await npcLines(np,r.lines); if(r.unlock && !S.unlocked.has(r.unlock)){ S.unlocked.add(r.unlock); Music.sting('realize'); await say('guide','normal','새로 물어볼 이야기가 생겼다.',{view:'inv'}); } await npcGives(r.gives); }
     else await npcLines(np,np.def||[[np.who,'base','…글쎄요. 잘 모르겠군요.']]);
     S.busy=false; if(back){ talkTo(); } else hideNpc();
@@ -597,7 +629,7 @@ function renderInvBar(){
       ${R.map(r=>`<button class="ib-room${invLoc.id===r.id?' on':''}${lockd(r)?' locked':''}" type="button" data-room="${r.id}" aria-pressed="${invLoc.id===r.id}">${lockd(r)?'<span aria-hidden="true">🔒</span> ':''}${esc(r.name)}</button>`).join('<span class="ib-dot" aria-hidden="true"></span>')}
       <button class="ib-arrow" type="button" data-step="1"${ri>=R.length-1?' disabled':''} aria-label="오른쪽 구역으로 (D)"><span class="ckey">D</span><span aria-hidden="true">▶</span></button>
     </div>`:`<div class="ib-rooms ib-single">${esc(invParent?invParent.name:'')}</div>`;
-  const people=np?`<div class="ib-people"><button class="ib-act talk" type="button" data-act="talk">${esc(josa(String(NAMES[np.who]||CAST[np.who].name).replace(/^증인 /,''),'와','과'))} 이야기하기<span class="ckey">T</span></button><button class="ib-act" type="button" data-act="show">증거 보여 주기<span class="ckey">P</span></button></div>`:'';
+  const people=np?`<div class="ib-people"><button class="ib-act talk" type="button" data-act="talk">${esc(josa(String(NAMES[np.who]||CAST[np.who].name).replace(/^(증인|피고|피해자) /,''),'와','과'))} 이야기하기<span class="ckey">T</span></button><button class="ib-act" type="button" data-act="show">증거 보여 주기<span class="ckey">P</span></button></div>`:'';
   $('#invbar').innerHTML=`<div class="ib-top">${rooms}${people}</div>
     <div class="ib-bottom"><div class="ib-locs" role="group" aria-label="장소 이동">${locs.map((l,k)=>{ const n=locSpots(l).filter(p=>(p.ev&&S.found.has(p.ev))||(p.p2&&p.p2.ev&&S.found.has(p.p2.ev))).length;
         return `<button class="ib-loc${invParent&&invParent.id===l.id?' on':''}" type="button" data-loc="${l.id}" aria-pressed="${!!(invParent&&invParent.id===l.id)}"><span class="ib-k" aria-hidden="true">${k+1}</span><span class="ib-n">${esc(l.name)}</span><span class="ib-c">증거 ${n}</span></button>`; }).join('')}</div>
@@ -613,11 +645,12 @@ function renderInvBar(){
 async function examine(p0){
   if(S.busy) return; S.busy=true; S.seen.add(spotKey(p0));
   const p=(S.phase>=P2()&&p0.p2)?Object.assign({},p0,p0.p2):p0;
+  track('inv_look',{loc:invLoc.id,spot:p.label,ev:p.ev||''});
   if(p.need && !S.found.has(p.need)){ for(const t of (p.lockedSay||['잠겨 있다.'])){ if(S.invSkip) break; await say(ME(),'think',t,{view:'inv'}); } renderSpots(); S.busy=false; return; }
   for(const t of p.say){ if(S.invSkip) break; await say(ME(),'think',t,{view:'inv'}); }
   const gets=(p.gives||[]).concat(p.ev?[p.ev]:[]).filter(id=>!S.found.has(id));
   for(const id of gets){
-    S.found.add(id); Music.sting('get'); S.missStreak=0;
+    S.found.add(id); Music.sting('get'); S.missStreak=0; track('ev_found',{id:id,from:invLoc.id});
     if(S.invSkip) continue;
     showEvidence(id);
     await say('guide','normal',`증거 수첩에 [[${EV_BY_ID[id].title}]]을(를) 넣었다.`,{view:'inv'});
@@ -625,7 +658,7 @@ async function examine(p0){
   }
   renderSpots(); renderInvBar(); S.busy=false;
 }
-function reqSpots(){ const out=[]; availLocs().forEach(l=>roomsOf(l).forEach(r=>{ const nm=l.name+(l.rooms?' · '+r.name:''); const np=npcOf(r); if(np){ (np.topics||[]).forEach(t=>{ (t.gives||[]).forEach(id=>out.push({id:id,loc:nm})); if(t.must) out.push({id:'talk:'+t.id,loc:nm}); }); Object.values(np.present||{}).forEach(x=>(x.gives||[]).forEach(id=>out.push({id:id,loc:nm}))); } r.spots.forEach(p0=>{ const p=(S.phase>=P2()&&p0.p2)?Object.assign({},p0,p0.p2):p0; if(p.only2&&S.phase<P2()) return; (p.gives||[]).concat(p.ev?[p.ev]:[]).forEach(id=>out.push({id:id,loc:nm})); }); })); return out; }
+function reqSpots(){ const out=[]; availLocs().forEach(l=>roomsOf(l).forEach(r=>{ const nm=l.name+(l.rooms?' · '+r.name:''); const np=npcOf(r); if(np){ (np.topics||[]).filter(avail).forEach(t=>{ (t.gives||[]).forEach(id=>out.push({id:id,loc:nm})); if(t.must) out.push({id:'talk:'+t.id,loc:nm}); }); Object.values(np.present||{}).forEach(x=>(x.gives||[]).forEach(id=>out.push({id:id,loc:nm}))); } r.spots.forEach(p0=>{ const p=(S.phase>=P2()&&p0.p2)?Object.assign({},p0,p0.p2):p0; if(p.only2&&S.phase<P2()) return; (p.gives||[]).concat(p.ev?[p.ev]:[]).forEach(id=>out.push({id:id,loc:nm})); }); })); return out; }
 function missingReq(){ return [...new Set(reqSpots().map(x=>x.id))].filter(id=>id.startsWith('talk:')?!(S.talked&&S.talked.has(id.slice(5))):!S.found.has(id)); }
 function locOf(id){ const x=reqSpots().find(s=>s.id===id); return x?x.loc:'다른 장소'; }
 async function toCourt(){
@@ -655,8 +688,30 @@ sheetEl.addEventListener('click',e=>{ if(e.target===sheetEl && sheetCloseable) c
 const dots=n=>`<span class="dots">${'●'.repeat(n)}${'○'.repeat(3-n)}</span>`;
 function recDetail(e,picked){
   return `<div class="big">${evArt(e)}</div><span class="chip">${e.type}</span>${isUsed(e.id)?' <span class="usedmark">✕ 이미 쓴 증거 · 다시 낼 수 없어요</span>':picked?' <span class="selmark">✓ 고름</span>':''}
-    <h4>${esc(e.title)}</h4><p class="body">${esc(e.body)}</p>
-    <p class="src">출처: ${esc(e.src)}</p><p class="rel">믿을 만한 정도 ${dots(e.trust)} ${TRUSTW[e.trust]}. ${esc(e.note)}</p>`;
+    <h4>${esc(e.title)}</h4><p class="body">${esc(e.body)}</p>${S.zoomed&&S.zoomed.has(e.id)&&e.zoom?`<p class="zoomnote">🔍 ${esc(plain(e.zoom.note||e.zoom.say[e.zoom.say.length-1]))}</p>`:''}
+    <p class="src">출처: ${esc(e.src)}</p><p class="rel">믿을 만한 정도 ${dots(e.trust)} ${TRUSTW[e.trust]}. ${esc(e.note)}</p>
+    <button class="abtn zoomb" type="button" data-zoom="${e.id}">🔍 확대해 보기</button>`;
+}
+/* 증거 확대: 증거 그림을 크게 보고, 확대해야만 보이는 단서(날짜 칸, 서명, 매화 얼룩)를 찾는다 */
+async function openZoom(id,back){
+  const e=EV_BY_ID[id]; S.zoomed=S.zoomed||new Set(); const first=!S.zoomed.has(id); S.zoomed.add(id);
+  track('zoom',{ev:id,hit:!!e.zoom,plum:!!(e.zoom&&e.zoom.plum)});
+  Music.sting('zoom');
+  openSheet(`<h2>증거 확대 · ${esc(e.title)}</h2><div class="zoombig">${evArt(e)}${e.zoom&&e.zoom.plum?'<span class="plum" aria-label="매화 모양 먹 얼룩">✿</span>':''}</div>
+    <div class="zoomtxt">${(e.zoom?e.zoom.say:['구석구석 살펴보았다. 카드에 적힌 것 말고 새로 보이는 것은 없다.']).map(t=>`<p>${t.replace(/\[\[(.*?)\]\]/g,'<b class="kw">$1</b>').replace(/^\(|\)$/g,'')}</p>`).join('')}</div>
+    <div class="sheet-foot"><button class="abtn primary" type="button" data-act="zback">돌아가기</button></div>`,true);
+  if(e.zoom && first){ Music.sting('realize'); if(e.zoom.plum){ S.plums=S.plums||new Set(); S.plums.add(id); } if(e.zoom.gives) e.zoom.gives.forEach(g=>{ if(!S.found.has(g)){ S.found.add(g); track('ev_found',{id:g,from:'zoom'}); } }); }
+  sheetCard.querySelector('[data-act=zback]').addEventListener('click',closeSheet);
+  onSheetClose=back?()=>setTimeout(back,40):null;
+}
+/* 용어 카드: 처음 나온 어려운 말을 쉬운 말로. 증거가 아니라서 제시할 수 없다 */
+function openTerms(back){
+  const D=CASE_DATA[S.case], all=(D&&D.terms)||[], got=all.filter(x=>S.terms&&S.terms.has(x.w));
+  openSheet(`<h2>용어 카드</h2><p class="lead">처음 나온 어려운 말을 모아 두었어요. 용어 카드는 증거가 아니라서 법정에 낼 수는 없어요.</p>
+    ${got.length?`<div class="terms">${got.map(x=>`<div class="term"><span class="term-ic" aria-hidden="true">${x.ic||'📖'}</span><b>${esc(x.w)}</b><p>${esc(x.d)}</p></div>`).join('')}</div>`:'<p>아직 모은 용어 카드가 없어요.</p>'}
+    <div class="sheet-foot"><button class="abtn primary" type="button" data-act="tback">${back?'증거 수첩으로':'닫기'}</button></div>`,true);
+  sheetCard.querySelector('[data-act=tback]').addEventListener('click',closeSheet);
+  onSheetClose=back?()=>setTimeout(back,40):null;
 }
 function openRecord(presentMode){
   const LIST=(S.mode==='inv'||S.story)?EVIDENCE.filter(e=>S.found&&S.found.has(e.id)):EVIDENCE.filter(e=>QUICK_EV.includes(e.id));
@@ -669,11 +724,15 @@ function openRecord(presentMode){
     <div class="sheet-foot">
       ${presentMode?'<span class="risk-note">틀리면 해치 방울 하나가 깨져요</span>':''}
       <button class="abtn" data-act="hist" type="button">대화 다시 보기 <span class="ckey">L</span></button>
+      ${S.terms&&S.terms.size?'<button class="abtn" data-act="terms" type="button">용어 카드</button>':''}
       <button class="abtn" data-act="close" type="button">닫기</button>
       ${presentMode?'<button class="abtn primary" data-act="present" type="button" disabled>이 증거 제시하기</button>':''}
     </div>`,true);
   const pb=sheetCard.querySelector('[data-act=present]'), D=$('#recD');
-  const paint=()=>{ D.innerHTML=recDetail(EV_BY_ID[view],sel===view); sheetCard.querySelectorAll('.tile').forEach(x=>{ x.classList.toggle('on',x.dataset.id===view); x.classList.toggle('sel',x.dataset.id===sel); x.setAttribute('aria-pressed',x.dataset.id===sel?'true':'false'); }); };
+  const backTo=()=>presentHandler?S.pickOpen:(()=>openRecord(presentMode));
+  const paint=()=>{ D.innerHTML=recDetail(EV_BY_ID[view],sel===view); sheetCard.querySelectorAll('.tile').forEach(x=>{ x.classList.toggle('on',x.dataset.id===view); x.classList.toggle('sel',x.dataset.id===sel); x.setAttribute('aria-pressed',x.dataset.id===sel?'true':'false'); });
+    const zb=D.querySelector('[data-zoom]'); if(zb){ const back=backTo(); if(presentMode&&!back) zb.remove(); else zb.addEventListener('click',()=>openZoom(zb.dataset.zoom,back)); } };
+  { const tb=sheetCard.querySelector('[data-act=terms]'); if(tb){ const back=backTo(); if(presentMode&&!back) tb.remove(); else tb.addEventListener('click',()=>openTerms(back)); } }
   sheetCard.querySelectorAll('.tile').forEach(b=>b.addEventListener('click',()=>{ Music.sting('click'); view=b.dataset.id; if(presentMode){ sel=b.dataset.id; pb.disabled=isUsed(sel); } paint(); }));
   recNav=(k)=>{ const ids=LIST.map(e=>e.id); let i=ids.indexOf(view); const cols=Math.max(1,Math.round(sheetCard.querySelector('.rec-grid').clientWidth/114));
     if(k==='ArrowRight') i++; else if(k==='ArrowLeft') i--; else if(k==='ArrowDown') i+=cols; else if(k==='ArrowUp') i-=cols;
@@ -800,9 +859,12 @@ function openTeacher(){
     ${S.invFound?`<p>조사에서 헛짚은 횟수: ${S.misses||0}번</p><p>조사에서 스스로 찾은 증거: ${S.invFound.length}/8 (${S.invFound.map(id=>id+' '+esc(EV_BY_ID[id].title)).join(', ')||'없음'})</p>`:''}
     ${S.classified?`<h3>분류 결과</h3><p>${S.lines.map((L,i)=>`${i+1}번 ${CAT_NAME[S.classify[i]]||'-'} ${S.classify[i]===correctCat(L)?'○':'×'}`).join(', ')}</p>`:''}`;
   }
-  openSheet(`<h2>교사용</h2>${body}
-    <h3>고증 확인 목록</h3><ol class="check">${GOJEUNG.map(x=>`<li>${esc(x)}</li>`).join('')}</ol>
+  if(S.case>=2) body=`<p class="lead">사건 ${S.case}을(를) 하고 있어요. 이번 판의 증거 제시 기록은 아래 ‘학습 데이터’에 모입니다.</p>`;
+  const gj=(CASE_DATA[S.case]&&CASE_DATA[S.case].gojeung)||GOJEUNG;
+  openSheet(`<h2>교사용</h2>${teacherDataHTML()}<h3>이번 판</h3>${body}
+    <h3>고증 확인 목록${S.case>=3?` (사건 ${S.case})`:''}</h3><ol class="check">${gj.map(x=>`<li>${esc(x)}</li>`).join('')}</ol>
     <div class="sheet-foot"><button class="abtn primary" id="tClose" type="button">${back?'재판 기록으로':'닫기'}</button></div>`,!back);
+  bindTeacherData();
   $('#tClose').addEventListener('click',()=>{ if(back) back(); else closeSheet(); });
 }
 
@@ -876,6 +938,10 @@ function rolePic(r){
 }
 let CASE_SEL=+(store.get('yj-case')||1)||1;
 function storyButtons(r){
+  if(CASE_DATA[CASE_SEL]){
+    const D=CASE_DATA[CASE_SEL], v=hasSaveX(CASE_SEL,r.id);
+    return `${v?`<button class="go" type="button" data-act="cx-${CASE_SEL}-${r.id}-resume">이어 하기<small>${phaseNameX(v.phase)}부터</small></button>`:''}<button class="go${v?' alt':''}" type="button" data-act="cx-${CASE_SEL}-${r.id}-new">본편 ${v?'처음부터':'시작'}<small>사건 ${CASE_SEL} · ${D.time||'90~110분'} · 자동 저장</small></button>`;
+  }
   if(CASE_SEL===2){
     const v=hasSave2(r.id);
     return `${v?`<button class="go" type="button" data-act="c2-${r.id}-resume">이어 하기<small>${PHASE2[v.phase]||''}부터</small></button>`:''}<button class="go${v?' alt':''}" type="button" data-act="c2-${r.id}-new">본편 ${v?'처음부터':'시작'}<small>사건 2 · 90~110분 · 자동 저장</small></button>`;
@@ -887,15 +953,18 @@ const CASES=[{n:1,t:'백제는 왜 무너졌나',d:'의자왕 · 튜토리얼',r
 function renderRoles(){
   const C=CASES.find(c=>c.n===CASE_SEL)||CASES[0];
   rolesEl.innerHTML=`<h2 class="roles-h">사건과 역할을 고르세요</h2>
+    <label class="sid-row">내 번호나 별명 <input id="sidIn" type="text" maxlength="12" autocomplete="off" placeholder="예) 5반 12번" value="${esc(store.get('yj-sid')||'')}"> <small>이름은 쓰지 마세요. 선생님이 기록을 모을 때만 써요.</small></label>
     <div class="case-tabs" role="tablist">${CASES.map(c=>`<button class="case-tab${c.n===C.n?' on':''}" type="button" role="tab" aria-selected="${c.n===C.n}" data-case="${c.n}"><b>사건 ${c.n}</b>${c.t}<small>${c.d}</small></button>`).join('')}</div>
-    <p class="roles-lead">${C.n===1?'사건 1은 검사 자리에서 해 볼 수 있어요.':'사건 2부터는 변호인 자리도 열립니다. 같은 사건을 다른 자리에서 다시 해 보세요.'}</p>
-    <div class="role-grid">${ROLES.map(r=>{ const ok=C.ready.includes(r.id); return `<div class="role${ok?' ready':''}">${ok?'':'<span class="lock">준비 중</span>'}<div class="role-pic" style="--glow:${r.glow}">${rolePic(r)}</div><h3>${r.name}<span>${r.who}</span></h3><p class="goal">${r.goal}</p><p class="how">${r.how}</p>${ok?storyButtons(r):'<button class="go" type="button" disabled>기획 확인 뒤 제작</button>'}</div>`; }).join('')}</div>`;
+    <p class="roles-lead">${C.n===1?'사건 1은 검사 자리에서 해 볼 수 있어요.':C.lead||'사건 2부터는 변호인 자리도 열립니다. 같은 사건을 다른 자리에서 다시 해 보세요.'}</p>
+    <div class="role-grid">${ROLES.map(r=>{ const ok=C.ready.includes(r.id), lockTxt=(C.locked&&C.locked[r.id])||'준비 중'; return `<div class="role${ok?' ready':''}${C.main===r.id?' main':''}">${ok?(C.main===r.id?'<span class="lock main">기본</span>':''):`<span class="lock">${esc(lockTxt)}</span>`}<div class="role-pic" style="--glow:${r.glow}">${rolePic(r)}</div><h3>${r.name}<span>${r.who}</span></h3><p class="goal">${r.goal}</p><p class="how">${r.how}</p>${ok?storyButtons(r):'<button class="go" type="button" disabled>기획 확인 뒤 제작</button>'}</div>`; }).join('')}</div>`;
+  { const si=$('#sidIn'); if(si) si.addEventListener('change',()=>store.set('yj-sid',si.value.trim().slice(0,12))); }
   rolesEl.querySelectorAll('[data-case]').forEach(b=>b.addEventListener('click',()=>{ CASE_SEL=+b.dataset.case; store.set('yj-case',CASE_SEL); Music.sting('click'); renderRoles(); }));
   const one=(sel,fn)=>{ const b=rolesEl.querySelector(sel); if(b) b.addEventListener('click',fn); };
   one('[data-role=pros]',()=>{ setCase(1); S.me='player'; S.case=1; startTrial(); });
   one('[data-role=story]',()=>{ setCase(1); S.me='player'; S.case=1; startStory(); });
   one('[data-role=resume]',()=>{ setCase(1); S.me='player'; S.case=1; resumeStory(); });
   rolesEl.querySelectorAll('[data-act^=c2-]').forEach(b=>b.addEventListener('click',()=>{ const [,role,kind]=b.dataset.act.split('-'); startCase2(role,kind==='resume'); }));
+  rolesEl.querySelectorAll('[data-act^=cx-]').forEach(b=>b.addEventListener('click',()=>{ const [,n,role,kind]=b.dataset.act.split('-'); startCaseX(+n,role,kind==='resume'); }));
 }
 
 function showTitle(){
@@ -903,7 +972,8 @@ function showTitle(){
   $('#titleIn').innerHTML=logoSVG()+`<p>사료로 묻고, 증거로 판결한다</p><small>아래에서 역할을 고르면 재판이 시작됩니다</small>`;
 }
 function backToRoles(){
-  closeSheet(); Music.stop(0.6); S.inTrial=false; S.bgm=null; setMood('open');
+  closeSheet(); Music.stop(0.6); S.inTrial=false; S.bgm=null; setMood('open'); setCharges(null); stageEl.classList.remove('meet');
+  { const sub=document.querySelector('.brand span'); if(sub) sub.textContent='사료로 묻고, 증거로 판결한다'; }
   controlsEl.hidden=true,$('#pips')&&($('#pips').hidden=true); rolesEl.hidden=false; hideEvidence(); $('#invbar').hidden=true; $('#lens').hidden=true; stageEl.classList.remove('inv'); S.mode=null;
   setView('judge','judge','smile'); setName('guide'); textEl.className='text'; nextEl.hidden=true;
   textEl.textContent='역할을 고르면 재판이 시작됩니다. 글상자를 누르면 다음 말로 넘어갑니다.';
@@ -926,6 +996,7 @@ $('#bPress').addEventListener('click',doPress);
 $('#bPresent').addEventListener('click',()=>{ if(!S.busy&&CX) openRecord(true); });
 $('#bPrev').addEventListener('click',()=>crossStep(-1));
 $('#bNext').addEventListener('click',()=>crossStep(1));
+$('#bObserve').addEventListener('click',doObserve);
 const soundBtn=$('#tSound'), volEl=$('#vol');
 function renderSound(){ soundBtn.textContent=Music.on?'소리 켬':'소리 끔'; soundBtn.setAttribute('aria-pressed',Music.on?'true':'false'); }
 volEl.value=String(Math.round(Music.volume*100));
@@ -963,6 +1034,7 @@ document.addEventListener('keydown',e=>{
     if(k==='ArrowLeft'){ e.preventDefault(); $('#bPrev').click(); return; }
     if(k==='f'||k==='F'||k==='ㄹ'){ e.preventDefault(); doPress(); return; }
     if(k==='e'||k==='E'||k==='ㄷ'){ e.preventDefault(); if(CX) openRecord(true); return; }
+    if((k==='s'||k==='S'||k==='ㄴ') && CX && CX.T.habit){ e.preventDefault(); doObserve(); return; }
   }
   if((k==='Enter'||k===' ') && !(e.target instanceof HTMLButtonElement)){ e.preventDefault(); onAdvance(); }
 });

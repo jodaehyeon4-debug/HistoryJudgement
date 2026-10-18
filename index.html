@@ -572,6 +572,66 @@ pre.code{background:var(--surface2);color:var(--ink);border:2px solid var(--line
 .lens.drag svg{transform:scale(1.18)}
 .lens svg{transition:transform .12s}
 .stage.inv{touch-action:none}
+
+/* ===== 사건 3~10 공통 장치 ===== */
+.case-tabs{grid-template-columns:repeat(auto-fill,minmax(170px,1fr))}
+.case-tab{padding:8px 12px;font-size:14px}
+.case-tab b{font-size:17px}
+.sid-row{display:flex;flex-wrap:wrap;align-items:center;gap:8px;margin:2px 0 8px;font-weight:800;color:var(--muted);font-size:14px}
+.sid-row input{font:inherit;font-weight:900;color:var(--ink);background:var(--surface);border:2px solid var(--line);border-radius:10px;padding:6px 10px;width:12em;max-width:60vw}
+.role .lock.main{background:var(--accent);color:var(--accent-ink);border-color:var(--accent)}
+/* 혐의·용의 카드: 법정 화면 왼쪽 위에 늘 띄움 */
+.cards{position:absolute;left:1.6%;top:2.2%;z-index:4;display:flex;flex-direction:column;gap:4px;max-width:46%;pointer-events:none}
+.cards[hidden]{display:none}
+.cards .ch-h{font-size:clamp(10px,1.2vw,12.5px);font-weight:900;color:var(--lac-ink);text-shadow:0 1px 2px #000}
+.cards .ch{display:flex;align-items:center;gap:6px;font-size:clamp(10px,1.25vw,13px);font-weight:800;color:#f7f2e6;background:rgba(14,16,30,.78);border:1px solid rgba(232,220,192,.5);border-radius:8px;padding:2px 8px;line-height:1.35}
+.cards .ch i{font-style:normal;font-weight:900;font-size:.9em;padding:0 6px;border-radius:999px;background:#3a3f5c;white-space:nowrap}
+.cards .ch.s-guilty i{background:#a83a2f}.cards .ch.s-partial i{background:#b06a1f}.cards .ch.s-innocent i,.cards .ch.s-dropped i{background:#2f7a52}.cards .ch.s-held i{background:#5a4a8e}
+.cards .ch.s-sus{border-color:#ffd36a}.cards .ch.s-sus i{background:#8a6a1a}
+.cards .ch small{opacity:.8;font-weight:700}
+@media (max-width:600px){.cards{max-width:62%}.cards .ch small{display:none}}
+/* 그림자 연출: 실루엣과 소리만, 끝은 검은 화면으로 끊김 */
+.shadow{position:absolute;inset:0;z-index:7;background:#120c10;overflow:hidden}
+.shadow[hidden]{display:none}
+.shadow svg{position:absolute;inset:0;width:100%;height:100%}
+.shadow .sh-cap{position:absolute;left:0;right:0;bottom:6%;text-align:center;color:#e8dcc0;font-weight:800;font-size:clamp(12px,1.6vw,16px);opacity:.75}
+.shadow.cut::after{content:"";position:absolute;inset:0;background:#000;animation:shCut .35s ease-in forwards}
+@keyframes shCut{from{opacity:0}to{opacity:1}}
+.shadow .fig{transition:transform 1.4s ease,opacity 1s ease}
+/* 알림 */
+.toast{position:absolute;left:50%;top:12%;transform:translateX(-50%);z-index:8;font-weight:900;font-size:clamp(12px,1.5vw,15px);color:#20180a;background:#ffd36a;border:2px solid #20180a;border-radius:999px;padding:4px 14px;animation:toastIn 2.2s ease-out forwards;pointer-events:none}
+.toast[hidden]{display:none}
+@keyframes toastIn{0%{opacity:0;transform:translate(-50%,-8px)}12%{opacity:1;transform:translate(-50%,0)}80%{opacity:1}100%{opacity:0}}
+/* 버릇 살피기 */
+.cbtn.observe svg{width:26px;height:26px}
+.stage.observe .char{transform:scale(1.18);transform-origin:50% 30%;transition:transform .35s ease}
+.pip.habit{border-color:#ff9f6a;box-shadow:0 0 0 2px #ff9f6a}
+/* 증거 확대·용어 카드 */
+.zoomb{margin-top:8px}
+.zoombig{position:relative;display:grid;place-items:center;background:var(--surface2);border:2px solid var(--line);border-radius:12px;padding:12px;margin:8px 0}
+.zoombig .evimg,.zoombig svg{width:min(420px,80vw);height:auto;max-height:52vh;object-fit:contain}
+.zoombig .plum{position:absolute;right:16%;bottom:14%;font-size:30px;color:#3a2a40;opacity:.75;transform:rotate(-12deg)}
+.zoomtxt p{font-weight:700;line-height:1.7;margin:4px 0}
+.zoomnote{font-weight:800;color:var(--accent);margin:4px 0}
+.terms{display:grid;grid-template-columns:repeat(auto-fill,minmax(210px,1fr));gap:10px}
+.term{background:var(--surface2);border:2px solid var(--line);border-radius:12px;padding:10px 12px}
+.term b{font-size:18px}.term p{margin:4px 0 0;font-weight:700;line-height:1.6}
+.term-ic{font-size:22px;margin-right:6px}
+/* 하루 끝 요약 */
+.day-sum .stat b{font-size:22px}
+.day-ev{line-height:2}
+.learned{font-weight:800;line-height:1.8}
+.seg.imp{max-width:420px;margin-bottom:6px}
+/* 주장 가르기·판결 저울·연표 */
+.claim-q{font-family:var(--serif);font-weight:800;font-size:17px;padding:10px 12px;border-left:5px solid var(--accent);background:var(--surface2);border-radius:8px;margin:6px 0 10px}
+.tl{display:flex;flex-wrap:wrap;gap:8px;align-items:stretch;margin:10px 0}
+.tl-i{flex:1 1 150px;background:var(--surface2);border:2px solid var(--line);border-top:6px solid var(--gold);border-radius:10px;padding:8px 10px}
+.tl-i b{display:block;font-family:var(--display);font-weight:400;font-size:22px;color:var(--gold)}
+.tl-i span{font-weight:800;line-height:1.5}
+.grade-note{font-weight:800;line-height:1.7}
+.hl .replay{margin-left:8px;padding:2px 10px;font-size:13px}
+.tbl-sm td,.tbl-sm th{font-size:13px}
+.stage.meet .lens{display:none !important}
 </style>
 </head>
 <body>
@@ -595,6 +655,9 @@ pre.code{background:var(--surface2);color:var(--ink);border:2px solid var(--line
     <div class="layer vig"></div>
     <div class="layer grain"></div>
     <div class="hud" id="hud"><span class="hud-l">재판부 신뢰 <span id="gaugeNum">5/5</span></span><div class="bells" id="bells"></div></div>
+    <div class="cards" id="cards" hidden></div>
+    <div class="shadow" id="shadow" hidden></div>
+    <div class="toast" id="toast" hidden></div>
     <div class="fade" id="fade" aria-hidden="true"><span id="fadeT"></span></div>
       <button class="pickhint" id="pickHint" type="button" hidden>증거 수첩을 열어 제시하기 <span class="ckey">E</span></button>
 <div class="npcl" id="npcl" hidden></div>
@@ -622,6 +685,7 @@ pre.code{background:var(--surface2);color:var(--ink);border:2px solid var(--line
     <button class="cbtn" id="bPrev" type="button" aria-label="이전 증언"><svg viewBox="0 0 30 30" aria-hidden="true"><path d="M20,5 L8,15 L20,25" fill="none" stroke="#d9a93f" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/></svg>이전<span class="ckey">←</span></button>
     <button class="cbtn press" id="bPress" type="button"><svg viewBox="0 0 30 30" aria-hidden="true"><path d="M4,6 H26 V20 H14 L8,26 V20 H4 Z" fill="#3f6fa8" stroke="#cfe0ff" stroke-width="2" stroke-linejoin="round"/><text x="15" y="18" font-size="13" font-weight="900" text-anchor="middle" fill="#fff" font-family="Noto Sans KR,sans-serif">?</text></svg><span><b class="bl">잠깐만요! <span class="ckey">F</span></b><small>더 묻기</small></span></button>
     <button class="cbtn present" id="bPresent" type="button"><svg viewBox="0 0 30 30" aria-hidden="true"><rect x="6" y="5" width="18" height="21" rx="2" fill="#f6edd8" stroke="#d9a93f" stroke-width="2"/><path d="M10,11 H20 M10,15 H20 M10,19 H16" stroke="#8a7350" stroke-width="2"/></svg><span><b class="bl">증거 제시 <span class="ckey">E</span></b><small class="risk">틀리면 방울 −1</small></span></button>
+    <button class="cbtn observe" id="bObserve" type="button" hidden><svg viewBox="0 0 30 30" aria-hidden="true"><circle cx="13" cy="13" r="8" fill="none" stroke="#f6d77a" stroke-width="3"/><path d="M19,19 L26,26" stroke="#f6d77a" stroke-width="4" stroke-linecap="round"/><circle cx="13" cy="13" r="3" fill="#f6d77a"/></svg><span><b class="bl">살피기 <span class="ckey">S</span></b><small>버릇 찾기</small></span></button>
     <button class="cbtn" id="bNext" type="button" aria-label="다음 증언">다음<span class="ckey">Space</span><svg viewBox="0 0 30 30" aria-hidden="true"><path d="M10,5 L22,15 L10,25" fill="none" stroke="#d9a93f" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
   </div>
 
@@ -640,7 +704,7 @@ const wait=ms=>new Promise(r=>setTimeout(r,window.__yjFast?Math.min(ms,15):ms));
 const store={get(k){try{return localStorage.getItem(k);}catch(e){return null;}},set(k,v){try{localStorage.setItem(k,v);}catch(e){}}};
 const shuffle=a=>{const b=a.slice();for(let i=b.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));const t=b[i];b[i]=b[j];b[j]=t;}return b;};
 const esc=s=>String(s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
-const ASSETS={"sprites": {"defendant": {"base": "assets/sprites/defendant_base.webp", "shock": "assets/sprites/defendant_shock.webp", "sweat": "assets/sprites/defendant_sweat.webp", "breakdown": "assets/sprites/defendant_breakdown.webp", "angry": "assets/sprites/defendant_angry.webp"}, "judge": {"base": "assets/sprites/judge_base.webp", "shock": "assets/sprites/judge_shock.webp", "stern": "assets/sprites/judge_stern.webp"}, "rival": {"base": "assets/sprites/rival_base.webp", "shock": "assets/sprites/rival_shock.webp", "sweat": "assets/sprites/rival_sweat.webp"}, "player": {"present": "assets/sprites/player_present.webp", "normal": "assets/sprites/player_normal.webp", "sweat": "assets/sprites/player_sweat.webp"}, "daon": {"base": "assets/sprites/daon_base.webp"}, "heungsu": {"base": "assets/sprites/heungsu_base.webp", "hesitate": "assets/sprites/heungsu_hesitate.webp"}, "scribe": {"base": "assets/sprites/scribe_base.webp", "sweat": "assets/sprites/scribe_sweat.webp"}, "citizen": {"base": "assets/sprites/citizen_base.webp"}, "wiman": {"base": "assets/sprites/wiman_base.webp", "sweat": "assets/sprites/wiman_sweat.webp", "angry": "assets/sprites/wiman_angry.webp", "breakdown": "assets/sprites/wiman_breakdown.webp"}, "jun": {"base": "assets/sprites/jun_base.webp", "hesitate": "assets/sprites/jun_hesitate.webp"}, "merchant": {"base": "assets/sprites/merchant_base.webp", "sweat": "assets/sprites/merchant_sweat.webp"}}, "bg": {"witness": "assets/bg/witness.webp", "judge": "assets/bg/judge.webp", "pros": "assets/bg/pros.webp", "ruins": "assets/bg/ruins.webp", "museum": "assets/bg/museum.webp", "archive": "assets/bg/archive.webp", "ruins-cliff": "assets/bg/ruins-cliff.webp", "ruins-palace": "assets/bg/ruins-palace.webp", "lobby": "assets/bg/lobby.webp", "prologue": "assets/bg/prologue.webp", "courtyard": "assets/bg/courtyard.webp", "wg-gate": "assets/bg/wg-gate.webp", "wg-court": "assets/bg/wg-court.webp", "wg-tower": "assets/bg/wg-tower.webp", "forge": "assets/bg/forge.webp", "museum2": "assets/bg/museum2.webp", "prologue2": "assets/bg/prologue2.webp", "hwangsan": "assets/bg/hwangsan.webp", "harbor": "assets/bg/harbor.webp"}, "desk": {"witness": "assets/desk/witness.webp", "judge": "assets/desk/judge.webp", "pros": "assets/desk/pros.webp"}, "ev": {"E1": "assets/ev/E1.webp", "E2": "assets/ev/E2.webp", "E3": "assets/ev/E3.webp", "E4": "assets/ev/E4.webp", "E5": "assets/ev/E5.webp", "E6": "assets/ev/E6.webp", "E7": "assets/ev/E7.webp", "E8": "assets/ev/E8.webp", "E9": "assets/ev/E9.webp", "E10": "assets/ev/E10.webp", "E11": "assets/ev/E11.webp", "E12": "assets/ev/E12.webp", "K1": "assets/ev/K1.webp", "C1": "assets/ev/C1.webp", "C2": "assets/ev/C2.webp", "C3": "assets/ev/C3.webp", "C4": "assets/ev/C4.webp", "C5": "assets/ev/C5.webp", "C7": "assets/ev/C7.webp", "C8": "assets/ev/C8.webp", "C9": "assets/ev/C9.webp", "C10": "assets/ev/C10.webp", "P1": "assets/ev/P1.webp", "E13": "assets/ev/E13.webp", "C6": "assets/ev/C6.webp", "C11": "assets/ev/C11.webp", "E14": "assets/ev/E14.webp"}};
+const ASSETS={"sprites": {"achan": {"base": "assets/sprites/achan_base.webp", "sweat": "assets/sprites/achan_sweat.webp"}, "citizen": {"base": "assets/sprites/citizen_base.webp"}, "courtlady": {"base": "assets/sprites/courtlady_base.webp"}, "daon": {"base": "assets/sprites/daon_base.webp"}, "defendant": {"angry": "assets/sprites/defendant_angry.webp", "base": "assets/sprites/defendant_base.webp", "breakdown": "assets/sprites/defendant_breakdown.webp", "shock": "assets/sprites/defendant_shock.webp", "sweat": "assets/sprites/defendant_sweat.webp"}, "fisher": {"angry": "assets/sprites/fisher_angry.webp", "base": "assets/sprites/fisher_base.webp"}, "gyeonhwon": {"angry": "assets/sprites/gyeonhwon_angry.webp", "base": "assets/sprites/gyeonhwon_base.webp", "breakdown": "assets/sprites/gyeonhwon_breakdown.webp", "disguise": "assets/sprites/gyeonhwon_disguise.webp"}, "heungsu": {"base": "assets/sprites/heungsu_base.webp", "hesitate": "assets/sprites/heungsu_hesitate.webp"}, "jinheung": {"angry": "assets/sprites/jinheung_angry.webp", "base": "assets/sprites/jinheung_base.webp", "serious": "assets/sprites/jinheung_serious.webp", "sweat": "assets/sprites/jinheung_sweat.webp"}, "judge": {"base": "assets/sprites/judge_base.webp", "shock": "assets/sprites/judge_shock.webp", "stern": "assets/sprites/judge_stern.webp"}, "jun": {"base": "assets/sprites/jun_base.webp", "hesitate": "assets/sprites/jun_hesitate.webp"}, "merchant": {"base": "assets/sprites/merchant_base.webp", "sweat": "assets/sprites/merchant_sweat.webp"}, "muryeok": {"base": "assets/sprites/muryeok_base.webp", "sweat": "assets/sprites/muryeok_sweat.webp"}, "neungmun": {"base": "assets/sprites/neungmun_base.webp", "sweat": "assets/sprites/neungmun_sweat.webp"}, "oldsoldier": {"base": "assets/sprites/oldsoldier_base.webp"}, "player": {"normal": "assets/sprites/player_normal.webp", "present": "assets/sprites/player_present.webp", "stand": "assets/sprites/player_stand.webp", "sweat": "assets/sprites/player_sweat.webp", "upset": "assets/sprites/player_upset.webp"}, "rival": {"base": "assets/sprites/rival_base.webp", "shock": "assets/sprites/rival_shock.webp", "sweat": "assets/sprites/rival_sweat.webp"}, "scribe": {"base": "assets/sprites/scribe_base.webp", "sweat": "assets/sprites/scribe_sweat.webp"}, "seong": {"base": "assets/sprites/seong_base.webp", "sad": "assets/sprites/seong_sad.webp"}, "singeom": {"base": "assets/sprites/singeom_base.webp", "sweat": "assets/sprites/singeom_sweat.webp"}, "villager": {"base": "assets/sprites/villager_base.webp"}, "wiman": {"angry": "assets/sprites/wiman_angry.webp", "base": "assets/sprites/wiman_base.webp", "breakdown": "assets/sprites/wiman_breakdown.webp", "sweat": "assets/sprites/wiman_sweat.webp"}}, "bg": {"archive": "assets/bg/archive.webp", "banwol": "assets/bg/banwol.webp", "bukhan": "assets/bg/bukhan.webp", "courtyard": "assets/bg/courtyard.webp", "forge": "assets/bg/forge.webp", "gwansan": "assets/bg/gwansan.webp", "hangang": "assets/bg/hangang.webp", "harbor": "assets/bg/harbor.webp", "hwangsan": "assets/bg/hwangsan.webp", "judge": "assets/bg/judge.webp", "lobby": "assets/bg/lobby.webp", "museum": "assets/bg/museum.webp", "museum2": "assets/bg/museum2.webp", "museum3": "assets/bg/museum3.webp", "prologue": "assets/bg/prologue.webp", "prologue2": "assets/bg/prologue2.webp", "prologue3": "assets/bg/prologue3.webp", "pros": "assets/bg/pros.webp", "ruins-cliff": "assets/bg/ruins-cliff.webp", "ruins-palace": "assets/bg/ruins-palace.webp", "ruins": "assets/bg/ruins.webp", "wg-court": "assets/bg/wg-court.webp", "wg-gate": "assets/bg/wg-gate.webp", "wg-tower": "assets/bg/wg-tower.webp", "witness": "assets/bg/witness.webp"}, "desk": {"judge": "assets/desk/judge.webp", "pros": "assets/desk/pros.webp", "witness": "assets/desk/witness.webp"}, "ev": {"C1": "assets/ev/C1.webp", "C10": "assets/ev/C10.webp", "C11": "assets/ev/C11.webp", "C2": "assets/ev/C2.webp", "C3": "assets/ev/C3.webp", "C4": "assets/ev/C4.webp", "C5": "assets/ev/C5.webp", "C6": "assets/ev/C6.webp", "C7": "assets/ev/C7.webp", "C8": "assets/ev/C8.webp", "C9": "assets/ev/C9.webp", "E1": "assets/ev/E1.webp", "E10": "assets/ev/E10.webp", "E11": "assets/ev/E11.webp", "E12": "assets/ev/E12.webp", "E13": "assets/ev/E13.webp", "E14": "assets/ev/E14.webp", "E2": "assets/ev/E2.webp", "E3": "assets/ev/E3.webp", "E4": "assets/ev/E4.webp", "E5": "assets/ev/E5.webp", "E6": "assets/ev/E6.webp", "E7": "assets/ev/E7.webp", "E8": "assets/ev/E8.webp", "E9": "assets/ev/E9.webp", "J1": "assets/ev/J1.webp", "J10": "assets/ev/J10.webp", "J2": "assets/ev/J2.webp", "J3": "assets/ev/J3.webp", "J4": "assets/ev/J4.webp", "J6": "assets/ev/J6.webp", "J7": "assets/ev/J7.webp", "K1": "assets/ev/K1.webp", "P1": "assets/ev/P1.webp"}};
 /* ===== BGM 엔진: 모든 곡을 이 페이지가 코드로 직접 연주 (음원 파일·다른 게임 음악 없음) ===== */
 const NOTE={C:0,D:2,E:4,F:5,G:7,A:9,B:11};
 function nm(s){ const r=/^([A-G])([#b]?)(-?\d)$/.exec(s); if(!r) throw new Error('음 이름 오류: '+s); return 12*(+r[3]+1)+NOTE[r[1]]+(r[2]==='#'?1:r[2]==='b'?-1:0); }
@@ -695,7 +759,7 @@ const TRACKS={
     intro:{buk:'X.X.XXXX', snare:'....xxXX', crash:'x.......'}, fill:{snare:'....xxXX', buk:'x...x.xX'}}
 };
 const TRACK_ORDER=['open','investigate','testimony','cross','crisis','turnabout','verdict'];
-const STINGS=[['objection','이의 있습니다!'],['whoosh','외침 직전 휙'],['zoom','근접 화면'],['murmur','방청석 웅성거림'],['realize','깨달음'],['crack','방울 깨짐'],['get','증거 획득'],['heal','방울 회복'],['miss','헛짚음'],['step','구역 이동'],['tick','증언 넘김'],['click','고르기'],['slam','책상 내려치기'],['hold','잠깐만요!'],['evidence','증거 제시'],['breakdown','피고 무너짐'],['wrong','헛 제시'],['gavel','의사봉'],['title','장 전환']];
+const STINGS=[['objection','이의 있습니다!'],['whoosh','외침 직전 휙'],['zoom','근접 화면'],['murmur','방청석 웅성거림'],['realize','깨달음'],['crack','방울 깨짐'],['get','증거 획득'],['heal','방울 회복'],['miss','헛짚음'],['step','구역 이동'],['tick','증언 넘김'],['click','고르기'],['slam','책상 내려치기'],['hold','잠깐만요!'],['evidence','증거 제시'],['breakdown','피고 무너짐'],['wrong','헛 제시'],['gavel','의사봉'],['title','장 전환'],['gasp','컥!'],['cough','기침'],['thud','쿵 (무거운)'],['clash','칼 부딪는 소리'],['door','큰 문 닫힘'],['shovel','삽질'],['cheer','군중의 함성'],['boo','방청석 야유'],['wind','빈 방의 바람']];
 
 const Music=(function(){
   let ctx=null, master=null, bus=null, timer=null, cur=null, curId=null, step=0, nextT=0, noiseBuf=null;
@@ -850,6 +914,19 @@ const Music=(function(){
       case 'tick': { const o=O('triangle',1150,t), g=G(0); g.gain.setValueAtTime(0.09,t); g.gain.exponentialRampToValueAtTime(0.0001,t+0.04); o.connect(g); g.connect(out); o.start(t); o.stop(t+0.05); break; }
       case 'click': { const o=O('square',1500,t), g=G(0); g.gain.setValueAtTime(0.04,t); g.gain.exponentialRampToValueAtTime(0.0001,t+0.025); o.connect(g); g.connect(out); o.start(t); o.stop(t+0.03); break; }
       case 'slam': DRUM.buk(out,t,1.1); DRUM.kung(out,t+0.015,1); nz(out,t,'lowpass',420,0.7,0.28,0.6); break;
+      /* 그림자 연출용 (공통 규칙 1-4) */
+      case 'gasp': { // '컥': 숨이 막히는 짧은 소리
+        const o=O('sawtooth',260,t), g=G(0), bp=F('bandpass',900,2); o.frequency.exponentialRampToValueAtTime(150,t+0.12);
+        g.gain.setValueAtTime(0.0001,t); g.gain.exponentialRampToValueAtTime(0.35,t+0.01); g.gain.exponentialRampToValueAtTime(0.0001,t+0.16);
+        o.connect(bp); bp.connect(g); g.connect(out); o.start(t); o.stop(t+0.2); nz(out,t,'bandpass',1400,3,0.12,0.5); break; }
+      case 'cough': [0,0.28].forEach((w,i)=>{ nz(out,t+w,'bandpass',700+i*120,1.6,0.16,0.55); thump(out,t+w,180,110,0.12,0.25); }); break;
+      case 'thud': thump(out,t,90,34,0.9,1.2); nz(out,t,'lowpass',300,0.7,0.5,0.55); DRUM.buk(out,t+0.02,0.8); break;              // '쿵(무거운)'
+      case 'clash': [0,0.17,0.31].forEach((w,i)=>{ [[2400,0.2],[3650,0.12],[5200,0.07]].forEach(p=>{ const o=O('sine',p[0]*(1+i*0.04),t+w), g=G(0); g.gain.setValueAtTime(p[1],t+w); g.gain.exponentialRampToValueAtTime(0.0001,t+w+0.5); o.connect(g); g.connect(out); o.start(t+w); o.stop(t+w+0.55); }); nz(out,t+w,'highpass',3000,0.7,0.08,0.4); }); break;
+      case 'door': { nz(out,t,'bandpass',220,4,0.9,0.25); const o=O('sawtooth',70,t), g=G(0), lp=F('lowpass',300,2); o.frequency.linearRampToValueAtTime(52,t+0.8); g.gain.setValueAtTime(0.0001,t); g.gain.exponentialRampToValueAtTime(0.12,t+0.3); g.gain.exponentialRampToValueAtTime(0.0001,t+0.85); o.connect(lp); lp.connect(g); g.connect(out); o.start(t); o.stop(t+0.9); thump(out,t+0.85,80,30,1.1,1.3); nz(out,t+0.85,'lowpass',500,0.7,0.6,0.6); break; }
+      case 'shovel': [0,0.55,1.1].forEach(w=>{ nz(out,t+w,'bandpass',1800,1.2,0.09,0.45); nz(out,t+w+0.05,'lowpass',500,0.7,0.25,0.35); }); break;
+      case 'cheer': { for(let k=0;k<70;k++){ const w=t+Math.random()*2.2, d=0.4+Math.random()*0.6, f=380+Math.random()*900; const sN=ctx.createBufferSource(); sN.buffer=noiseBuf; const bp=F('bandpass',f,8), g=G(0); g.gain.setValueAtTime(0.0001,w); g.gain.exponentialRampToValueAtTime(0.5,w+0.08); g.gain.exponentialRampToValueAtTime(0.0001,w+d); sN.connect(bp); bp.connect(g); g.connect(out); sN.start(w,Math.random()*1.5); sN.stop(w+d+0.02); } nz(out,t,'bandpass',600,0.5,2.6,0.25); break; }
+      case 'boo': { for(let k=0;k<30;k++){ const w=t+Math.random()*1.2, d=0.35+Math.random()*0.4, o=O('sawtooth',110+Math.random()*90,w), g=G(0), lp=F('lowpass',500,1); o.frequency.linearRampToValueAtTime(80,w+d); g.gain.setValueAtTime(0.0001,w); g.gain.exponentialRampToValueAtTime(0.06,w+0.08); g.gain.exponentialRampToValueAtTime(0.0001,w+d); o.connect(lp); lp.connect(g); g.connect(out); o.start(w); o.stop(w+d+0.02); } break; }
+      case 'wind': { const sN=ctx.createBufferSource(); sN.buffer=noiseBuf; const bp=F('bandpass',500,0.8), g=G(0); bp.frequency.setValueAtTime(400,t); bp.frequency.linearRampToValueAtTime(900,t+1.4); bp.frequency.linearRampToValueAtTime(350,t+3); g.gain.setValueAtTime(0.0001,t); g.gain.exponentialRampToValueAtTime(0.3,t+1); g.gain.exponentialRampToValueAtTime(0.0001,t+3.2); sN.connect(bp); bp.connect(g); g.connect(out); sN.start(t,Math.random()); sN.stop(t+3.3); break; }
     }
     setTimeout(()=>{ try{ out.disconnect(); }catch(e){} },4500);
   }
@@ -1442,14 +1519,15 @@ function logLine(who,text,o){
 function openHistory(back){
   const H=S.hist||[];
   openSheet(`<h2>대화 기록</h2><p class="lead">지금까지 나온 말을 다시 볼 수 있어요. 증언은 초록, 속마음은 하늘색이에요.</p>
-    <div class="hist" id="histBox">${H.length?H.map(e=>`<div class="hl ${e.c}"><b>${esc(e.n)}</b><span>${esc(e.t)}</span></div>`).join(''):'<p>아직 기록이 없어요.</p>'}</div>
+    <div class="hist" id="histBox">${H.length?H.map(e=>`<div class="hl ${e.c}"><b>${esc(e.n)}</b><span>${esc(e.t)}${e.shadow?` <button class="abtn replay" type="button" data-shadow="${e.shadow}">▶ 다시 보기</button>`:''}</span></div>`).join(''):'<p>아직 기록이 없어요.</p>'}</div>
     <div class="sheet-foot"><button class="abtn primary" type="button" data-act="hclose">${back?'증거 수첩으로 돌아가기':'닫기'}</button></div>`,true);
   const box=$('#histBox'); if(box) box.scrollTop=box.scrollHeight;
   sheetCard.querySelector('[data-act=hclose]').addEventListener('click',closeSheet);
+  sheetCard.querySelectorAll('[data-shadow]').forEach(b=>b.addEventListener('click',async()=>{ const k=b.dataset.shadow; onSheetClose=null; closeSheet(); track('shadow_replay',{scene:k}); await playShadow(k,true); openHistory(back); }));
   onSheetClose=back?()=>setTimeout(back,40):null;
 }
 async function say(who,expr,text,opts){
-  opts=opts||{}; logLine(who,text,opts);
+  opts=opts||{}; logLine(who,text,opts); noteTerms(text);
   if(opts.view!=='inv' && (opts.view||VIEW_OF[who])) setView(opts.view||VIEW_OF[who],who,expr,opts.action); setName(who,opts.tag);
   textEl.className='text'+(opts.testimony?' testimony':'');
   nextEl.hidden=true;
@@ -1496,7 +1574,9 @@ async function gavel(){ gavelEl.classList.remove('show'); void gavelEl.offsetWid
 const BELL=on=>`<svg class="bell${on?'':' off'}" viewBox="0 0 40 46" aria-hidden="true"><defs><linearGradient id="bg${on?1:0}" x1="0" y1="0" x2=".7" y2="1"><stop offset="0" stop-color="#fff1b8"/><stop offset=".5" stop-color="#e2b54e"/><stop offset="1" stop-color="#8a5f17"/></linearGradient></defs><path d="M20,2 C24,2 26,5 25,8 C32,10 35,17 35,25 L38,36 H2 L5,25 C5,17 8,10 15,8 C14,5 16,2 20,2 Z" fill="url(#bg${on?1:0})" stroke="#2a1a14" stroke-width="2.4"/><path d="M6,30 H34" stroke="#7a5414" stroke-width="2"/><circle cx="20" cy="40" r="4.4" fill="#5a3d10" stroke="#2a1a14" stroke-width="2"/><path d="M12,16 C13,12 16,10 19,10" stroke="#fff6d0" stroke-width="2" fill="none" stroke-linecap="round"/></svg>`;
 const S={trust:5};
 const ME=()=>S.me||'player';
-const ROLE_NAME=()=>S.me==='rival'?'변호인':'검사';
+const ROLE_NAME=()=>S.me==='rival'?'변호인':S.me==='daon'?'판사':'검사';
+/* 사건 3부터: 사건 데이터 등록부 (story3.js~가 채움). 첫 화면이 먼저 그려지므로 여기 둔다 */
+const CASE_DATA={};
 const SAVE_KEY='yj-story-1';
 const PHASE_NAME={1:'조사 1',2:'법정 1일차',3:'조사 2',4:'법정 2일차'};
 function renderGauge(){
@@ -1580,7 +1660,8 @@ function enterCross(pos){
   setView('witness',who,L.expr||'normal');
   setName(who,`추궁 ${pos+1}/${CX.vis.length}`);
   CX.seen=CX.seen||new Set(); CX.seen.add(CX.vis[pos]);
-  $('#pips').innerHTML=CX.vis.map((li,k)=>{ const l=CX.T.lines[li]; const st=l.broken?'broken':(l.pressed?'pressed':(CX.seen.has(li)?'seen':'')); return `<button class="pip ${st}${k===pos?' cur':''}" type="button" data-k="${k}" aria-label="${k+1}번째 증언${l.broken?' (깸)':l.pressed?' (물어봄)':''}">${l.broken?'✓':k+1}</button>`; }).join('');
+  { const ob=$('#bObserve'); if(ob) ob.hidden=!CX.T.habit; }
+  $('#pips').innerHTML=CX.vis.map((li,k)=>{ const l=CX.T.lines[li]; const st=l.broken?'broken':(l.pressed?'pressed':(CX.seen.has(li)?'seen':'')); return `<button class="pip ${st}${l.habitSeen&&!l.broken?' habit':''}${k===pos?' cur':''}" type="button" data-k="${k}" aria-label="${k+1}번째 증언${l.broken?' (깸)':l.pressed?' (물어봄)':''}">${l.broken?'✓':k+1}</button>`; }).join('');
   $('#pips').hidden=false;
   $('#pips').querySelectorAll('.pip').forEach(b=>b.addEventListener('click',()=>{ if(!S.busy && CX) enterCross(+b.dataset.k); }));
   textEl.className='text testimony'; nextEl.hidden=true;
@@ -1588,6 +1669,16 @@ function enterCross(pos){
   controlsEl.hidden=false;
 }
 function crossStep(d){ if(!CX||S.busy) return; enterCross((CX.pos+d+CX.vis.length)%CX.vis.length); }
+/* 버릇 살피기: 증인을 확대해 거짓말할 때만 나오는 버릇을 찾는다. 어느 문장이 수상한지만 알려 주고, 깰 증거는 알려 주지 않는다 */
+async function doObserve(){
+  if(S.busy||!CX||!CX.T.habit) return; S.busy=true; controlsEl.hidden=true; $('#pips').hidden=true;
+  const L=curLine(), hit=!!(L.lie&&!L.broken); S.observes=(S.observes||0)+1;
+  track('observe',{key:CX.T.key||'',line:CX.vis[CX.pos]+1,hit:hit});
+  Music.sting('zoom'); stageEl.classList.add('observe');
+  if(hit){ L.habitSeen=true; Music.sting('realize'); await say(ME(),'shock',`(…지금! 증인이 [[${CX.T.habit}]]. 이 말을 할 때만 그래. 이 문장이 수상해!)`); }
+  else await say(ME(),'think','(증인을 자세히 살펴봤다. 이 말을 할 때는 특별한 버릇이 보이지 않는다.)');
+  stageEl.classList.remove('observe'); S.busy=false; enterCross(CX.pos);
+}
 async function doPress(){
   if(CX){ const l=curLine(); if(l) l.pressed=true; }
   if(S.busy||!CX) return; S.busy=true; controlsEl.hidden=true,$('#pips')&&($('#pips').hidden=true); S.presses++;
@@ -1595,17 +1686,23 @@ async function doPress(){
   await shout('hold');
   if(L.press) await line(L.press);
   if(L.endOnPress && !CX.T.lines.some(l=>l.lie&&!l.broken)){ controlsEl.hidden=true,$('#pips')&&($('#pips').hidden=true); S.busy=false; const res=CX.res; CX=null; res(); return; }
+  track('press',{key:CX.T.key||'',line:CX.vis[CX.pos]+1,reveal:L.reveal!==undefined&&!CX.vis.includes(L.reveal)});
   if(L.reveal!==undefined && !CX.vis.includes(L.reveal)){
     Music.sting('realize'); flash();
     CX.vis.splice(CX.pos+1,0,L.reveal);
     await say('judge','stern','증언에 [[새 문장]]이 더해졌습니다.');
+    const NL=CX.T.lines[L.reveal];
+    if(NL.gives && CX.T.solve!=='reveal'){ await say(CX.T.who,NL.expr||'normal',NL.text,{testimony:true,tag:'새 증언'}); for(const id of NL.gives){ if(S.found.has(id)) continue; S.found.add(id); Music.sting('get'); showEvidence(id); await say('guide','normal',`증거 수첩에 [[${EV_BY_ID[id].title}]]을(를) 넣었다.`); hideEvidence(); track('ev_found',{id:id,from:'testimony'}); } }
     if(CX.T.solve==='reveal'){ CX.pos=CX.pos+1; S.idx=CX.vis[CX.pos]; const R=curLine();
       await say(CX.T.who,R.expr||'normal',R.text,{testimony:true,tag:'새 증언'});
       controlsEl.hidden=true,$('#pips')&&($('#pips').hidden=true); S.busy=false; const T=CX.T, res=CX.res; CX=null; if(T.onReveal) await T.onReveal(); res(); return; }
+    if(CX.T.allReveal && !crossLeft(CX)){ controlsEl.hidden=true; $('#pips').hidden=true; S.busy=false; const T=CX.T, res=CX.res; CX=null; if(T.onHit) await T.onHit(); res(); return; }
     S.busy=false; enterCross(CX.pos+1); return;
   }
   S.busy=false; enterCross(CX.pos);
 }
+/* 아직 깰 거짓이 남았는가. allReveal이면 숨은 말을 다 끌어낼 때까지 끝나지 않는다 */
+function crossLeft(cx){ const T=cx.T; return T.lines.some(l=>l.lie&&!l.broken) || (!!T.allReveal && T.lines.some(l=>l.reveal!==undefined && !cx.vis.includes(l.reveal))); }
 async function doPresent(id){
   const pend=S.combo; onSheetClose=null; closeSheet(); S.combo=pend; if(S.busy||!CX) return; S.busy=true; controlsEl.hidden=true,$('#pips')&&($('#pips').hidden=true);
   const L=curLine(), card=EV_BY_ID[id];
@@ -1620,13 +1717,14 @@ async function doPresent(id){
     const pair=S.combo; S.combo=null; onSheetClose=null;
     const ok2=pair && pair!==id && L.need2.includes(id) && L.need2.includes(pair);
     S.log.push({line:(CX.T.key?CX.T.key+' ':'')+(CX.vis[CX.pos]+1), card:(pair?pair+'+':'')+id, ok:ok2});
-    if(!ok2){ await wrongPresent(card); return; }
+    if(!ok2){ track('present',{key:CX.T.key||'',line:CX.vis[CX.pos]+1,ev:(pair?pair+'+':'')+id,ok:false}); await wrongPresent(card); return; }
   }
   const ok=!!L.lie && (L.need2?true:(Array.isArray(L.ev)?L.ev.includes(id):L.ev===id));
   if(!L.need2) S.log.push({line:(CX.T.key?CX.T.key+' ':'')+(CX.vis[CX.pos]+1), card:id, ok:ok});
+  { const lg=S.log[S.log.length-1]; track('present',{key:CX.T.key||'',line:CX.vis[CX.pos]+1,ev:lg.card,ok:lg.ok}); }
   if(ok){
     const cx=CX, T=CX.T, res=CX.res; CX=null; L.broken=true;
-    const left=T.lines.some(l=>l.lie&&!l.broken);
+    const left=crossLeft(cx);
     Music.stop(0.02); Music.sting('realize'); await wait(420);
     await slam();
     await shout('objection');
@@ -1654,6 +1752,7 @@ async function wrongPresent(card){
   await loseTrust();
   if(CX){ CX.miss=(CX.miss||0)+1;
     if(CX.miss===2 && S.trust>0){ const k=CX.vis.findIndex(i=>CX.T.lines[i].lie&&!CX.T.lines[i].broken);
+      if(k>=0) track('hint_line',{key:CX.T.key||'',line:k+1});
       if(k>=0) await say('judge','normal',`…검사, 힌트를 하나 주겠소. 증언 가운데 [[${k+1}번째 말]]을 잘 살펴보시오. 그 말과 어긋나는 증거가 수첩에 있을 것이오.`.replace('검사',ROLE_NAME())); } }
   if(S.trust<=0){ CX=null; await loseTrial(); return; }
   await say(who,['defendant','wiman'].includes(who)?'smug':'base','…엉뚱한 증거로군.');
@@ -1662,10 +1761,10 @@ async function wrongPresent(card){
   S.busy=false; enterCross(CX.pos);
 }
 async function loseTrial(){
-  bgm('crisis');
-  await say('judge','stern','재판부는 더 이상 검사를 믿을 수 없습니다. 오늘 재판은 여기까지입니다.');
+  bgm('crisis'); track('lose',{});
+  await say('judge','stern',`재판부는 더 이상 ${ROLE_NAME()}의 말을 믿을 수 없습니다. 오늘 재판은 여기까지입니다.`);
   await gavel();
-  await say('judge','normal','다만 검사가 졌다고 피고의 책임이 사라지는 것은 아닙니다. 증거를 다시 갖춰 [[항소]]하시오.');
+  await say('judge','normal',S.me==='player'||!S.me?'다만 검사가 졌다고 피고의 책임이 사라지는 것은 아닙니다. 증거를 다시 갖춰 [[항소]]하시오.':'증거를 다시 살피고, 이어 하기로 이 날부터 다시 하시오.');
   S.busy=false; S.inTrial=false; openGameOver(); if(S.onLose){ const f=S.onLose; S.onLose=null; f(); }
 }
 async function quickHit(L,id){
@@ -1741,7 +1840,11 @@ const LOCS=[
 function locBG(id){
   const A=ASSETS.bg||{}; if(A[id]) return `<img class="bgimg" src="${A[id]}" alt="">`;
   const C={archive:['#1b2238','#3a2a20','#f0b860'],museum:['#141a26','#2a3040','#d8c890']}[id]||['#e8925a','#6a3a52','#4a3a2a'];
-  return SV+`<defs>${lg('lc',[[0,C[0]],[1,C[1]]])}</defs><rect width="1600" height="900" fill="url(#lc)"/><circle cx="800" cy="300" r="260" fill="${C[2]}" opacity=".12"/><rect y="700" width="1600" height="200" fill="#000" opacity=".25"/></svg>`;
+  /* 그림이 아직 없는 장소: 조사할 물건을 모두(단서·미끼 구별 없이) 스케치처럼 그려 둔다 */
+  let room=null; LOCS.forEach(l=>(l.rooms||[l]).forEach(r=>{ if(r.id===id) room=r; }));
+  const items=room&&room.spots?room.spots.map(p=>{ const x=p.x*16, y=p.y*9, w=p.w*16, h=p.h*9;
+    return `<g><rect x="${x}" y="${y}" width="${w}" height="${h}" rx="14" fill="#fff4dc" fill-opacity=".14" stroke="#fff4dc" stroke-opacity=".55" stroke-width="4" stroke-dasharray="14 10"/><text x="${x+w/2}" y="${y+h/2+12}" text-anchor="middle" font-size="${Math.max(24,Math.min(38,w/7))}" font-family="Noto Sans KR,sans-serif" font-weight="700" fill="#fff4dc" fill-opacity=".8">${esc(p.label)}</text></g>`; }).join(''):'';
+  return SV+`<defs>${lg('lc',[[0,C[0]],[1,C[1]]])}</defs><rect width="1600" height="900" fill="url(#lc)"/><circle cx="800" cy="300" r="260" fill="${C[2]}" opacity=".12"/><rect y="700" width="1600" height="200" fill="#000" opacity=".25"/>${items}${room?`<text x="1580" y="50" text-anchor="end" font-size="30" font-family="Noto Sans KR,sans-serif" fill="#fff4dc" fill-opacity=".6">${esc(room.name||'')} · 그림 준비 중</text>`:''}</svg>`;
 }
 let invLoc=null, invParent=null;
 const locSpots=l=>(l.rooms?l.rooms.flatMap(r=>r.spots):l.spots);
@@ -1770,7 +1873,7 @@ let textSpeed=+(store.get('yj-speed')||0)||0;
 const QUICK_EV=['E1','E2','E3','E4','E5','E6','E7','E8'];
 let moving=false;
 const P2=()=>S.p2at||2;
-const avail=x=>!!x && (!x.from||S.phase>=x.from) && (!x.until||S.phase<=x.until);
+const avail=x=>!!x && (!x.from||S.phase>=x.from) && (!x.until||S.phase<=x.until) && (!x.role||x.role===S.role);
 const availLocs=()=>LOCS.filter(avail);
 const roomsOf=l=>(l.rooms||[l]).filter(avail);
 /* 조사 중 대사가 나오는 동안 장소·구역을 누르면, 남은 대사를 건너뛰고 바로 옮긴다 */
@@ -1804,6 +1907,8 @@ function roomStep(d){
 function goRoom(room,silent,how){
   const id=room.id, from=invLoc; if(from&&from.id===id&&!silent) return;
   invLoc=room; if(!room.miss&&invParent.miss) room.miss=invParent.miss;
+  track('move',{to:id});
+  stageEl.classList.toggle('meet',room.kind==='meet');
   curView='loc:'+id; deskEl.innerHTML=''; charEl.innerHTML=''; charEl.dataset.key='';
   preloadBG();
   if(silent||!from){ putBG(bgEl,id); sceneEl.classList.remove('cut'); void sceneEl.offsetWidth; sceneEl.classList.add('cut'); }
@@ -1848,13 +1953,15 @@ function renderSpots(){ renderNpcLayer(); $('#lens').hidden=moving; stageEl.clas
 function moveLens(dx,dy){ lens.x=Math.max(1,Math.min(99,lens.x+dx)); lens.y=Math.max(3,Math.min(97,lens.y+dy)); placeLens(); }
 async function examineAt(){
   if(S.busy||S.mode!=='inv') return;
+  if(invLoc&&invLoc.kind==='meet'){ if(npcOf(invLoc)) talkTo(); return; }
   if(npcHit(lens.x,lens.y)){ Music.sting('click'); talkTo(); return; }
   const p=spotAt(lens.x,lens.y);
   if(p){ Music.sting('click'); examine(p); return; }
   Music.sting('miss');
   S.busy=true; const m=invLoc.miss; S.misses=(S.misses||0)+1; S.missStreak=(S.missStreak||0)+1;
+  track('inv_miss',{loc:invLoc.id,x:Math.round(lens.x),y:Math.round(lens.y)});
   await say(ME(),'normal',m[Math.floor(Math.random()*m.length)],{view:'inv'});
-  if(S.story && S.missStreak%10===0 && !S.invSkip){ const miss=missingReq(); if(miss.length) await say(ME(),'think',`(헛짚기만 하네… [[${locOf(miss[Math.floor(Math.random()*miss.length)])}]] 쪽을 다시 살펴볼까?)`,{view:'inv'}); }
+  if(S.story && S.missStreak%10===0 && !S.invSkip){ const miss=missingReq(); if(miss.length) track('hint_place',{to:locOf(miss[0])}); if(miss.length) await say(ME(),'think',`(헛짚기만 하네… [[${locOf(miss[Math.floor(Math.random()*miss.length)])}]] 쪽을 다시 살펴볼까?)`,{view:'inv'}); }
   S.busy=false;
 }
 /* ===== 조사 중 인물: 이야기하기·보여 주기 ===== */
@@ -1877,14 +1984,14 @@ function hideNpc(){ charEl.innerHTML=''; charEl.dataset.key=''; renderNpcLayer()
 async function npcLines(np,lines){
   for(const x of lines){ if(S.invSkip) break; const who=x[0]==='ME'?ME():x[0]; if(who===np.who) showNpc(np,x[1]); await say(who,x[1],x[2],{view:'inv'}); }
 }
-async function npcGives(ids){ for(const id of (ids||[])){ if(S.found.has(id)) continue; S.found.add(id); Music.sting('get'); S.missStreak=0; showEvidence(id); await say('guide','normal',`증거 수첩에 [[${EV_BY_ID[id].title}]]을(를) 넣었다.`,{view:'inv'}); hideEvidence(); } }
+async function npcGives(ids){ for(const id of (ids||[])){ if(S.found.has(id)) continue; S.found.add(id); Music.sting('get'); S.missStreak=0; track('ev_found',{id:id,from:'talk'}); showEvidence(id); await say('guide','normal',`증거 수첩에 [[${EV_BY_ID[id].title}]]을(를) 넣었다.`,{view:'inv'}); hideEvidence(); } }
 function talkTo(){
   const np=npcOf(invLoc); if(!np||S.busy||moving) return;
   S.talked=S.talked||new Set(); S.unlocked=S.unlocked||new Set();
   showNpc(np); S.busy=true;
   const list=()=>{
-    openSheet(`<h2>${esc(String(NAMES[np.who]||CAST[np.who].name).replace(/^증인 /,''))}에게 묻기</h2><p class="lead">물어볼 것을 고르세요. 🔒은 증거를 보여 줘야 열리는 이야기예요.</p>
-      <div class="choices">${np.topics.map((t,i)=>{ const lk=t.lock&&!S.unlocked.has(t.id); return `<button class="choice${S.talked.has(t.id)?' done':''}" type="button" data-i="${i}"><span class="ck">${lk?'🔒':S.talked.has(t.id)?'✓':i+1}</span>${esc(t.t)}</button>`; }).join('')}</div>
+    openSheet(`<h2>${esc(String(NAMES[np.who]||CAST[np.who].name).replace(/^(증인|피고|피해자) /,''))}에게 묻기</h2><p class="lead">물어볼 것을 고르세요. 🔒은 증거를 보여 줘야 열리는 이야기예요.</p>
+      <div class="choices">${np.topics.map((t,i)=>{ if(!avail(t)) return ''; const lk=t.lock&&!S.unlocked.has(t.id); return `<button class="choice${S.talked.has(t.id)?' done':''}" type="button" data-i="${i}"><span class="ck">${lk?'🔒':S.talked.has(t.id)?'✓':i+1}</span>${esc(t.t)}</button>`; }).join('')}</div>
       <div class="sheet-foot"><button class="abtn" type="button" data-act="tshow">증거 보여 주기 <span class="ckey">P</span></button><button class="abtn primary" type="button" data-act="tend">그만 묻기</button></div>`,true);
     onSheetClose=()=>{ hideNpc(); S.busy=false; renderInvBar(); };
     sheetCard.querySelector('[data-act=tend]').addEventListener('click',closeSheet);
@@ -1892,6 +1999,7 @@ function talkTo(){
     recNav=k=>{ const i=parseInt(k,10)-1; const b=sheetCard.querySelector(`.choice[data-i="${i}"]`); if(b) b.click(); };
     sheetCard.querySelectorAll('.choice').forEach(b=>b.addEventListener('click',async()=>{
       const t=np.topics[+b.dataset.i]; onSheetClose=null; closeSheet(); Music.sting('click');
+      track('talk',{who:np.who,topic:t.id,locked:!!(t.lock&&!S.unlocked.has(t.id))});
       if(t.lock && !S.unlocked.has(t.id)){ await say(ME(),'think',t.lockSay||'(지금은 말해 주지 않을 것 같다.)',{view:'inv'}); list(); return; }
       await npcLines(np,t.lines); S.talked.add(t.id); await npcGives(t.gives); list();
     }));
@@ -1908,6 +2016,7 @@ function showTo(back){
     S.allowUsed=false; onSheetClose=null; closeSheet(); showEvidence(id);
     await say(ME(),'present',`이걸 봐 주세요. ‘${EV_BY_ID[id].title}’예요.`,{view:'inv'}); hideEvidence();
     const r=(np.present||{})[id];
+    track('show',{who:np.who,ev:id,ok:!!r,unlock:r&&r.unlock||''});
     if(r){ await npcLines(np,r.lines); if(r.unlock && !S.unlocked.has(r.unlock)){ S.unlocked.add(r.unlock); Music.sting('realize'); await say('guide','normal','새로 물어볼 이야기가 생겼다.',{view:'inv'}); } await npcGives(r.gives); }
     else await npcLines(np,np.def||[[np.who,'base','…글쎄요. 잘 모르겠군요.']]);
     S.busy=false; if(back){ talkTo(); } else hideNpc();
@@ -1922,7 +2031,7 @@ function renderInvBar(){
       ${R.map(r=>`<button class="ib-room${invLoc.id===r.id?' on':''}${lockd(r)?' locked':''}" type="button" data-room="${r.id}" aria-pressed="${invLoc.id===r.id}">${lockd(r)?'<span aria-hidden="true">🔒</span> ':''}${esc(r.name)}</button>`).join('<span class="ib-dot" aria-hidden="true"></span>')}
       <button class="ib-arrow" type="button" data-step="1"${ri>=R.length-1?' disabled':''} aria-label="오른쪽 구역으로 (D)"><span class="ckey">D</span><span aria-hidden="true">▶</span></button>
     </div>`:`<div class="ib-rooms ib-single">${esc(invParent?invParent.name:'')}</div>`;
-  const people=np?`<div class="ib-people"><button class="ib-act talk" type="button" data-act="talk">${esc(josa(String(NAMES[np.who]||CAST[np.who].name).replace(/^증인 /,''),'와','과'))} 이야기하기<span class="ckey">T</span></button><button class="ib-act" type="button" data-act="show">증거 보여 주기<span class="ckey">P</span></button></div>`:'';
+  const people=np?`<div class="ib-people"><button class="ib-act talk" type="button" data-act="talk">${esc(josa(String(NAMES[np.who]||CAST[np.who].name).replace(/^(증인|피고|피해자) /,''),'와','과'))} 이야기하기<span class="ckey">T</span></button><button class="ib-act" type="button" data-act="show">증거 보여 주기<span class="ckey">P</span></button></div>`:'';
   $('#invbar').innerHTML=`<div class="ib-top">${rooms}${people}</div>
     <div class="ib-bottom"><div class="ib-locs" role="group" aria-label="장소 이동">${locs.map((l,k)=>{ const n=locSpots(l).filter(p=>(p.ev&&S.found.has(p.ev))||(p.p2&&p.p2.ev&&S.found.has(p.p2.ev))).length;
         return `<button class="ib-loc${invParent&&invParent.id===l.id?' on':''}" type="button" data-loc="${l.id}" aria-pressed="${!!(invParent&&invParent.id===l.id)}"><span class="ib-k" aria-hidden="true">${k+1}</span><span class="ib-n">${esc(l.name)}</span><span class="ib-c">증거 ${n}</span></button>`; }).join('')}</div>
@@ -1938,11 +2047,12 @@ function renderInvBar(){
 async function examine(p0){
   if(S.busy) return; S.busy=true; S.seen.add(spotKey(p0));
   const p=(S.phase>=P2()&&p0.p2)?Object.assign({},p0,p0.p2):p0;
+  track('inv_look',{loc:invLoc.id,spot:p.label,ev:p.ev||''});
   if(p.need && !S.found.has(p.need)){ for(const t of (p.lockedSay||['잠겨 있다.'])){ if(S.invSkip) break; await say(ME(),'think',t,{view:'inv'}); } renderSpots(); S.busy=false; return; }
   for(const t of p.say){ if(S.invSkip) break; await say(ME(),'think',t,{view:'inv'}); }
   const gets=(p.gives||[]).concat(p.ev?[p.ev]:[]).filter(id=>!S.found.has(id));
   for(const id of gets){
-    S.found.add(id); Music.sting('get'); S.missStreak=0;
+    S.found.add(id); Music.sting('get'); S.missStreak=0; track('ev_found',{id:id,from:invLoc.id});
     if(S.invSkip) continue;
     showEvidence(id);
     await say('guide','normal',`증거 수첩에 [[${EV_BY_ID[id].title}]]을(를) 넣었다.`,{view:'inv'});
@@ -1950,7 +2060,7 @@ async function examine(p0){
   }
   renderSpots(); renderInvBar(); S.busy=false;
 }
-function reqSpots(){ const out=[]; availLocs().forEach(l=>roomsOf(l).forEach(r=>{ const nm=l.name+(l.rooms?' · '+r.name:''); const np=npcOf(r); if(np){ (np.topics||[]).forEach(t=>{ (t.gives||[]).forEach(id=>out.push({id:id,loc:nm})); if(t.must) out.push({id:'talk:'+t.id,loc:nm}); }); Object.values(np.present||{}).forEach(x=>(x.gives||[]).forEach(id=>out.push({id:id,loc:nm}))); } r.spots.forEach(p0=>{ const p=(S.phase>=P2()&&p0.p2)?Object.assign({},p0,p0.p2):p0; if(p.only2&&S.phase<P2()) return; (p.gives||[]).concat(p.ev?[p.ev]:[]).forEach(id=>out.push({id:id,loc:nm})); }); })); return out; }
+function reqSpots(){ const out=[]; availLocs().forEach(l=>roomsOf(l).forEach(r=>{ const nm=l.name+(l.rooms?' · '+r.name:''); const np=npcOf(r); if(np){ (np.topics||[]).filter(avail).forEach(t=>{ (t.gives||[]).forEach(id=>out.push({id:id,loc:nm})); if(t.must) out.push({id:'talk:'+t.id,loc:nm}); }); Object.values(np.present||{}).forEach(x=>(x.gives||[]).forEach(id=>out.push({id:id,loc:nm}))); } r.spots.forEach(p0=>{ const p=(S.phase>=P2()&&p0.p2)?Object.assign({},p0,p0.p2):p0; if(p.only2&&S.phase<P2()) return; (p.gives||[]).concat(p.ev?[p.ev]:[]).forEach(id=>out.push({id:id,loc:nm})); }); })); return out; }
 function missingReq(){ return [...new Set(reqSpots().map(x=>x.id))].filter(id=>id.startsWith('talk:')?!(S.talked&&S.talked.has(id.slice(5))):!S.found.has(id)); }
 function locOf(id){ const x=reqSpots().find(s=>s.id===id); return x?x.loc:'다른 장소'; }
 async function toCourt(){
@@ -1980,8 +2090,30 @@ sheetEl.addEventListener('click',e=>{ if(e.target===sheetEl && sheetCloseable) c
 const dots=n=>`<span class="dots">${'●'.repeat(n)}${'○'.repeat(3-n)}</span>`;
 function recDetail(e,picked){
   return `<div class="big">${evArt(e)}</div><span class="chip">${e.type}</span>${isUsed(e.id)?' <span class="usedmark">✕ 이미 쓴 증거 · 다시 낼 수 없어요</span>':picked?' <span class="selmark">✓ 고름</span>':''}
-    <h4>${esc(e.title)}</h4><p class="body">${esc(e.body)}</p>
-    <p class="src">출처: ${esc(e.src)}</p><p class="rel">믿을 만한 정도 ${dots(e.trust)} ${TRUSTW[e.trust]}. ${esc(e.note)}</p>`;
+    <h4>${esc(e.title)}</h4><p class="body">${esc(e.body)}</p>${S.zoomed&&S.zoomed.has(e.id)&&e.zoom?`<p class="zoomnote">🔍 ${esc(plain(e.zoom.note||e.zoom.say[e.zoom.say.length-1]))}</p>`:''}
+    <p class="src">출처: ${esc(e.src)}</p><p class="rel">믿을 만한 정도 ${dots(e.trust)} ${TRUSTW[e.trust]}. ${esc(e.note)}</p>
+    <button class="abtn zoomb" type="button" data-zoom="${e.id}">🔍 확대해 보기</button>`;
+}
+/* 증거 확대: 증거 그림을 크게 보고, 확대해야만 보이는 단서(날짜 칸, 서명, 매화 얼룩)를 찾는다 */
+async function openZoom(id,back){
+  const e=EV_BY_ID[id]; S.zoomed=S.zoomed||new Set(); const first=!S.zoomed.has(id); S.zoomed.add(id);
+  track('zoom',{ev:id,hit:!!e.zoom,plum:!!(e.zoom&&e.zoom.plum)});
+  Music.sting('zoom');
+  openSheet(`<h2>증거 확대 · ${esc(e.title)}</h2><div class="zoombig">${evArt(e)}${e.zoom&&e.zoom.plum?'<span class="plum" aria-label="매화 모양 먹 얼룩">✿</span>':''}</div>
+    <div class="zoomtxt">${(e.zoom?e.zoom.say:['구석구석 살펴보았다. 카드에 적힌 것 말고 새로 보이는 것은 없다.']).map(t=>`<p>${t.replace(/\[\[(.*?)\]\]/g,'<b class="kw">$1</b>').replace(/^\(|\)$/g,'')}</p>`).join('')}</div>
+    <div class="sheet-foot"><button class="abtn primary" type="button" data-act="zback">돌아가기</button></div>`,true);
+  if(e.zoom && first){ Music.sting('realize'); if(e.zoom.plum){ S.plums=S.plums||new Set(); S.plums.add(id); } if(e.zoom.gives) e.zoom.gives.forEach(g=>{ if(!S.found.has(g)){ S.found.add(g); track('ev_found',{id:g,from:'zoom'}); } }); }
+  sheetCard.querySelector('[data-act=zback]').addEventListener('click',closeSheet);
+  onSheetClose=back?()=>setTimeout(back,40):null;
+}
+/* 용어 카드: 처음 나온 어려운 말을 쉬운 말로. 증거가 아니라서 제시할 수 없다 */
+function openTerms(back){
+  const D=CASE_DATA[S.case], all=(D&&D.terms)||[], got=all.filter(x=>S.terms&&S.terms.has(x.w));
+  openSheet(`<h2>용어 카드</h2><p class="lead">처음 나온 어려운 말을 모아 두었어요. 용어 카드는 증거가 아니라서 법정에 낼 수는 없어요.</p>
+    ${got.length?`<div class="terms">${got.map(x=>`<div class="term"><span class="term-ic" aria-hidden="true">${x.ic||'📖'}</span><b>${esc(x.w)}</b><p>${esc(x.d)}</p></div>`).join('')}</div>`:'<p>아직 모은 용어 카드가 없어요.</p>'}
+    <div class="sheet-foot"><button class="abtn primary" type="button" data-act="tback">${back?'증거 수첩으로':'닫기'}</button></div>`,true);
+  sheetCard.querySelector('[data-act=tback]').addEventListener('click',closeSheet);
+  onSheetClose=back?()=>setTimeout(back,40):null;
 }
 function openRecord(presentMode){
   const LIST=(S.mode==='inv'||S.story)?EVIDENCE.filter(e=>S.found&&S.found.has(e.id)):EVIDENCE.filter(e=>QUICK_EV.includes(e.id));
@@ -1994,11 +2126,15 @@ function openRecord(presentMode){
     <div class="sheet-foot">
       ${presentMode?'<span class="risk-note">틀리면 해치 방울 하나가 깨져요</span>':''}
       <button class="abtn" data-act="hist" type="button">대화 다시 보기 <span class="ckey">L</span></button>
+      ${S.terms&&S.terms.size?'<button class="abtn" data-act="terms" type="button">용어 카드</button>':''}
       <button class="abtn" data-act="close" type="button">닫기</button>
       ${presentMode?'<button class="abtn primary" data-act="present" type="button" disabled>이 증거 제시하기</button>':''}
     </div>`,true);
   const pb=sheetCard.querySelector('[data-act=present]'), D=$('#recD');
-  const paint=()=>{ D.innerHTML=recDetail(EV_BY_ID[view],sel===view); sheetCard.querySelectorAll('.tile').forEach(x=>{ x.classList.toggle('on',x.dataset.id===view); x.classList.toggle('sel',x.dataset.id===sel); x.setAttribute('aria-pressed',x.dataset.id===sel?'true':'false'); }); };
+  const backTo=()=>presentHandler?S.pickOpen:(()=>openRecord(presentMode));
+  const paint=()=>{ D.innerHTML=recDetail(EV_BY_ID[view],sel===view); sheetCard.querySelectorAll('.tile').forEach(x=>{ x.classList.toggle('on',x.dataset.id===view); x.classList.toggle('sel',x.dataset.id===sel); x.setAttribute('aria-pressed',x.dataset.id===sel?'true':'false'); });
+    const zb=D.querySelector('[data-zoom]'); if(zb){ const back=backTo(); if(presentMode&&!back) zb.remove(); else zb.addEventListener('click',()=>openZoom(zb.dataset.zoom,back)); } };
+  { const tb=sheetCard.querySelector('[data-act=terms]'); if(tb){ const back=backTo(); if(presentMode&&!back) tb.remove(); else tb.addEventListener('click',()=>openTerms(back)); } }
   sheetCard.querySelectorAll('.tile').forEach(b=>b.addEventListener('click',()=>{ Music.sting('click'); view=b.dataset.id; if(presentMode){ sel=b.dataset.id; pb.disabled=isUsed(sel); } paint(); }));
   recNav=(k)=>{ const ids=LIST.map(e=>e.id); let i=ids.indexOf(view); const cols=Math.max(1,Math.round(sheetCard.querySelector('.rec-grid').clientWidth/114));
     if(k==='ArrowRight') i++; else if(k==='ArrowLeft') i--; else if(k==='ArrowDown') i+=cols; else if(k==='ArrowUp') i-=cols;
@@ -2125,9 +2261,12 @@ function openTeacher(){
     ${S.invFound?`<p>조사에서 헛짚은 횟수: ${S.misses||0}번</p><p>조사에서 스스로 찾은 증거: ${S.invFound.length}/8 (${S.invFound.map(id=>id+' '+esc(EV_BY_ID[id].title)).join(', ')||'없음'})</p>`:''}
     ${S.classified?`<h3>분류 결과</h3><p>${S.lines.map((L,i)=>`${i+1}번 ${CAT_NAME[S.classify[i]]||'-'} ${S.classify[i]===correctCat(L)?'○':'×'}`).join(', ')}</p>`:''}`;
   }
-  openSheet(`<h2>교사용</h2>${body}
-    <h3>고증 확인 목록</h3><ol class="check">${GOJEUNG.map(x=>`<li>${esc(x)}</li>`).join('')}</ol>
+  if(S.case>=2) body=`<p class="lead">사건 ${S.case}을(를) 하고 있어요. 이번 판의 증거 제시 기록은 아래 ‘학습 데이터’에 모입니다.</p>`;
+  const gj=(CASE_DATA[S.case]&&CASE_DATA[S.case].gojeung)||GOJEUNG;
+  openSheet(`<h2>교사용</h2>${teacherDataHTML()}<h3>이번 판</h3>${body}
+    <h3>고증 확인 목록${S.case>=3?` (사건 ${S.case})`:''}</h3><ol class="check">${gj.map(x=>`<li>${esc(x)}</li>`).join('')}</ol>
     <div class="sheet-foot"><button class="abtn primary" id="tClose" type="button">${back?'재판 기록으로':'닫기'}</button></div>`,!back);
+  bindTeacherData();
   $('#tClose').addEventListener('click',()=>{ if(back) back(); else closeSheet(); });
 }
 
@@ -2201,6 +2340,10 @@ function rolePic(r){
 }
 let CASE_SEL=+(store.get('yj-case')||1)||1;
 function storyButtons(r){
+  if(CASE_DATA[CASE_SEL]){
+    const D=CASE_DATA[CASE_SEL], v=hasSaveX(CASE_SEL,r.id);
+    return `${v?`<button class="go" type="button" data-act="cx-${CASE_SEL}-${r.id}-resume">이어 하기<small>${phaseNameX(v.phase)}부터</small></button>`:''}<button class="go${v?' alt':''}" type="button" data-act="cx-${CASE_SEL}-${r.id}-new">본편 ${v?'처음부터':'시작'}<small>사건 ${CASE_SEL} · ${D.time||'90~110분'} · 자동 저장</small></button>`;
+  }
   if(CASE_SEL===2){
     const v=hasSave2(r.id);
     return `${v?`<button class="go" type="button" data-act="c2-${r.id}-resume">이어 하기<small>${PHASE2[v.phase]||''}부터</small></button>`:''}<button class="go${v?' alt':''}" type="button" data-act="c2-${r.id}-new">본편 ${v?'처음부터':'시작'}<small>사건 2 · 90~110분 · 자동 저장</small></button>`;
@@ -2212,15 +2355,18 @@ const CASES=[{n:1,t:'백제는 왜 무너졌나',d:'의자왕 · 튜토리얼',r
 function renderRoles(){
   const C=CASES.find(c=>c.n===CASE_SEL)||CASES[0];
   rolesEl.innerHTML=`<h2 class="roles-h">사건과 역할을 고르세요</h2>
+    <label class="sid-row">내 번호나 별명 <input id="sidIn" type="text" maxlength="12" autocomplete="off" placeholder="예) 5반 12번" value="${esc(store.get('yj-sid')||'')}"> <small>이름은 쓰지 마세요. 선생님이 기록을 모을 때만 써요.</small></label>
     <div class="case-tabs" role="tablist">${CASES.map(c=>`<button class="case-tab${c.n===C.n?' on':''}" type="button" role="tab" aria-selected="${c.n===C.n}" data-case="${c.n}"><b>사건 ${c.n}</b>${c.t}<small>${c.d}</small></button>`).join('')}</div>
-    <p class="roles-lead">${C.n===1?'사건 1은 검사 자리에서 해 볼 수 있어요.':'사건 2부터는 변호인 자리도 열립니다. 같은 사건을 다른 자리에서 다시 해 보세요.'}</p>
-    <div class="role-grid">${ROLES.map(r=>{ const ok=C.ready.includes(r.id); return `<div class="role${ok?' ready':''}">${ok?'':'<span class="lock">준비 중</span>'}<div class="role-pic" style="--glow:${r.glow}">${rolePic(r)}</div><h3>${r.name}<span>${r.who}</span></h3><p class="goal">${r.goal}</p><p class="how">${r.how}</p>${ok?storyButtons(r):'<button class="go" type="button" disabled>기획 확인 뒤 제작</button>'}</div>`; }).join('')}</div>`;
+    <p class="roles-lead">${C.n===1?'사건 1은 검사 자리에서 해 볼 수 있어요.':C.lead||'사건 2부터는 변호인 자리도 열립니다. 같은 사건을 다른 자리에서 다시 해 보세요.'}</p>
+    <div class="role-grid">${ROLES.map(r=>{ const ok=C.ready.includes(r.id), lockTxt=(C.locked&&C.locked[r.id])||'준비 중'; return `<div class="role${ok?' ready':''}${C.main===r.id?' main':''}">${ok?(C.main===r.id?'<span class="lock main">기본</span>':''):`<span class="lock">${esc(lockTxt)}</span>`}<div class="role-pic" style="--glow:${r.glow}">${rolePic(r)}</div><h3>${r.name}<span>${r.who}</span></h3><p class="goal">${r.goal}</p><p class="how">${r.how}</p>${ok?storyButtons(r):'<button class="go" type="button" disabled>기획 확인 뒤 제작</button>'}</div>`; }).join('')}</div>`;
+  { const si=$('#sidIn'); if(si) si.addEventListener('change',()=>store.set('yj-sid',si.value.trim().slice(0,12))); }
   rolesEl.querySelectorAll('[data-case]').forEach(b=>b.addEventListener('click',()=>{ CASE_SEL=+b.dataset.case; store.set('yj-case',CASE_SEL); Music.sting('click'); renderRoles(); }));
   const one=(sel,fn)=>{ const b=rolesEl.querySelector(sel); if(b) b.addEventListener('click',fn); };
   one('[data-role=pros]',()=>{ setCase(1); S.me='player'; S.case=1; startTrial(); });
   one('[data-role=story]',()=>{ setCase(1); S.me='player'; S.case=1; startStory(); });
   one('[data-role=resume]',()=>{ setCase(1); S.me='player'; S.case=1; resumeStory(); });
   rolesEl.querySelectorAll('[data-act^=c2-]').forEach(b=>b.addEventListener('click',()=>{ const [,role,kind]=b.dataset.act.split('-'); startCase2(role,kind==='resume'); }));
+  rolesEl.querySelectorAll('[data-act^=cx-]').forEach(b=>b.addEventListener('click',()=>{ const [,n,role,kind]=b.dataset.act.split('-'); startCaseX(+n,role,kind==='resume'); }));
 }
 
 function showTitle(){
@@ -2228,7 +2374,8 @@ function showTitle(){
   $('#titleIn').innerHTML=logoSVG()+`<p>사료로 묻고, 증거로 판결한다</p><small>아래에서 역할을 고르면 재판이 시작됩니다</small>`;
 }
 function backToRoles(){
-  closeSheet(); Music.stop(0.6); S.inTrial=false; S.bgm=null; setMood('open');
+  closeSheet(); Music.stop(0.6); S.inTrial=false; S.bgm=null; setMood('open'); setCharges(null); stageEl.classList.remove('meet');
+  { const sub=document.querySelector('.brand span'); if(sub) sub.textContent='사료로 묻고, 증거로 판결한다'; }
   controlsEl.hidden=true,$('#pips')&&($('#pips').hidden=true); rolesEl.hidden=false; hideEvidence(); $('#invbar').hidden=true; $('#lens').hidden=true; stageEl.classList.remove('inv'); S.mode=null;
   setView('judge','judge','smile'); setName('guide'); textEl.className='text'; nextEl.hidden=true;
   textEl.textContent='역할을 고르면 재판이 시작됩니다. 글상자를 누르면 다음 말로 넘어갑니다.';
@@ -2251,6 +2398,7 @@ $('#bPress').addEventListener('click',doPress);
 $('#bPresent').addEventListener('click',()=>{ if(!S.busy&&CX) openRecord(true); });
 $('#bPrev').addEventListener('click',()=>crossStep(-1));
 $('#bNext').addEventListener('click',()=>crossStep(1));
+$('#bObserve').addEventListener('click',doObserve);
 const soundBtn=$('#tSound'), volEl=$('#vol');
 function renderSound(){ soundBtn.textContent=Music.on?'소리 켬':'소리 끔'; soundBtn.setAttribute('aria-pressed',Music.on?'true':'false'); }
 volEl.value=String(Math.round(Music.volume*100));
@@ -2288,6 +2436,7 @@ document.addEventListener('keydown',e=>{
     if(k==='ArrowLeft'){ e.preventDefault(); $('#bPrev').click(); return; }
     if(k==='f'||k==='F'||k==='ㄹ'){ e.preventDefault(); doPress(); return; }
     if(k==='e'||k==='E'||k==='ㄷ'){ e.preventDefault(); if(CX) openRecord(true); return; }
+    if((k==='s'||k==='S'||k==='ㄴ') && CX && CX.T.habit){ e.preventDefault(); doObserve(); return; }
   }
   if((k==='Enter'||k===' ') && !(e.target instanceof HTMLButtonElement)){ e.preventDefault(); onAdvance(); }
 });
@@ -2358,17 +2507,39 @@ async function reasonEv(q,opts,prompt){
     const c=await choiceSheet(q,opts);
     if(!c.ok){ await say('judge','stern',c.fb||'그 이유로는 판결할 수 없소.'); await loseTrust(); if(S.trust<=0){ S.allowUsed=false; await loseTrial(); return false; } continue; }
     S.expect=c.ev; const id=await pickEvidence(prompt||'그 이유를 뒷받침하는 증거를 고르세요.'); S.expect=null;
+    track('reason',{q:q,a:c.t,ev:id,ok:c.ev.includes(id)});
     if(c.ev.includes(id)){ showEvidence(id); await say(ME(),'present',`근거는 ‘${EV_BY_ID[id].title}’입니다.`); hideEvidence(); await say('judge','normal','이유와 근거가 맞소.'); await gainTrust(); S.allowUsed=false; return true; }
-    await say('judge','stern','그 증거는 이 이유를 뒷받침하지 못하오.'); await loseTrust(); if(S.trust<=0){ S.allowUsed=false; await loseTrial(); return false; }
+    const bad=EV_BY_ID[id];
+    if(bad&&bad.fake&&S.zoomed&&S.zoomed.has(id)) await say('judge','stern','확대해 보고도 낸 그 종이에는 [[매화 얼룩]]이 있소. 누가 썼는지 알 수 없는 종이는 근거가 될 수 없소.');
+    else if(bad&&bad.fake) await say('judge','stern','그 종이는 누가 썼는지 알 수 없소. [[근거에서 빼시오]].');
+    else if(bad&&bad.trust===1) await say('judge','stern','[[전해 들은 말]]은 근거가 약하오. 직접 본 사람의 말이나 기록으로 뒷받침하시오.');
+    else await say('judge','stern','그 증거는 이 이유를 뒷받침하지 못하오.');
+    await loseTrust(); if(S.trust<=0){ S.allowUsed=false; await loseTrial(); return false; }
   }
 }
-function dayPause(n){
+/* 하루 끝 요약: 찾은 증거, 깬 거짓, 남은 방울, 오늘 알게 된 것, 피고에 대한 인상 */
+function dayStart(){ S.dayMark={found:new Set(S.found||[]),log:(S.log||[]).length,t:Date.now()}; }
+function dayPause(n,learned){
+  const M=S.dayMark||{found:new Set(),log:0,t:Date.now()};
+  const newEv=[...(S.found||[])].filter(id=>!M.found.has(id)&&EV_BY_ID[id]);
+  const hits=(S.log||[]).slice(M.log).filter(x=>x.ok).length, wrongs=(S.log||[]).slice(M.log).filter(x=>!x.ok).length;
+  const D=CASE_DATA[S.case], L=learned||(D&&D.learned&&D.learned[n])||null, who=(D&&D.defName)||(S.case===2?'위만':'의자왕');
+  const mins=Math.max(1,Math.round((Date.now()-M.t)/60000));
+  track('day_end',{day:n,newEv:newEv.length,hits:hits,wrongs:wrongs,trust:S.trust,mins:mins});
   return new Promise(res=>{
     openSheet(`<h2>${n}일차가 끝났습니다</h2>
+      <div class="stats day-sum"><div class="stat">오늘 찾은 증거<b>${newEv.length}개</b></div><div class="stat">깬 거짓<b>${hits}개</b></div><div class="stat">헛 제시<b>${wrongs}번</b></div><div class="stat">남은 해치 방울<b>${S.trust}/5</b></div></div>
+      ${newEv.length?`<p class="day-ev">${newEv.map(id=>`<span class="chip">${esc(EV_BY_ID[id].title)}</span>`).join(' ')}</p>`:''}
+      ${L?`<h3>오늘 알게 된 것</h3><ol class="learned">${L.map(x=>`<li>${esc(x)}</li>`).join('')}</ol>`:''}
+      <h3>지금 ${esc(who)}에 대한 내 생각은?</h3>
+      <div class="seg imp" role="group" aria-label="피고에 대한 인상">${[['good','좋다'],['unsure','모르겠다'],['bad','나쁘다']].map(x=>`<button type="button" data-imp="${x[0]}" aria-pressed="false">${x[1]}</button>`).join('')}</div>
       <p class="lead">여기까지 자동으로 저장했어요. 수업을 여기서 끊어도, 다음 시간에 첫 화면의 <b>이어 하기</b>로 ${n+1}일차부터 이어 갈 수 있어요.</p>
       <div class="sheet-foot"><button class="abtn" id="pStop" type="button">여기서 멈추기</button><button class="abtn primary" id="pGo" type="button">${n+1}일차 시작</button></div>`,false);
-    $('#pGo').addEventListener('click',()=>{ closeSheet(); res(true); });
-    $('#pStop').addEventListener('click',()=>{ closeSheet(); backToRoles(); res(false); });
+    let imp=null;
+    sheetCard.querySelectorAll('[data-imp]').forEach(b=>b.addEventListener('click',()=>{ imp=b.dataset.imp; Music.sting('click'); sheetCard.querySelectorAll('[data-imp]').forEach(x=>{ x.classList.toggle('sel',x===b); x.setAttribute('aria-pressed',x===b?'true':'false'); }); }));
+    const done=go=>{ track('impression',{day:n,v:imp||'skip'}); closeSheet(); if(!go) backToRoles(); else dayStart(); res(go); };
+    $('#pGo').addEventListener('click',()=>done(true));
+    $('#pStop').addEventListener('click',()=>done(false));
   });
 }
 /* ===== 사건 1 본편: 프롤로그 → 의뢰 → 조사 1 → 1일차 → 조사 2 → 2일차 → 판결 → 결말 ===== */
@@ -2379,8 +2550,9 @@ function saveAt(phase){
 function clearSave(){ try{ localStorage.removeItem(SAVE_KEY); }catch(e){} }
 
 function prepStory(){
-  { const sub=document.querySelector('.brand span'); if(sub && S.case!==2) sub.textContent='사건 1 「백제는 왜 무너졌나」'; }
+  { const sub=document.querySelector('.brand span'); if(sub && (S.case||1)===1) sub.textContent='사건 1 「백제는 왜 무너졌나」'; }
   S.p2at=3; S.talked=new Set(); S.unlocked=new Set(); S.hist=[]; S.allowUsed=false; S.expect=null;
+  S.flags={}; S.terms=new Set(); S.zoomed=new Set(); S.plums=new Set(); S.observes=0; S.charges=null; setCharges(null); dayStart();
   closeSheet(); Music.resume(); titleEl.hidden=true; rolesEl.hidden=true; controlsEl.hidden=true;
   $('#invbar').hidden=true; $('#lens').hidden=true; stageEl.classList.remove('inv');
   resetState(); S.story=true; S.inTrial=true; S.found=new Set(); S.seen=new Set(); S.misses=0;
@@ -2431,10 +2603,11 @@ async function storyPrologue(){
 
 /* ---------- 법정 1일차 ---------- */
 async function courtOpen(day){
-  await titleCard(day+'일차','법정');
+  S.day=day; await titleCard(day+'일차','법정');
   bgm('open'); Music.sting('murmur'); await wait(900);
   if(day>1 && S.trust<5){ S.trust=5; S.slip=false; renderGauge(); Music.sting('heal'); }
-  await say('judge','normal',day===1?(S.case===2?'지금부터 [[역사 법정]]을 엽니다. 피고는 고조선의 왕위를 차지한 위만.':'지금부터 [[역사 법정]]을 엽니다. 피고는 백제의 마지막 왕, 의자왕.'):'어제에 이어 재판을 엽니다. 해치 방울이 모두 돌아왔습니다.');
+  const D=CASE_DATA[S.case];
+  await say('judge','normal',day===1?(D?D.openLine:S.case===2?'지금부터 [[역사 법정]]을 엽니다. 피고는 고조선의 왕위를 차지한 위만.':'지금부터 [[역사 법정]]을 엽니다. 피고는 백제의 마지막 왕, 의자왕.'):'어제에 이어 재판을 엽니다. 해치 방울이 모두 돌아왔습니다.');
   await gavel();
 }
 async function storyDay1(){
@@ -2572,7 +2745,7 @@ async function storyDay3(){
   await say('scribe','smug','고려 조정의 기록관이오. 우리가 엮은 기록에는 한 치의 틀림도 없소.');
   await titleCard('― 증언 ―','기록은 모두 정확하다');
   const T4={key:'기록관',who:'scribe',lines:[
-    {text:'우리는 옛 기록을 하나도 빼지 않고 옮겼소.',expr:'smug',press:[['player','normal','하나도요?'],['scribe','smug','물론이오. 붓 끝이 떨린 적도 없소.']]},
+    {text:'우리는 옛 기록을 하나도 빼지 않고 옮겼소.',expr:'smug',press:[['player','normal','하나도요?'],['scribe','smug','물론이오. 붓 끝이 떨린 적도 없소.'],['scribe','sweat','기록은… 쓰인 그대로요. [[쓰인 그대로]].'],['player','think','(손목에 먹물이 묻어 있네. 꽃 모양 같기도 하고…)']]},
     {text:'백제의 기록도 신라의 기록만큼 [[많이 남아 있었소]].',expr:'smug',lie:true,ev:'E11',
       press:[['player','normal','두 나라 기록이 비슷하게 남아 있었다고요?'],['scribe','smug','그렇소. 공평하게 옮겼지.']],
       hit:[['player','present','「삼국사기」를 엮은 사정입니다. 그때 남아 있던 옛 기록은 [[신라 쪽 자료가 훨씬 많았습니다]].'],['player','confident','백제의 일은, 백제를 무너뜨린 쪽의 눈으로 남은 부분이 많습니다!']]},
@@ -2682,8 +2855,9 @@ function choiceSheet(q,opts){
   return new Promise(res=>{
     const o=shuffle(opts); window.__yjOpts=o;
     openSheet(`<h2>답하기</h2><p class="lead">${esc(q)}</p><div class="choices">${o.map((x,i)=>`<button class="choice" type="button" data-i="${i}"><span class="ck">${i+1}</span>${esc(x.t)}</button>`).join('')}</div>`,false);
-    sheetCard.querySelectorAll('.choice').forEach(b=>b.addEventListener('click',()=>{ Music.sting('click'); closeSheet(); res(o[+b.dataset.i]); }));
-    recNav=k=>{ const n=parseInt(k,10); if(n>=1&&n<=o.length){ closeSheet(); res(o[n-1]); } };
+    const fin=x=>{ track('choice',{q:q,a:x.t,ok:x.ok===undefined?'':!!x.ok,tag:x.tag||''}); res(x); };
+    sheetCard.querySelectorAll('.choice').forEach(b=>b.addEventListener('click',()=>{ Music.sting('click'); closeSheet(); fin(o[+b.dataset.i]); }));
+    recNav=k=>{ const n=parseInt(k,10); if(n>=1&&n<=o.length){ closeSheet(); fin(o[n-1]); } };
   });
 }
 function pickEvidence(lead){
@@ -2754,7 +2928,8 @@ const EVIDENCE2=[
   {id:'C7',type:'사료',title:'주변을 아우른 기록',body:'위만은 군사력과 재물을 바탕으로 이웃한 진번, 임둔을 복속시켜 땅을 넓혔다.',src:'「사기」 조선열전',trust:3,note:'위만 조선이 커진 모습이에요.'},
   {id:'C8',type:'사료',title:'남쪽으로 간 준왕',body:'쫓겨난 준왕은 측근과 백성을 이끌고 바닷길로 남쪽에 가서 새로 자리를 잡고 스스로 ‘한왕’이라 하였다.',src:'「위략」',trust:2,note:'같은 시대, 다른 선택을 한 사람이에요.'},
   {id:'C9',type:'유물',title:'비파형 동검',body:'고조선을 대표하는 청동 검. 위만이 오기 훨씬 전부터 쓰였다.',src:'박물관 고조선실',trust:3,note:'고조선 문화를 보여 주는 유물이에요.'},
-  {id:'C10',type:'문서',title:'준왕의 밀서',body:'“위만을 없애라. 그리고 [[낙랑]]의 군사로 서쪽을 막으라.” 끝에 준왕의 도장이 찍혀 있다.',src:'피고 위만이 내놓은 문서',trust:1,note:'누가, 언제 쓴 문서일까요? 낱말 하나하나를 의심해 보세요.'},
+  {id:'C10',type:'문서',title:'준왕의 밀서',body:'“위만을 없애라. 그리고 [[낙랑]]의 군사로 서쪽을 막으라.” 끝에 준왕의 도장이 찍혀 있다.',src:'피고 위만이 내놓은 문서',trust:1,note:'누가, 언제 쓴 문서일까요? 낱말 하나하나를 의심해 보세요.',
+   zoom:{say:['밀서의 귀퉁이를 크게 확대해 보았다.','오른쪽 위에 작은 [[매화 모양 먹 얼룩]]이 있다. 도장과는 다른 먹이다.','…누가 이런 얼룩을 남겼을까?'],plum:true,note:'오른쪽 위에 매화 모양 먹 얼룩이 있다.'}},
   {id:'C11',type:'증언',title:'포구의 뱃사공 이야기',body:'그날 밤 준왕 일행은 허둥지둥 배에 올라 남쪽 바닷길로 떠났다. 누구에게 편지를 남길 틈도 없었다.',src:'바닷가 포구에서 들은 이야기 (상상)',trust:2,note:'그날 밤 준왕이 무엇을 할 수 있었는지 생각해 보세요.'},
   {id:'P1',type:'물건',title:'통행패',body:'서쪽 망루로 올라가는 사람에게 내주던 나무패.',src:'철기 공방',trust:3,note:'잠긴 곳을 여는 물건이에요.'}
 ];
@@ -2835,7 +3010,7 @@ let CASE=1;
 const C1DATA={ev:EVIDENCE.slice(), locs:LOCS.slice()};
 function setCase(n){
   CASE=n;
-  const ev=n===2?EVIDENCE2:C1DATA.ev, lc=n===2?LOCS2:C1DATA.locs;
+  const X=CASE_DATA[n], ev=X?X.ev:n===2?EVIDENCE2:C1DATA.ev, lc=X?X.locs:n===2?LOCS2:C1DATA.locs;
   EVIDENCE.length=0; ev.forEach(e=>EVIDENCE.push(e));
   Object.keys(EV_BY_ID).forEach(k=>delete EV_BY_ID[k]); EVIDENCE.forEach(e=>{ EV_BY_ID[e.id]=e; });
   LOCS.length=0; lc.forEach(l=>LOCS.push(l));
@@ -2846,7 +3021,7 @@ function hasSave2(role){ try{ const v=JSON.parse(store.get(SAVE2(role))||'null')
 function saveAt2(phase){ store.set(SAVE2(S.me==='rival'?'def':'pros'),JSON.stringify({phase:phase,found:[...S.found],seen:[...(S.seen||[])],trust:S.trust,misses:S.misses||0,presses:S.presses||0,log:S.log||[],forged:!!S.forged,used:[...(S.used||[])],talked:[...(S.talked||[])],unlocked:[...(S.unlocked||[])],when:Date.now()})); }
 function clearSave2(role){ try{ localStorage.removeItem(SAVE2(role)); }catch(e){} }
 function startCase2(role,resume){
-  setCase(2); const sub=document.querySelector('.brand small,.brand span'); if(sub) sub.textContent='사건 2 「왕검성의 밤」';
+  setCase(2); S.case=2; S.role=role; const sub=document.querySelector('.brand small,.brand span'); if(sub) sub.textContent='사건 2 「왕검성의 밤」';
   prepStory(); S.case=2; S.p2at=9; S.me=role==='def'?'rival':'player'; S.lines=[];
   let from=0; const v=resume?hasSave2(role):null;
   if(v){ S.found=new Set(v.found); S.seen=new Set(v.seen||[]); S.trust=v.trust||5; S.misses=v.misses||0; S.presses=v.presses||0; S.log=v.log||[]; S.forged=!!v.forged; S.used=new Set(v.used||[]); S.talked=new Set(v.talked||[]); S.unlocked=new Set(v.unlocked||[]); renderGauge(); from=v.phase; }
@@ -3085,16 +3260,732 @@ async function verdict2(role){
   await say('judge','normal',role==='pros'?'혐의 ②. 검사가 공소를 거두었으므로 [[더 판단하지 않소]].':'혐의 ②. 피고가 고조선을 이었다는 근거가 있고, 혐의는 증명되지 않았소. [[무죄]].');
   await say('judge','normal','같은 시대, 쫓겨난 준왕은 남쪽으로 가서 [[새로 자리를 잡았소]]. 사람마다 다른 선택이 있었소.');
   Music.stop(1); clearSave2(role);
-  const used=S.log.filter(x=>!x.ok).length, found=EVIDENCE2.filter(e=>!['C2','C10'].includes(e.id)&&S.found.has(e.id)).length;
+  // 포구의 뱃사공 이야기(C11)는 검사 모드 3일차에만 나오므로 변호인 모드의 셈에서 뺀다
+  const notCounted=role==='def'?['C2','C10','C11']:['C2','C10'];
+  const used=S.log.filter(x=>!x.ok).length, found=EVIDENCE2.filter(e=>!notCounted.includes(e.id)&&S.found.has(e.id)).length;
+  track('case_end',{grade:'',trust:S.trust,wrongs:used,found:found});
   openSheet(`<h2>사건 2 결과 · ${role==='pros'?'검사':'변호인'}</h2>
     <p class="lead">${role==='pros'?'거짓 경보를 두 증거로 밝히고, 가짜 밀서의 시대착오를 잡고, 증명되지 않은 혐의를 스스로 거두었습니다.':'가짜 증거의 유혹을 '+(S.ethics?'이겨 내고':'이기지 못했지만')+', 증인의 거짓을 잡고, 확정 사실은 지키면서 참작할 사정을 세웠습니다.'}</p>
-    <ul class="res-list"><li>남은 해치 방울 ${S.trust}/5</li><li>헛 제시 ${used}번</li><li>조사에서 헛짚음 ${S.misses||0}번</li><li>스스로 찾은 증거 ${found}/${EVIDENCE2.filter(e=>!['C2','C10'].includes(e.id)).length}</li>${role==='def'?`<li>변호인의 진실 의무 ${S.ethics?'지킴':'놓침'}</li>`:''}</ul>
+    <ul class="res-list"><li>남은 해치 방울 ${S.trust}/5</li><li>헛 제시 ${used}번</li><li>조사에서 헛짚음 ${S.misses||0}번</li><li>스스로 찾은 증거 ${found}/${EVIDENCE2.filter(e=>!notCounted.includes(e.id)).length}</li>${role==='def'?`<li>변호인의 진실 의무 ${S.ethics?'지킴':'놓침'}</li>`:''}</ul>
     <h3>실제 역사에서는</h3>
     <p>위만이 세운 나라(위만 조선)는 철기 문화를 바탕으로 크게 성장했습니다. 그러나 손자 우거왕 때 한나라의 공격을 받아 기원전 108년에 무너졌고, 한나라는 그 땅에 낙랑 등의 군을 두었습니다.</p>
     <div class="sheet-foot"><button class="abtn primary" type="button" id="r2back">처음 화면으로</button></div>`,false);
   $('#r2back').addEventListener('click',()=>{ closeSheet(); backToRoles(); });
 }
 
+/* ===== 사건 3~10 공통 틀: 학습 데이터, 혐의 카드, 그림자 연출, 용어 카드, 판사 모드 도구, 사건 진행 ===== */
+
+/* ---------- 학습 데이터 (공통 규칙 2장) ----------
+   {t, sid, case, role, day, kind, detail} 를 기기 안에만 쌓는다. 실명은 받지 않고 학급 번호나 별명만.
+   교사가 내려받을 때만 밖으로 나간다 (CSV). */
+const EVKEY='yj-events', EVMAX=12000;
+function loadEvents(){ try{ return JSON.parse(store.get(EVKEY)||'[]')||[]; }catch(e){ return []; } }
+function track(kind,detail){
+  try{
+    const E=loadEvents();
+    E.push({t:Date.now(),sid:store.get('yj-sid')||'',case:S.case||1,role:S.role||(S.me==='rival'?'def':S.me==='daon'?'judge':'pros'),day:S.day||S.phase||0,kind:kind,detail:detail||{}});
+    if(E.length>EVMAX) E.splice(0,E.length-EVMAX);
+    store.set(EVKEY,JSON.stringify(E));
+  }catch(e){}
+}
+const KIND_KO={start:'시작',move:'장소 이동',inv_look:'조사',inv_miss:'헛짚음',ev_found:'증거 얻음',hint_place:'장소 힌트',talk:'이야기',show:'보여 주기',press:'더 묻기',present:'증거 제시',hint_line:'해치 힌트',choice:'고르기',reason:'판결 이유',pick:'증거 고르기',zoom:'증거 확대',observe:'버릇 살피기',claim:'주장 가르기',term:'용어 카드',day_end:'하루 끝',impression:'피고 인상',lose:'방울 모두 깨짐',case_end:'사건 끝',shadow_replay:'그림자 다시 보기'};
+function csvCell(v){ const s=String(v===undefined||v===null?'':v); return /[",\n]/.test(s)?'"'+s.replace(/"/g,'""')+'"':s; }
+function eventsCSV(E){
+  const head=['시각','번호_별명','사건','역할','일차','종류','종류_한글','내용'];
+  const pad=n=>String(n).padStart(2,'0');
+  const ts=t=>{ const d=new Date(t); return `${d.getFullYear()}-${pad(d.getMonth()+1)}-${pad(d.getDate())} ${pad(d.getHours())}:${pad(d.getMinutes())}:${pad(d.getSeconds())}`; };
+  return '﻿'+[head.join(',')].concat(E.map(e=>[ts(e.t),e.sid,e.case,e.role,e.day,e.kind,KIND_KO[e.kind]||e.kind,JSON.stringify(e.detail)].map(csvCell).join(','))).join('\n');
+}
+const ROLE_KO={pros:'검사',def:'변호인',judge:'판사'};
+/* 학생별 요약: 며칠째, 어디서 막혔는지 */
+function eventSummary(E){
+  const G={};
+  E.forEach(e=>{ const k=(e.sid||'(이름표 없음)')+'|'+e.case+'|'+e.role; const g=G[k]||(G[k]={sid:e.sid||'(이름표 없음)',case:e.case,role:e.role,day:0,miss:{},wrong:{},hints:0,first:e.t,last:e.t,end:null,imp:[]});
+    g.day=Math.max(g.day,+e.day||0); g.last=Math.max(g.last,e.t); g.first=Math.min(g.first,e.t);
+    if(e.kind==='inv_miss') g.miss[e.detail.loc]=(g.miss[e.detail.loc]||0)+1;
+    if(e.kind==='present'&&!e.detail.ok){ const w=(e.detail.key||'증언')+' '+e.detail.line+'번째 말'; g.wrong[w]=(g.wrong[w]||0)+1; }
+    if(e.kind==='claim'&&!e.detail.ok){ const w='주장 가르기'; g.wrong[w]=(g.wrong[w]||0)+1; }
+    if(e.kind==='hint_line'||e.kind==='hint_place') g.hints++;
+    if(e.kind==='impression') g.imp.push(({good:'좋다',unsure:'모르겠다',bad:'나쁘다',skip:'-'})[e.detail.v]||'-');
+    if(e.kind==='case_end') g.end=e.detail.grade||'끝냄'; });
+  const top=o=>{ const a=Object.entries(o).sort((x,y)=>y[1]-x[1])[0]; return a?`${a[0]} (${a[1]}번)`:'-'; };
+  return Object.values(G).sort((a,b)=>b.last-a.last).map(g=>({sid:g.sid,cr:`사건 ${g.case} · ${ROLE_KO[g.role]||g.role}`,day:g.end?'끝냄':(g.day?g.day+'일차':'-'),miss:top(g.miss),wrong:top(g.wrong),hints:g.hints,imp:g.imp.join('→')||'-',end:g.end||'-',mins:Math.max(1,Math.round((g.last-g.first)/60000))}));
+}
+function teacherDataHTML(){
+  const E=loadEvents(), sum=eventSummary(E);
+  return `<h3>학습 데이터 (이 기기)</h3>
+    <p class="lead">학생의 조사·추궁·판단을 사건·날짜·행동 단위로 이 기기 안에만 모읍니다. 이름 대신 첫 화면의 <b>번호나 별명</b>으로 저장합니다. 지금 ${E.length}개의 기록이 있어요.</p>
+    ${sum.length?`<div class="tblwrap"><table class="tbl-sm"><thead><tr><th>번호·별명</th><th>사건·역할</th><th>며칠째</th><th>가장 많이 헤맨 곳</th><th>가장 많이 틀린 곳</th><th>힌트</th><th>피고 인상 변화</th><th>걸린 시간</th></tr></thead><tbody>
+      ${sum.map(r=>`<tr><td>${esc(r.sid)}</td><td>${esc(r.cr)}</td><td>${esc(r.day)}</td><td>${esc(r.miss)}</td><td>${esc(r.wrong)}</td><td>${r.hints}</td><td>${esc(r.imp)}</td><td>${r.mins}분</td></tr>`).join('')}</tbody></table></div>`:'<p>아직 모인 기록이 없어요.</p>'}
+    <div class="sheet-foot" style="justify-content:flex-start"><button class="abtn" type="button" id="tCsv">CSV 내려받기</button><button class="abtn" type="button" id="tClear">이 기기의 기록 지우기</button></div>`;
+}
+function bindTeacherData(){
+  const b=$('#tCsv'); if(b) b.addEventListener('click',()=>{
+    const csv=eventsCSV(loadEvents()), sid=(store.get('yj-sid')||'기기').replace(/[^\w가-힣-]/g,'_');
+    const d=new Date(), name=`역사재판_학습데이터_${sid}_${d.getFullYear()}${String(d.getMonth()+1).padStart(2,'0')}${String(d.getDate()).padStart(2,'0')}.csv`;
+    try{ const url=URL.createObjectURL(new Blob([csv],{type:'text/csv;charset=utf-8'})); const a=document.createElement('a'); a.href=url; a.download=name; document.body.appendChild(a); a.click(); a.remove(); setTimeout(()=>URL.revokeObjectURL(url),2000); }catch(e){}
+  });
+  const c=$('#tClear'); if(c) c.addEventListener('click',()=>{ let ok=false; try{ ok=window.confirm('이 기기에 쌓인 학습 데이터를 모두 지울까요? 먼저 CSV로 내려받아 두세요.'); }catch(e){} if(ok){ store.set(EVKEY,'[]'); openTeacher(); } });
+}
+
+/* ---------- 알림과 용어 카드 ---------- */
+function toast(msg){ const t=$('#toast'); if(!t) return; t.hidden=true; void t.offsetWidth; t.textContent=msg; t.hidden=false; clearTimeout(toast._t); toast._t=setTimeout(()=>{ t.hidden=true; },2300); }
+function noteTerms(text){
+  const D=CASE_DATA[S.case]; if(!D||!D.terms||!S.terms) return;
+  const p=plain(text);
+  D.terms.forEach(x=>{ if(!S.terms.has(x.w) && p.includes(x.w)){ S.terms.add(x.w); track('term',{w:x.w}); toast(`📖 새 용어 카드: ${x.w}`); } });
+}
+
+/* ---------- 혐의 카드·용의 카드: 화면 위에 늘 띄움 ---------- */
+const CH_ST={'':'다투는 중',guilty:'유죄',partial:'일부 유죄',innocent:'무죄',dropped:'취하',held:'판단 보류',sus:'의심',clear:'아님',defendant:'피고'};
+function setCharges(list,label){
+  S.charges=list?{label:label||'혐의',list:list}:null;
+  const el=$('#cards'); if(!el) return;
+  if(!list){ el.hidden=true; el.innerHTML=''; return; }
+  el.hidden=false;
+  el.innerHTML=`<span class="ch-h">${esc(S.charges.label)}</span>`+list.map(c=>`<span class="ch s-${c.st||'open'}">${esc(c.t)}<i>${CH_ST[c.st||'']||c.st}</i>${c.note?`<small>${esc(c.note)}</small>`:''}</span>`).join('');
+}
+function chargeSt(i,st,note){ if(!S.charges) return; const c=S.charges.list[i]; if(!c) return; c.st=st; if(note!==undefined) c.note=note; setCharges(S.charges.list,S.charges.label); }
+
+/* ---------- 그림자 연출 (공통 규칙 1장): 실루엣과 소리만, 3~5초, 끝은 검은 화면 ---------- */
+const SH=`<svg viewBox="0 0 1600 900" preserveAspectRatio="xMidYMid slice" xmlns="http://www.w3.org/2000/svg">`;
+function shPerson(x,y,k,o){ o=o||{}; k=k||1; const c=o.c||'#000';
+  const head=`<circle cx="0" cy="-150" r="30" fill="${c}"/>`;
+  const plume=o.plume?`<path d="M0,-180 C20,-240 70,-250 92,-226 C60,-226 34,-206 18,-176 Z" fill="${c}"/>`:'';
+  const helm=o.helm?`<path d="M-34,-150 C-34,-196 34,-196 34,-150 Z" fill="${c}"/>`:'';
+  const body=o.seated?`<path d="M-44,-118 L44,-118 L58,-30 L90,-30 L90,0 L-60,0 L-52,-60 Z" fill="${c}"/>`:o.lying?'':`<path d="M-40,-118 L40,-118 L52,0 L16,0 L10,80 L-10,80 L-16,0 L-52,0 Z" fill="${c}"/>`;
+  const armUp=o.armUp?`<path d="M30,-110 L74,-200 L86,-194 L46,-104 Z" fill="${c}"/>`:'';
+  const spear=o.spear?`<rect x="${o.spear>0?44:-50}" y="-290" width="7" height="370" fill="${c}"/><path d="M${o.spear>0?47.5:-46.5},-320 l-12,34 h24 Z" fill="${c}"/>`:'';
+  const bowl=o.bowl?`<path d="M40,-92 h56 c0,22 -12,32 -28,32 c-16,0 -28,-10 -28,-32 Z" fill="${c}"/>`:'';
+  const shovel=o.shovel?`<rect x="40" y="-150" width="7" height="200" fill="${c}" transform="rotate(25 44 -50)"/><path d="M70,40 l30,12 l-14,34 l-30,-12 Z" fill="${c}"/>`:'';
+  const torch=o.torch?`<rect x="44" y="-210" width="8" height="120" fill="${c}"/><ellipse cx="48" cy="-226" rx="16" ry="26" fill="#ff9a3a" opacity=".9"/>`:'';
+  const arms=o.manse?`<path d="M-30,-112 L-58,-230 L-44,-234 L-18,-118 Z M30,-112 L58,-230 L44,-234 L18,-118 Z" fill="${c}"/>`:'';
+  const lying=o.lying?`<rect x="-150" y="-40" width="300" height="46" rx="22" fill="${c}"/><circle cx="-170" cy="-24" r="28" fill="${c}"/>`:'';
+  return `<g class="fig" transform="translate(${x},${y}) scale(${k})"${o.id?` id="${o.id}"`:''}>${o.lying?lying:head+helm+plume+body+armUp+spear+bowl+shovel+torch+arms}</g>`;
+}
+const SHADOWS={
+  gwansan:{cap:'554년, 관산성 골짜기',bg:['#3b2a2a','#140c0c'],
+    draw:()=>`<path d="M0,620 C300,560 500,700 800,640 C1100,580 1300,700 1600,620 L1600,900 L0,900 Z" fill="#0d0808"/>`+
+      `<g class="fig" id="rider" transform="translate(800,640)"><path d="M-110,-40 C-90,-90 60,-100 110,-60 L130,-110 L150,-104 L134,-40 L120,40 L100,40 L96,0 L-70,0 L-76,40 L-96,40 Z" fill="#000"/>${shPerson(0,-60,0.75,{helm:true})}</g>`+
+      [180,330,1270,1420].map((x,i)=>`<g class="fig sp" data-x="${x<800?1:-1}">${shPerson(x,700,1,{spear:x<800?1:-1,helm:true})}</g>`).join(''),
+    seq:[[300,'clash'],[1200,'clash'],[1900,'step'],[2600,'thud']],move:(svg)=>{ svg.querySelectorAll('.sp').forEach(g=>{ g.style.transform=`translateX(${(+g.dataset.x)*240}px)`; }); },cut:3600},
+  poseok:{cap:'927년 겨울, 포석정',bg:['#2a2e3e','#0b0c14'],
+    draw:()=>`<path d="M300,760 C500,700 700,820 900,740 C1100,680 1200,800 1350,760" stroke="#000" stroke-width="40" fill="none" opacity=".8"/>`+shPerson(800,700,1,{seated:true})+
+      [260,420,1180,1340].map(x=>`<g class="fig sp" data-x="${x<800?1:-1}">${shPerson(x,720,1,{spear:x<800?1:-1,helm:true})}</g>`).join('')+
+      `<g class="fig" id="tall" style="opacity:0">${shPerson(1080,700,1.35,{helm:true,plume:true,armUp:true})}</g>`,
+    seq:[[400,'step'],[1500,'murmur'],[2600,'thud']],move:(svg)=>{ svg.querySelectorAll('.sp').forEach(g=>{ g.style.transform=`translateX(${(+g.dataset.x)*170}px)`; }); setTimeout(()=>{ const t=svg.querySelector('#tall'); if(t) t.style.opacity=1; },1300); },cut:3500,after:'plume'},
+  emptypalace:{cap:'텅 빈 개경의 궁궐',bg:['#2e2a24','#0e0c0a'],
+    draw:()=>`<rect x="640" y="420" width="320" height="300" fill="#000" opacity=".85"/><path d="M600,420 L800,330 L1000,420 Z" fill="#000" opacity=".85"/><rect x="760" y="560" width="80" height="120" fill="#2e2a24"/>`,
+    seq:[[100,'wind'],[2400,'wind']],cut:4000},
+  door:{cap:'1618년, 서궁',bg:['#2a2620','#0c0a08'],
+    draw:()=>`<rect x="420" y="160" width="760" height="620" fill="#000" opacity=".9"/><g class="fig" id="dl" style="transform-origin:420px 470px"><rect x="420" y="160" width="380" height="620" fill="#1a1410"/></g><g class="fig" id="dr" style="transform-origin:1180px 470px"><rect x="800" y="160" width="380" height="620" fill="#1a1410"/></g>`+shPerson(800,760,0.9,{}),
+    seq:[[200,'step'],[1400,'door']],move:(svg)=>{ const a=svg.querySelector('#dl'), b=svg.querySelector('#dr'); if(a) a.style.transform='scaleX(1)'; if(b) b.style.transform='scaleX(1)'; },pre:(svg)=>{ const a=svg.querySelector('#dl'), b=svg.querySelector('#dr'); if(a) a.style.transform='scaleX(.08)'; if(b) b.style.transform='scaleX(.08)'; },cut:3300},
+  sickbed:{cap:'1645년 봄 밤, 세자의 거처',bg:['#1e2230','#07080e'],
+    draw:()=>shPerson(760,700,1,{lying:true})+`<g class="fig" id="bowl" style="transform:translateX(420px)">${shPerson(1000,700,1.1,{bowl:true})}</g>`,
+    seq:[[600,'cough'],[1900,'cough'],[2700,'gasp']],move:(svg)=>{ const b=svg.querySelector('#bowl'); if(b) b.style.transform='translateX(0)'; },cut:3900},
+  graves:{cap:'1868년 밤, 남연군 묘',bg:['#22281e','#080a06'],
+    draw:()=>`<path d="M520,720 C620,560 980,560 1080,720 Z" fill="#000"/>`+[380,560,1040,1220].map(x=>`<g class="fig dig">${shPerson(x,760,0.9,{shovel:true})}</g>`).join('')+`<g class="fig" id="torch" style="opacity:0;transform:translateX(300px)">${shPerson(1480,760,1,{torch:true})}${shPerson(1380,760,1,{torch:true})}</g>`,
+    seq:[[200,'shovel'],[1600,'shovel'],[2400,'step'],[3000,'step']],move:(svg)=>{ setTimeout(()=>{ const t=svg.querySelector('#torch'); if(t){ t.style.opacity=1; t.style.transform='translateX(0)'; } setTimeout(()=>svg.querySelectorAll('.dig').forEach((g,i)=>{ g.style.transform=`translateX(${i<2?-500:500}px)`; g.style.opacity=0; }),900); },1500); },cut:4300},
+  manse:{cap:'1919년 3월',bg:['#2c2f3a','#0d0e14'],
+    draw:()=>`<rect x="650" y="220" width="300" height="420" fill="#000" opacity=".8"/><path d="M720,640 V420 C720,330 880,330 880,420 V640 Z" fill="#2c2f3a"/>`+Array.from({length:16},(_,i)=>`<g class="fig wave" style="opacity:0;transition-delay:${i*90}ms">${shPerson(60+i*100,820+(i%2)*30,0.8,{manse:true})}</g>`).join(''),
+    seq:[[300,'cheer'],[2400,'cheer']],move:(svg)=>{ svg.querySelectorAll('.wave').forEach(g=>{ g.style.opacity=1; }); },cut:4400},
+  emptyroom:{cap:'빈 방',bg:['#26221e','#0b0a09'],
+    draw:()=>`<rect x="560" y="260" width="480" height="380" fill="#000" opacity=".6"/><rect x="600" y="300" width="180" height="300" fill="#26221e" opacity=".7"/><rect x="820" y="300" width="180" height="300" fill="#26221e" opacity=".7"/>`,
+    seq:[[100,'wind']],cut:3300}
+};
+function playShadow(kind,replay){
+  const D=SHADOWS[kind]; if(!D) return Promise.resolve();
+  if(!replay){ S.hist=S.hist||[]; S.hist.push({n:'장면',t:`(그림자 장면) ${D.cap}`,c:'thought',shadow:kind}); }
+  const el=$('#shadow'); controlsEl.hidden=true;
+  el.innerHTML=SH+`<defs>${lg('shg',[[0,D.bg[0]],[1,D.bg[1]]])}</defs><rect width="1600" height="900" fill="url(#shg)"/>${D.draw()}</svg><div class="sh-cap">${esc(D.cap)}</div>`;
+  el.className='shadow'; el.hidden=false; Music.stop(0.4);
+  const svg=el.querySelector('svg'); if(D.pre) D.pre(svg);
+  if(window.__yjFast) return new Promise(r=>setTimeout(()=>{ el.hidden=true; el.innerHTML=''; r(); },20));
+  return new Promise(res=>{
+    const timers=[]; let done=false;
+    const fin=()=>{ if(done) return; done=true; timers.forEach(clearTimeout); el.classList.add('cut'); setTimeout(()=>{ el.hidden=true; el.className='shadow'; el.innerHTML=''; skipCurrent=null; res(); },D.after==='plume'?1300:420);
+      if(D.after==='plume') setTimeout(()=>{ el.classList.remove('cut'); el.innerHTML=SH+`<rect width="1600" height="900" fill="#000"/><path d="M700,520 C760,360 900,330 960,380 C880,390 820,440 790,520 Z" fill="#7a1f1a" opacity=".85"/></svg><div class="sh-cap">…붉은 꿩 깃털</div>`; },450); };
+    timers.push(setTimeout(()=>{ if(D.move) D.move(svg); },80));
+    D.seq.forEach(s=>timers.push(setTimeout(()=>Music.sting(s[1]),s[0])));
+    timers.push(setTimeout(fin,D.cut));
+    el.onclick=fin; skipCurrent=fin;
+  });
+}
+
+/* ---------- 인물 더하기 (그림이 없으면 코드 그림으로 대신) ---------- */
+function addCast(id,o){
+  CAST[id]=Object.assign({name:o.name},o.spec||{skin:'#e8c4a0',robe:'#5a6a80',robe2:'#3e4a5c',collar:'cross',hat:'short',hair:'#1c1a20',beard:'none',iris:'#3a2a20'});
+  NAMES[id]=o.label||o.name; VIEW_OF[id]=o.view||'witness'; ACTION_COL[id]=o.col||'#5a4a3a';
+}
+NAMES.daon='다온 판사'; VIEW_OF.daon='judge'; ACTION_COL.daon='#3a2f55';
+
+/* ---------- 사건 등록과 저장 ---------- */
+function regCase(n,def){
+  CASE_DATA[n]=def; def.ev.forEach(e=>{ if(!e.icon) e.icon='scroll'; });
+  const i=CASES.findIndex(c=>c.n===n), c={n:n,t:def.title,d:def.desc,ready:Object.keys(def.roles),main:def.main,lead:def.lead,locked:def.locked};
+  if(i>=0) CASES[i]=c; else CASES.push(c);
+  CASES.sort((a,b)=>a.n-b.n);
+  if(def.views) Object.assign(VIEWS,def.views);
+}
+const SAVEX=(n,role)=>`yj-story-${n}-${role}`;
+function hasSaveX(n,role){ try{ const v=JSON.parse(store.get(SAVEX(n,role))||'null'); return v&&v.phase?v:null; }catch(e){ return null; } }
+function clearSaveX(n,role){ try{ localStorage.removeItem(SAVEX(n,role)); }catch(e){} }
+function phaseNameX(p){ return `${Math.ceil(p/2)}일차 ${p%2?'조사':'법정'}`; }
+function saveAtX(phase){
+  store.set(SAVEX(S.case,S.role),JSON.stringify({phase:phase,found:[...S.found],seen:[...(S.seen||[])],trust:S.trust,misses:S.misses||0,presses:S.presses||0,log:S.log||[],used:[...(S.used||[])],talked:[...(S.talked||[])],unlocked:[...(S.unlocked||[])],
+    flags:S.flags||{},terms:[...(S.terms||[])],zoomed:[...(S.zoomed||[])],plums:[...(S.plums||[])],observes:S.observes||0,charges:S.charges,when:Date.now()}));
+}
+function startCaseX(n,role,resume){
+  const D=CASE_DATA[n]; if(!D||!D.roles[role]) return;
+  setCase(n); S.case=n; S.role=role;
+  const sub=document.querySelector('.brand span'); if(sub) sub.textContent=`사건 ${n} 「${D.title}」`;
+  prepStory(); S.case=n; S.role=role; S.me=role==='def'?'rival':role==='judge'?'daon':'player'; S.p2at=99; S.day=1;
+  let from=0; const v=resume?hasSaveX(n,role):null;
+  if(v){ S.found=new Set(v.found); S.seen=new Set(v.seen||[]); S.trust=v.trust||5; S.misses=v.misses||0; S.presses=v.presses||0; S.log=v.log||[]; S.used=new Set(v.used||[]); S.talked=new Set(v.talked||[]); S.unlocked=new Set(v.unlocked||[]);
+    S.flags=v.flags||{}; S.terms=new Set(v.terms||[]); S.zoomed=new Set(v.zoomed||[]); S.plums=new Set(v.plums||[]); S.observes=v.observes||0; if(v.charges) setCharges(v.charges.list,v.charges.label); renderGauge(); from=v.phase; }
+  else clearSaveX(n,role);
+  dayStart(); track('start',{resume:!!v,from:from});
+  D.roles[role](from);
+}
+/* 4일 진행: 날마다 [조사] → [법정] → 하루 끝. days[i] = {inv, court, learned} */
+async function playDays(days,from){
+  for(let d=1;d<=days.length;d++){
+    const D=days[d-1], pi=2*d-1, pc=2*d;
+    if(from<=pi && D.inv){ saveAtX(pi); S.day=d; await titleCard(d+'일차','조사'); await D.inv(); }
+    if(from<=pc){ saveAtX(pc); S.day=d; if(!await D.court()) return false;
+      if(d<days.length){ saveAtX(pc+1); if(!await dayPause(d,D.learned)) return false; } }
+  }
+  return true;
+}
+const invDay=(d,intro)=>investigate(d,intro);
+
+/* ---------- 법정 도구 ---------- */
+async function testimony(T,title,sub){
+  bgm('testimony'); await titleCard('― 증언 ―',title);
+  const vis=T.lines.filter(l=>!l.hidden);
+  for(let i=0;i<vis.length;i++) await say(T.who,vis[i].expr||'base',vis[i].text,{testimony:true,tag:`증언 ${i+1}/${vis.length}`});
+  bgm('cross'); await titleCard('― 추궁 ―',sub||'더 묻고, 틀린 말에는 증거를 내세요');
+  return runCross(T);
+}
+/* 고르기: 틀린 답(ok:false)은 방울 −1 후 다시. 정답이 하나가 아닌 갈림길은 모든 답에 ok:true */
+async function choose(q,opts,o){
+  o=o||{}; let miss=0;
+  for(;;){
+    const c=await choiceSheet(q,opts);
+    if(c.ok!==false){ if(opts.some(x=>x.ok===false)&&!o.noGain) await gainTrust(); return c; }
+    miss++; await say(o.who||'judge',o.expr||'stern',c.fb||'그 답으로는 안 되오.');
+    if(miss===2&&o.hint) await say('judge','normal',o.hint);
+    await loseTrust(); if(S.trust<=0){ await loseTrial(); return null; }
+  }
+}
+/* 증거 고르기: ids 가운데 하나를 낼 때까지. 전해 들은 말·가짜 기록은 따로 꾸짖음 */
+async function presentFor(lead,ids,o){
+  o=o||{}; let miss=0;
+  for(;;){
+    S.expect=ids; const id=await pickEvidence(lead); S.expect=null;
+    const ok=ids.includes(id); track('pick',{lead:lead,ev:id,ok:ok});
+    if(ok){ if(!o.quiet){ showEvidence(id); await say(ME(),'present',o.say?o.say(EV_BY_ID[id]):`‘${EV_BY_ID[id].title}’입니다!`); hideEvidence(); } if(!o.noGain) await gainTrust(); return id; }
+    const bad=EV_BY_ID[id]; miss++;
+    if(bad&&bad.fake) await say('judge','stern','그 종이는 누가 썼는지 알 수 없소. 증거 수첩에서 [[확대해]] 보시오.');
+    else if(bad&&bad.trust===1&&!o.allowHearsay) await say('judge','stern','[[전해 들은 말]]은 근거가 약하오.');
+    else await say('judge','stern',o.fb||'그 증거로는 보일 수 없소.');
+    if(miss===2&&o.hint) await say('judge','normal',o.hint);
+    await loseTrust(); if(S.trust<=0){ await loseTrial(); return null; }
+  }
+}
+async function victim(who,lines,intro){
+  Music.stop(0.8); await wait(500);
+  await say('judge','normal',intro||'판결에 앞서, 피해를 입은 사람의 이야기를 듣겠습니다.');
+  bgm('testimony');
+  for(const x of lines) await say(who,x[0],x[1],{tag:'피해자 진술'});
+  await say('judge','normal','잘 들었습니다. 이 말은 판결에 반영하겠습니다.');
+}
+/* 판사 모드: 주장 가르기 (확인됨 / 확인 안 됨 / 의견일 뿐 / 받아들일 수 없음) */
+const CLAIM_OPTS={ok:'증거로 확인됨',no:'확인 안 됨',op:'의견일 뿐',bad:'받아들일 수 없는 주장 (원칙에 어긋남)'};
+const CLAIM_FB={ok:'증거가 있는 주장을 확인 안 된 것으로 보았소.',no:'그 주장을 뒷받침하는 증거는 아직 없소. 오히려 반대되는 증거가 있지 않소?',op:'그것은 사실이 아니라 말하는 사람의 생각이오. 확인할 수 있는 일이 아니오.',bad:'이 주장은 증거 문제가 아니라, 법의 원칙에 어긋나오.'};
+async function sortClaims(list,o){
+  o=o||{};
+  for(const C of list){
+    await say(C.who,C.expr||'confident',C.text,{tag:'주장'});
+    const keys=['ok','no','op'].concat(C.ans==='bad'||o.withBad?['bad']:[]);
+    let miss=0;
+    for(;;){
+      const c=await choiceSheet(`주장 가르기: “${plain(C.text)}”`,keys.map(k=>({t:CLAIM_OPTS[k],ok:k===C.ans,k:k})));
+      track('claim',{text:plain(C.text).slice(0,60),pick:c.k,ans:C.ans,ok:c.ok});
+      if(c.ok){ break; }
+      miss++; S.claimMiss=(S.claimMiss||0)+1;
+      await say('judge','stern',(C.fb&&C.fb[c.k])||CLAIM_FB[C.ans]);
+      if(miss===2) await say('judge','normal','…판사, 하나만 일러 주겠소. [[확인됨]]은 증거가 있을 때, [[확인 안 됨]]은 증거가 없거나 반대 증거가 있을 때, [[의견일 뿐]]은 좋다·나쁘다 같은 생각을 말할 때요.');
+      await loseTrust(); if(S.trust<=0){ await loseTrial(); return false; }
+    }
+    if(C.ev){ const id=await presentFor(C.ans==='ok'?'이 주장을 확인해 주는 증거를 고르세요.':C.ans==='bad'?'이 주장을 막는 원칙 카드를 고르세요.':'이 주장이 확인되지 않는 까닭을 보여 줄 증거를 고르세요.',C.ev,{noGain:true}); if(!id) return false; }
+    if(C.after) await line(C.after);
+    await gainTrust();
+  }
+  return true;
+}
+/* 판결 저울: 동기 / 방법 / 결과 / 그 뒤의 행동 */
+async function scale(title,rows){
+  S.flags.scale=S.flags.scale||{};
+  await say('judge','normal',`${title}. 판결 저울에 올려 보시오. [[동기]], [[방법]], [[결과]], [[그 뒤의 행동]]을 차례로 다시오.`);
+  const out={};
+  for(const R of rows){ const c=await choose(`판결 저울 · ${R.k}: ${R.q}`,R.opts,{hint:R.hint}); if(!c) return false; out[R.k]=c.t; }
+  S.flags.scale[title]=out; track('scale',{title:title,out:out});
+  return true;
+}
+/* 연표 화면 */
+function timeline(title,items,lead){
+  return new Promise(res=>{
+    openSheet(`<h2>${esc(title)}</h2>${lead?`<p class="lead">${esc(lead)}</p>`:''}<div class="tl">${items.map(x=>`<div class="tl-i"><b>${esc(x.y)}</b><span>${esc(x.t)}</span></div>`).join('')}</div>
+      <div class="sheet-foot"><button class="abtn primary" type="button" id="sheetGo">계속</button></div>`,false);
+    $('#sheetGo').addEventListener('click',()=>{ closeSheet(); res(); });
+  });
+}
+/* 그림 카드 (줄타기, 세 가지 세금 같은 설명 카드) */
+function infoCard(title,html){
+  return new Promise(res=>{
+    openSheet(`<h2>${esc(title)}</h2><div class="history" style="margin-top:0">${html}</div><div class="sheet-foot"><button class="abtn primary" type="button" id="sheetGo">알겠어요</button></div>`,false);
+    $('#sheetGo').addEventListener('click',()=>{ closeSheet(); res(); });
+  });
+}
+/* 공소 취하 / 혐의 유지 (사건 2의 장치를 혐의 여러 개로) */
+async function withdrawChoice(i,q,keepTxt,dropTxt){
+  const c=await choiceSheet(q,[{t:keepTxt,ok:true,tag:'keep'},{t:dropTxt,ok:true,tag:'drop'}]);
+  S.flags.drop=S.flags.drop||{}; S.flags.drop[i]=c.tag==='drop'; track('withdraw',{charge:i,drop:c.tag==='drop'});
+  if(c.tag==='drop'){ Music.sting('boo'); await wait(600); chargeSt(i,'dropped'); }
+  return c.tag==='drop';
+}
+/* 결과 화면 */
+function caseResult(o){
+  const n=S.case, D=CASE_DATA[n], wrongs=(S.log||[]).filter(x=>!x.ok).length;
+  track('case_end',{grade:o.grade,trust:S.trust,wrongs:wrongs});
+  clearSaveX(n,S.role); S.done=true; S.inTrial=false;
+  openSheet(`<h2>사건 ${n} 결과 · ${ROLE_KO[S.role]||''}</h2>
+    <div class="tier">${esc(o.grade)}</div><p class="lead">${esc(o.lead)}</p>
+    <ul class="res-list"><li>남은 해치 방울 ${S.trust}/5</li><li>헛 제시 ${wrongs}번</li><li>조사에서 헛짚음 ${S.misses||0}번</li>${(o.items||[]).map(x=>`<li>${esc(x)}</li>`).join('')}</ul>
+    ${o.judge?`<p class="grade-note">해치: “${esc(o.judge)}”</p>`:''}
+    <h3>실제 역사에서는</h3><p>${esc(o.history||D.history||'')}</p>
+    <div class="sheet-foot"><button class="abtn" type="button" id="rTeach">교사용 기록</button><button class="abtn primary" type="button" id="r2back">처음 화면으로</button></div>`,false);
+  $('#r2back').addEventListener('click',()=>{ closeSheet(); backToRoles(); });
+  $('#rTeach').addEventListener('click',openTeacher);
+}
+async function hitScene(who,breakLine){ await say(ME()==='rival'?'player':'rival','shock','…!'); Music.stop(0.05); Music.sting('breakdown'); flash(); shake('quake'); if(breakLine) await say(who,'breakdown',breakLine,{action:true}); Music.sting('murmur'); await wait(900); await gavel(); bgm('open'); }
+
+/* ===== 사건 3 「한강의 배신」: 변호인 모드(기본, 누리) + 검사 모드('지는 검사', 하람) =====
+   혐의 ① 동맹을 깨고 한강 하류를 빼앗은 죄 → 유죄(잠금)
+   혐의 ② 성왕을 죽이라 명한 죄 → 무죄 (J4 관산성 기록, J5 김무력의 숨은 말)
+   혐의 ③ 처음부터 한강을 홀로 차지하려 한 죄 → 무죄 (J2 551년 나누기, J7 순수비 연대)
+   실존 인물(진흥왕·성왕·김무력)의 대사는 모두 상상입니다. */
+addCast('jinheung',{name:'진흥왕',label:'피고 진흥왕',col:'#7a2430',spec:{skin:'#efc9a2',robe:'#7a2430',robe2:'#5a1822',collar:'cross',hat:'short',hair:'#1c1a20',beard:'none',iris:'#3a2a20'}});
+addCast('seong',{name:'성왕',label:'피해자 성왕',col:'#2a5a5a',spec:{skin:'#ebc6a2',robe:'#25505a',robe2:'#1a3a42',collar:'cross',hat:'short',hair:'#d8d8d8',beard:'long',beardColor:'#e6e0d4',iris:'#3a2a20'}});
+addCast('muryeok',{name:'김무력',label:'증인 김무력',col:'#5a2a2a',spec:{skin:'#e2b48a',robe:'#6a2a2a',robe2:'#4a1c1c',collar:'cross',hat:'short',hair:'#1c1a20',beard:'thin',iris:'#2e2018'}});
+addCast('fisher',{name:'한강 나루 어부',label:'증인 어부',col:'#6a5038',spec:{skin:'#d9a77c',robe:'#7a6248',robe2:'#5a4634',collar:'cross',hat:'short',hair:'#2a2220',beard:'thin',iris:'#3a2a20'}});
+
+const EVIDENCE3=[
+  {id:'J1',type:'사료',icon:'alliance',title:'나제 동맹 기록',body:'433년 백제와 신라는 남쪽으로 내려오는 고구려에 맞서 손을 잡았다. 493년에는 백제 동성왕이 신라 귀족의 딸을 왕비로 맞아 동맹을 더 굳혔다.',src:'「삼국사기」',trust:3,note:'두 나라가 120년 넘게 한편이었다는 기록이에요.'},
+  {id:'J2',type:'사료',icon:'map',title:'551년 한강 나누기',body:'551년 백제와 신라가 함께 고구려를 쳐서 한강 유역을 되찾았다. 백제는 한강 하류의 옛 땅 6군을, 신라는 한강 상류의 10군을 차지했다.',src:'「삼국사기」 거칠부 열전과 「일본서기」를 바탕으로 정리',trust:3,note:'551년에 한강 하류는 누구의 땅이었을까요?'},
+  {id:'J3',type:'사료',icon:'map',title:'신주 설치 기록',body:'553년 7월, 신라가 백제의 동북쪽 땅(한강 하류)을 빼앗아 ‘신주’를 두고 김무력을 군주로 삼았다.',src:'「삼국사기」 신라본기 진흥왕 14년',trust:3,note:'동맹을 맺은 나라가 되찾은 땅을 빼앗은 기록이에요.'},
+  {id:'J4',type:'사료',icon:'army',title:'관산성 전투 기록',body:'554년 백제 성왕이 가야·왜의 군사와 함께 신라의 관산성을 먼저 쳤다. 신주의 김무력이 군사를 이끌고 와서 맞섰다. 성왕은 몇십 명의 군사만 데리고 밤길을 가다가 숨어 있던 신라군을 만나 목숨을 잃었다.',src:'「삼국사기」 신라본기와 「일본서기」를 바탕으로 정리',trust:3,note:'누가 먼저 쳤는지, 성왕이 어떻게 목숨을 잃었는지 보세요.'},
+  {id:'J5',reuse:true,type:'증언',icon:'scroll',title:'김무력의 증언',body:'“왕께서 내리신 명은 ‘관산성을 구원하라’였소. 성왕을 어찌하라는 말은 없었소.”',src:'2일차 법정, 김무력의 숨은 말 (대사는 상상)',trust:2,note:'왕의 명령과 싸움터에서 일어난 일을 나누어 보세요.'},
+  {id:'J6',type:'지도',icon:'map',title:'서해 뱃길 지도',body:'한강 하구는 서해로 나가는 길목이다. 신라는 한강을 얻은 뒤 당항성(지금의 경기도 화성)을 거쳐 바닷길로 중국과 직접 오갈 수 있게 되었다.',src:'접견에서 들은 진흥왕의 이야기 · 사료 바탕',trust:2,note:'진흥왕이 한강을 원한 이유예요. 이유가 있으면 잘못이 사라질까요?'},
+  {id:'J7',type:'유물',icon:'scroll',title:'북한산 순수비 탁본',body:'진흥왕이 새로 얻은 땅을 돌아보며(순수) 북한산 봉우리에 세운 비석의 탁본. 기록에 진흥왕이 북한산을 돌아본 것은 555년이고, 비석은 그 무렵이나 그 뒤에 세운 것으로 본다.',src:'북한산 비봉 · 「삼국사기」 진흥왕 16년',trust:3,note:'비석을 세운 해가 553년보다 앞설 수 있을까요?'},
+  {id:'J8',type:'증언',icon:'scroll',title:'전해 들은 말',body:'“신라 왕이 성왕의 목을 베라 명했다더라.” 어부가 장터에서 들었다는 말이다. 누가 처음 한 말인지는 아무도 모른다.',src:'1일차 법정, 어부의 숨은 말 (상상)',trust:1,note:'직접 본 사람의 말일까요, 들은 말일까요?'},
+  {id:'J9',type:'증언',icon:'scroll',title:'성왕의 진술',body:'“한강 하류는 76년 만에 되찾은 우리 옛 땅이었소. 그 땅을 2년 만에, 120년 넘게 손잡아 온 이웃에게 빼앗겼소.”',src:'3일차 법정, 피해자 진술 (대사는 상상)',trust:2,note:'피해를 입은 사람의 목소리예요.'},
+  {id:'J10',type:'문서',icon:'scroll',fake:true,title:'익명의 쪽지',body:'“진흥왕이 성왕의 목을 베라 했다는 문서가 있다.” 보낸 사람의 이름이 없다.',src:'하람 검사가 법정 문틈에서 받은 쪽지 (게임 속 이야기)',trust:1,note:'문서가 있다는 말뿐이에요. 그 문서는 어디 있을까요?',
+   zoom:{say:['쪽지의 귀퉁이를 크게 확대해 보았다.','오른쪽 아래에 작은 [[매화 모양 먹 얼룩]]이 찍혀 있다. 일부러 찍은 것처럼 또렷하다.','‘문서가 있다’는 말만 있고, 문서는 어디에도 없다. 누가 이 쪽지를 썼을까?'],plum:true,note:'귀퉁이에 매화 모양 먹 얼룩. 문서가 있다는 말만 있고 문서는 없다.'}},
+  {id:'D1',type:'유물',icon:'censer',title:'신라 금관',body:'나뭇가지 모양 장식이 달린 신라의 금관. 경주의 큰 무덤들에서 나왔다.',src:'박물관 신라실',trust:3,note:'멋진 유물이지만, 이 재판의 쟁점과 이어질까요?'},
+  {id:'D2',type:'유물',icon:'censer',title:'천마 말다래',body:'말 탄 사람의 다리에 흙이 튀지 않게 막는 말다래. 하늘을 나는 흰 말이 그려져 있다. 경주 천마총에서 나왔다.',src:'박물관 신라실',trust:3,note:'신라의 솜씨를 보여 주는 유물이에요.'},
+  {id:'D3',type:'사료',icon:'scroll',title:'화랑 이야기',body:'진흥왕 때 나라에서 젊은이들의 모임인 화랑을 키웠다는 이야기.',src:'박물관 안내판 · 「삼국사기」',trust:3,note:'진흥왕이 한 일이지만, 지금 혐의와 이어질까요?'}
+];
+const C3CH=()=>[{t:'① 동맹을 깨고 한강 하류를 빼앗은 죄'},{t:'② 성왕을 죽이라 명한 죄'},{t:'③ 처음부터 한강을 홀로 차지하려 한 죄'}];
+
+const LOCS3=[
+  {id:'banwol',name:'반월성 접견실',time:'아침',role:'def',kind:'meet',intro:'신라의 궁궐 반월성. 피고 진흥왕이 변호인을 기다리고 있다.',miss:['…'],spots:[],
+   npcs:[{who:'jinheung',expr:'base',place:{x:52,h:74,b:0},topics:[
+     {id:'j1-alli',t:'백제와의 사이',lines:[['jinheung','base','백제와 우리는 백 년 넘게 한편이었소. 고구려가 내려올 때마다 서로 군사를 보냈지.'],['jinheung','serious','…그걸 부정할 생각은 없소.']]},
+     {id:'j1-river',t:'한강 하류를 차지한 일',must:true,lines:[['jinheung','serious','553년, 내가 한강 하류를 차지하고 신주를 둔 것은 사실이오.'],['jinheung','serious','변호인이 그걸 감추려 한다면 그만두시오. 기록에 다 남아 있으니.'],['ME','think','(혐의 ①은 기록으로 확정된 일이구나. 그렇다면 다툴 것은 ②와 ③이야.)']]},
+     {id:'j1-seong',t:'성왕의 죽음',lock:'J3',lockSay:'(진흥왕은 대답을 피한다. 신라가 한강에 무엇을 두었는지 보여 주면 이야기를 시작할지도 모른다.)',lines:[['jinheung','serious','신주를 두고 김무력을 보냈소. 이듬해 그 김무력이 관산성에서 백제군과 맞섰지.'],['jinheung','sweat','성왕이 그 싸움에서… 그 이야기는 김무력에게 직접 들으시오.']]},
+     {id:'j2-gwan',t:'관산성 싸움',from:2,lines:[['jinheung','serious','성왕이 먼저 관산성을 쳤다는 소식을 듣고, 나는 김무력에게 [[구하러 가라]] 했소.'],['jinheung','angry','성왕을 죽이라고? 그런 명을 내린 적은 없소!']]},
+     {id:'j2-sea',t:'한강이 왜 필요했나',from:2,lock:'J2',must:true,lockSay:'(진흥왕은 창밖만 본다. 551년에 한강을 어떻게 나누었는지 보여 주면 속마음을 꺼낼지도 모른다.)',
+      lines:[['jinheung','serious','551년에 우리가 받은 것은 상류였소. 하류가 없으면 바다로 나갈 수가 없지.'],['jinheung','serious','한강 하구를 쥐면 [[서해 바닷길]]로 중국과 바로 오갈 수 있었소. 신라가 살 길이었지.'],['jinheung','sweat','…그 길이 백제가 76년 만에 되찾은 땅 위에 있었을 뿐이오.']],gives:['J6']}],
+    present:{J3:{lines:[['jinheung','serious','신주… 그래, 내가 둔 것이오.']],unlock:'j1-seong'},J2:{lines:[['jinheung','serious','551년의 나누기라… 좋소, 그때 이야기를 하지.']],unlock:'j2-sea'},
+      J1:{lines:[['jinheung','serious','그 동맹 문서… 내 할아버지 때보다도 오래된 약속이었지.']]},J8:{lines:[['jinheung','angry','누가 그런 말을 퍼뜨렸소! 나는 그런 명을 내린 적이 없소!']]},J4:{lines:[['jinheung','serious','관산성… 그 싸움으로 동맹은 완전히 끝났소.']]}},
+    def:[['jinheung','base','그건 내가 할 말이 없는 물건이오.']]}]},
+  {id:'hangang',name:'한강 나루',time:'해 질 녘',intro:'한강 하류의 나루터다. 언덕 위 성책에는 신라의 깃발이 걸려 있다.',
+   miss:['젖은 모래다.','물결이 밀려왔다 간다.','갈대가 바람에 흔들린다.','발자국뿐이다.','작은 조개껍데기다. 단서는 아니다.'],
+   spots:[
+    {x:10,y:75,w:17,h:21,label:'상자 위 죽간 묶음',ev:'J1',say:['나무 상자 위에 죽간 두루마리가 묶여 있다.','백제와 신라가 [[손을 잡은 기록]]이다. 433년부터 이어진 약속, 나제 동맹.']},
+    {x:9,y:39,w:11,h:24,label:'빈 나무 팻말',ev:'J2',say:['앞면은 비어 있는 나무 팻말이다.','뒷면에 칼로 긁은 지도가 있다. 551년, 한강 [[하류 6군은 백제]], [[상류 10군은 신라]]가 나누어 가졌다는 표시다.']},
+    {x:12,y:4,w:22,h:26,label:'언덕 위 성책의 깃발',ev:'J3',say:['언덕 위 나무 성책에 붉은 깃발이 줄지어 걸려 있다.','문기둥에 나무패가 매달려 있다. “553년, 이곳에 [[신주]]를 둔다.” 신라가 이 땅을 차지한 표시다.']},
+    {x:62,y:51,w:36,h:22,label:'묶여 있는 배',say:['지붕이 달린 나룻배다. 단서는 아니다.']},
+    {x:55,y:66,w:9,h:11,label:'나무 부두',say:['낡은 나무 부두다. 삐걱거린다.']},
+    {x:56,y:36,w:30,h:12,label:'노을 진 강물',say:['강물이 노을에 물들었다. 이 강을 두고 세 나라가 다투었다.']},
+    {x:88,y:72,w:12,h:22,label:'갈대숲',say:['갈대가 우거져 있다. 아무것도 없다.']}],
+   npcs:[{who:'fisher',expr:'base',place:{x:44,h:56,b:4},until:2,topics:[
+     {id:'f-who',t:'누구세요?',lines:[['fisher','base','이 나루에서 고기 잡는 사람이오. 할아버지 때부터 백제 사람이지.']]},
+     {id:'f-day',t:'그날의 나루',must:true,lines:[['fisher','base','신라 깃발이 저 성책에 걸리던 날을 잊지 못하오.'],['fisher','angry','함께 싸우자던 놈들이 우리 땅에 깃발을 꽂았지!']]},
+     {id:'f-seong',t:'성왕 이야기',lock:'J3',lockSay:'(어부는 성책 쪽을 노려본다. 신라가 이 나루에 무엇을 두었는지 보여 주면 말을 꺼낼지도 모른다.)',lines:[['fisher','angry','신주라… 그 신주의 장수가 성왕을 죽였소.'],['fisher','base','장터에서 다들 그러던데. 신라 왕이 성왕을 베라 명했다고.'],['ME','think','(‘장터에서 다들 그러던데’… 직접 본 건 아닌가 봐.)']]}],
+    present:{J3:{lines:[['fisher','angry','이 나무패! 저 성책에 걸려 있던 거요.']],unlock:'f-seong'},J1:{lines:[['fisher','angry','동맹? 그딴 걸 믿은 우리가 바보였지.']]},J2:{lines:[['fisher','base','551년엔 이 나루가 백제 땅이었소. 기뻤지… 2년 동안은.']]}},
+    def:[['fisher','base','그건 고기 잡는 데 쓸모가 없겠구려.']]}]},
+  {id:'gwansan',name:'관산성 터',time:'저녁',from:2,intro:'554년 백제와 신라가 크게 싸운 관산성의 터다. 무너진 성벽이 산등성이를 따라 남아 있다.',
+   miss:['마른 풀이다.','돌 부스러기다.','바람이 차다.','아무것도 없다.','흙길이다.'],
+   spots:[
+    {x:3,y:60,w:21,h:27,label:'부서진 북',ev:'J4',say:['풀밭에 쓰러진 커다란 북이다. 가죽이 찢어져 있다.','북 안쪽에 접힌 천이 끼어 있다. 펼쳐 보니 [[관산성 싸움]]을 그린 지도다. 화살표가 아래에서 산성 쪽으로 뻗어 있다.']},
+    {x:23,y:73,w:17,h:20,label:'흩어진 화살',say:['부러진 화살들이다. 어느 쪽 화살인지는 알 수 없다. 단서는 아니다.']},
+    {x:63,y:21,w:20,h:32,label:'쓰러진 망루 문',say:['무너진 망루 문이다. 싸움이 얼마나 거셌는지 알 수 있다.']},
+    {x:0,y:2,w:44,h:32,label:'무너진 돌 성벽',say:['산등성이를 따라 쌓은 돌 성벽이 무너져 있다.']},
+    {x:40,y:42,w:18,h:30,label:'가운데 오솔길',say:['산성으로 오르는 오솔길이다.']},
+    {x:84,y:60,w:12,h:35,label:'골짜기로 난 길',say:['골짜기 아래로 이어진 좁은 길이다. 밤에는 앞이 잘 보이지 않았을 것이다.']}]},
+  {id:'bukhan',name:'북한산 비봉',time:'맑은 낮',from:3,intro:'북한산의 바위 봉우리다. 진흥왕이 세웠다는 비석이 서 있다. 아래로 한강이 굽이친다.',
+   miss:['단단한 바위다.','이끼가 끼었다.','바람이 시원하다.','아무것도 없다.','작은 돌멩이다.'],
+   spots:[
+    {x:16,y:80,w:17,h:12,label:'바위 위의 천과 먹',ev:'J7',say:['바위 위에 하얀 천과 먹판이 놓여 있다. 누군가 [[탁본]]을 뜨려던 것 같다.','비석에 종이를 대고 먹을 두드려 글자를 떠냈다. 진흥왕이 이 땅을 돌아보고(순수) 세운 비석이다. 기록에 진흥왕이 북한산에 온 해는 [[555년]].']},
+    {x:10,y:20,w:16,h:58,label:'돌비석',say:['오래된 돌비석이다. 글자가 닳아서 맨눈으로는 읽기 어렵다.','종이와 먹이 있으면 탁본을 떠서 읽을 수 있을 텐데.']},
+    {x:28,y:22,w:22,h:40,label:'소나무',say:['바위틈에 뿌리를 내린 소나무다.']},
+    {x:68,y:58,w:32,h:22,label:'굽이치는 한강',say:['저 아래로 한강이 흐른다. 이 강을 차지한 나라가 서해로 나갈 수 있었다.']},
+    {x:50,y:3,w:40,h:22,label:'맑은 하늘',say:['구름 한 점 없다.']}]},
+  {id:'museum3',name:'박물관 신라실',time:'저녁',from:3,intro:'오늘날의 박물관 신라실이다. 반짝이는 유물이 많지만, 쟁점과 이어지는 것은 많지 않다.',
+   miss:['반질반질한 바닥이다.','어두운 벽이다.','조명이 비칠 뿐이다.','아무것도 없다.'],
+   spots:[
+    {x:3,y:5,w:25,h:82,label:'금관 진열장',ev:'D1',say:['나뭇가지 모양 장식이 달린 [[신라 금관]]이다. 경주의 큰 무덤에서 나왔다.','멋진 유물이지만, 이 재판의 쟁점과 관계가 있을까?']},
+    {x:40,y:49,w:24,h:26,label:'흰 말 그림 진열장',ev:'D2',say:['하늘을 나는 흰 말이 그려진 [[천마 말다래]]다.','신라의 솜씨가 대단하다. 하지만 한강과는 관계가 없어 보인다.']},
+    {x:68,y:46,w:28,h:46,label:'안내판',ev:'D3',say:['안내판에 진흥왕 이야기가 적혀 있다. “진흥왕 때 나라에서 [[화랑]]을 키웠다.”','진흥왕이 한 일이긴 한데… 지금 혐의와 이어질까?']},
+    {x:61,y:16,w:15,h:28,label:'뒷벽의 탁본 액자',say:['비석 탁본을 본뜬 액자다. 진짜 비석에서 떠 온 것은 아니라고 적혀 있다.','진짜 비석을 직접 보러 가야 확실하겠다.']},
+    {x:33,y:13,w:16,h:42,label:'창밖 야경',say:['창밖으로 도시의 불빛과 산이 보인다.']}]},
+  {id:'lobby',name:'법정 로비',time:'저녁',from:3,intro:'재판이 끝난 법정 로비다.',
+   miss:['반들반들한 마룻바닥이다.','빈 의자다.','아무것도 없다.'],
+   spots:[{x:5,y:62,w:31,h:22,label:'긴 의자',say:['나무 의자다.']},{x:36,y:28,w:22,h:40,label:'법정 문',say:['내일 다시 열릴 법정의 문이다.']}],
+   npcs:[
+    {who:'player',expr:'upset',role:'def',place:{x:72,h:70,b:0},topics:[
+      {id:'h-feel',t:'백제 편',lines:[['player','upset','…나도 알아. 법정은 편을 드는 곳이 아니라는 거.'],['player','upset','그래도 76년 만에 되찾은 땅을 2년 만에 빼앗겼잖아. [[나도 백제 편이 되고 싶었어]].']]},
+      {id:'h-note',t:'혐의 ②를 세운 까닭',must:true,lines:[['player','upset','…사실, 재판 전에 법정 문틈에서 쪽지를 받았어.'],['player','upset','“진흥왕이 성왕의 목을 베라 했다는 문서가 있다.” 그 말만 믿고 혐의를 세웠지.'],['rival','think','(그 문서는 지금 어디 있지? 이 쪽지, [[확대해서]] 살펴봐야겠어.)']],gives:['J10']}],
+     present:{J7:{lines:[['player','upset','555년… 응, 나도 봤어.']]},J10:{lines:[['player','upset','그 쪽지… 누가 보냈는지 나도 몰라.']]}},
+     def:[['player','upset','지금은 그걸로 다투고 싶지 않아.']]},
+    {who:'rival',expr:'smug',role:'pros',place:{x:72,h:70,b:0},topics:[
+      {id:'n-kids',t:'방청석의 아이들',must:true,lines:[['rival','normal','하람, 방청석 아이들이 다 백제 편이지? 그 마음에 맞춰 주고 싶은 거, 나도 알아.'],['rival','confident','그런데 [[아이들 편이 되는 것과 정의 편이 되는 건 달라]].'],['player','upset','…알아. 안다고.']]},
+      {id:'n-note',t:'익명의 쪽지',lock:'J10',lockSay:'(누리에게 그 쪽지를 보여 줄까?)',lines:[['rival','think','이 쪽지가 혐의 ②의 근거였어? 문서가 있다면서, 그 문서는 어디 있는데?'],['rival','normal','그리고 하람, 이거 [[확대해]] 봤어? 귀퉁이에 뭔가 찍혀 있는 것 같은데.']]}],
+     present:{J10:{lines:[['rival','shock','쪽지…? 보여 줘 봐.']],unlock:'n-note'},J7:{lines:[['rival','normal','555년이지. 553년보다 뒤야.']]}},
+     def:[['rival','normal','그걸로 날 흔들 수 있을까?']]}]}
+];
+const TERMS3=[
+  {w:'동맹',d:'서로 돕기로 한 약속이에요.',ic:'🤝'},
+  {w:'나제 동맹',d:'백제(제)와 신라(나)가 고구려에 맞서 맺은 동맹이에요. 433년에 시작됐어요.',ic:'🤝'},
+  {w:'신주',d:'신라가 553년 한강 하류를 차지하고 새로 둔 행정 구역이에요.',ic:'🏯'},
+  {w:'군주',d:'여기서는 신라에서 한 지역의 군대를 맡은 장수를 말해요. 왕(군주)과 헷갈리지 마세요.',ic:'🛡️'},
+  {w:'순수',d:'왕이 새로 얻은 땅을 돌아보며 살피는 일이에요.',ic:'👣'},
+  {w:'탁본',d:'비석에 종이를 대고 먹을 두드려 새겨진 글자를 떠내는 방법이에요.',ic:'🖌️'},
+  {w:'접견',d:'변호인이 피고를 따로 만나 이야기를 듣는 일이에요.',ic:'💬'},
+  {w:'논고',d:'검사가 피고의 죄와 그 근거를 법정에서 정리해 말하는 것이에요.',ic:'📜'},
+  {w:'취하',d:'검사가 세운 혐의를 스스로 거두는 것이에요.',ic:'↩️'},
+  {w:'전해 들은 말',d:'직접 보지 않고 다른 사람에게서 들은 말이에요. 증거로서 힘이 약해요.',ic:'👂'}
+];
+
+/* ---------- 증언 묶음 ---------- */
+const T3fish=()=>({key:'어부',who:'fisher',allReveal:true,lines:[
+  {text:'나는 이 한강 나루에서 평생 고기를 잡은 사람이오.',expr:'base',press:[['rival','normal','평생이요? 그럼 551년 일도 기억하세요?'],['fisher','base','기억하다마다. 내가 젊을 때였지.']]},
+  {text:'551년, 백제와 신라가 함께 고구려를 몰아냈지. 그날은 정말 기뻤소.',expr:'base',press:[['rival','think','(그때까지는 함께 싸웠구나.)'],['fisher','base','그런데 기쁨은 오래가지 않았소.']]},
+  {text:'그런데 바로 그해, 신라 놈들이 이 나루까지 몽땅 차지했소!',expr:'angry',lie:true,ev:'J2',press:[['rival','normal','바로 그해에요?'],['fisher','angry','그렇다니까! 551년에!']],
+   hit:[['rival','present','551년의 기록입니다. 그해 한강 [[하류 6군]]은 백제가, [[상류 10군]]은 신라가 나누어 가졌어요.'],['rival','confident','이 나루가 신라 땅이 된 건 551년이 아니라 [[553년]]입니다. 증인의 말은 2년이나 앞당겨졌어요!'],['fisher','angry','으, 으윽… 몇 해 차이가 뭐 그리 대수요!']]},
+  {text:'그리고 성왕을 죽이라 명한 것도 신라 왕이오. 내가 똑똑히 알지!',expr:'angry',reveal:4,press:[['rival','think','똑똑히 안다고요? 증인, 그걸 [[직접 보셨나요]]?'],['fisher','base','그, 그건…'],['judge','stern','증인, 본 것과 들은 것을 나누어 증언하시오.']]},
+  {text:'…직접 본 건 아니오. 장터에서 다들 그렇게 말하더란 말이오.',expr:'base',hidden:true,gives:['J8']}
+]});
+const T3mu=me=>({key:'김무력',who:'muryeok',allReveal:true,lines:[
+  {text:'나는 신주의 군주 김무력이오. 관산성 싸움에 나갔소.',expr:'base',press:[[me,'normal','군주라면 신주의 군대를 맡은 장수군요.'],['muryeok','base','그렇소. 신주를 둔 이듬해의 일이었지.']]},
+  {text:'554년 그날, 우리 신라군이 먼저 관산성의 백제군을 들이쳤소.',expr:'base',lie:true,ev:'J4',press:[[me,'normal','신라군이 먼저요?'],['muryeok','base','그렇소. 우리가 먼저 쳤지!']],
+   hit:[[me,'present','관산성 싸움의 기록입니다. 554년, 관산성을 [[먼저 친 것은 백제]] 쪽이었어요.'],[me,'confident','신라군이 먼저 들이쳤다는 말은 기록과 맞지 않습니다!'],['muryeok','sweat','크흠… 싸움터에서는 누가 먼저인지 헷갈리기도 하오.']]},
+  {text:'나는 왕의 명을 받들어 움직였을 뿐이오.',expr:'base',reveal:3,press:[[me,'normal','그 명이 정확히 무엇이었죠?'],['muryeok','sweat','그, 그건… 꼭 말해야 하오?'],['judge','stern','증인, 받은 명령을 그대로 증언하시오.']]},
+  {text:'…왕께서 내리신 명은 ‘관산성을 구원하라’였소. 성왕을 어찌하라는 말은 없었소.',expr:'sweat',hidden:true,gives:['J5']},
+  {text:'성왕의 목숨을 거두라는 것도 왕의 뜻이었소!',expr:'base',lie:true,ev:'J5',press:[[me,'think','왕의 뜻이라고요?'],['muryeok','base','그, 그렇게 생각했소!']],
+   hit:[[me,'present','증인이 방금 한 말입니다. 왕의 명은 [[‘관산성을 구원하라’]]뿐이었어요.'],[me,'confident','성왕의 목숨을 거두라는 명은 없었습니다. 증인의 말이 서로 어긋나요!'],['muryeok','sweat','으, 으윽…!']]}
+]});
+const T3haram=reveal=>({key:'하람 논고',who:'player',lines:[
+  {text:'혐의 ③. 피고는 처음부터 한강을 홀로 차지할 속셈으로 백제와 손을 잡았습니다.',expr:'stand',press:[['rival','normal','‘처음부터’라는 근거는요?'],['player','stand','다음 말을 들어 보세요.']]},
+  {text:'그 증거가 북한산 순수비예요. 피고는 551년, 백제와 함께 싸우던 바로 그해에 벌써 북한산에 자기 비석을 세웠습니다!',expr:'stand',lie:true,ev:'J7',press:[['rival','think','551년에 비석을…?'],['player','stand','그래요. 처음부터 노렸다는 증거죠.']],
+   hit:[['rival','present','북한산 순수비의 탁본입니다. 진흥왕이 북한산을 돌아본 것은 [[555년]]이에요.'],['rival','confident','비석은 553년에 신주를 둔 [[뒤에]] 세운 것이지, 551년에 세운 게 아닙니다!'],['player','upset','…그, 그건 들은 이야기라서…']]},
+  reveal?{text:'피고가 한강을 원한 까닭은 백제를 괴롭히려는 것 말고는 아무것도 없었어요.',expr:'stand',lie:true,ev:'J6',press:[['rival','think','아무것도 없었다고요?'],['player','stand','네. 미워서 빼앗은 거예요.']],
+   hit:[['rival','present','한강 하구는 [[서해 바닷길]]의 문이었어요. 신라는 그 길로 중국과 오가려 했습니다.'],['rival','normal','이유가 있었다고 빼앗은 일이 옳아지는 건 아니에요. 하지만 ‘미워서 빼앗았을 뿐’이라는 말은 사실과 달라요.'],['player','upset','…']]}
+   :{text:'피고가 한강을 원한 까닭은 백제를 괴롭히려는 것 말고는 아무것도 없었어요.',expr:'stand',press:[['rival','think','(진흥왕의 이유를 말하면 반박할 수 있는데… 숨기기로 했잖아.)'],['player','stand','반박하지 못하시는군요.']]},
+  {text:'551년에 함께 싸운 것도 결국 한강을 노린 속임수였습니다.',expr:'stand',press:[['rival','normal','그때 한강 하류는 누가 가졌죠?'],['player','sweat','…백제요.'],['rival','confident','속임수였다면 왜 하류를 백제에 두었을까요?']]}
+]});
+const SEONG3=[['base','백제의 왕, 성왕이오.'],['base','한강 하류는 475년 고구려에 빼앗긴 뒤 [[76년 만에]] 되찾은 우리 옛 땅이었소.'],['sad','그 땅을 2년 만에, 120년 넘게 손잡아 온 이웃에게 빼앗겼소.'],['sad','나는 아들을 도우러 관산성으로 가다가… 골짜기에서 목숨을 잃었소.'],['base','내가 바라는 것은 하나요. [[있었던 일]]만큼은 지우지 말아 주시오.']];
+
+/* ---------- 공통 장면 ---------- */
+async function prologue3(){
+  bgm('crisis');
+  await say('guide','normal','553년 가을, 한강 하류.',{view:'prologue3'});
+  await say('guide','normal','백제가 76년 만에 되찾은 땅에, 함께 싸운 신라의 붉은 깃발이 올랐다.',{view:'prologue3'});
+  await say('guide','normal','그리고 이듬해, 관산성의 골짜기.',{view:'prologue3'});
+  await playShadow('gwansan');
+  await wait(400);
+  await say('voice','normal','역사가 묻는다. 미운 사람에게도, [[증명된 만큼만]] 죄를 물을 수 있는가.',{view:'prologue3'});
+  await titleCard('사건 3','한강의 배신');
+}
+async function chargesRead(){
+  await say('judge','normal','검사는 혐의를 말하시오.');
+  await say('player','confident','혐의는 세 가지입니다. 첫째, 120년 넘게 이어 온 [[동맹을 깨고 한강 하류를 빼앗은 죄]].');
+  setCharges(C3CH());
+  await say('player','confident','둘째, 관산성에서 [[성왕을 죽이라 명한 죄]]. 셋째, [[처음부터 한강을 홀로 차지하려 한 죄]]입니다!');
+  Music.sting('murmur'); await wait(700);
+  await say('jinheung','base','흥. 하나는 맞고, 둘은 부풀렸군.');
+}
+async function seongStatement(){
+  await victim('seong',SEONG3,'판결에 앞서, 피해를 입은 사람의 이야기를 듣겠습니다. 증인은 백제의 [[성왕]]이오.');
+  if(!S.found.has('J9')){ S.found.add('J9'); Music.sting('get'); showEvidence('J9'); await say('guide','normal','증거 수첩에 [[성왕의 진술]]을 넣었다.'); hideEvidence(); }
+}
+async function verdictLines3(){
+  bgm('verdict'); await gavel();
+  await say('judge','normal','판결을 내리겠소.');
+  chargeSt(0,'guilty'); await say('judge','stern','혐의 ①. 피고는 120년 넘게 이어 온 동맹을 깨고, 백제가 되찾은 한강 하류를 빼앗았소. [[유죄]].');
+  if(S.flags.drop&&S.flags.drop[1]) await say('judge','normal','혐의 ②. 검사가 스스로 거두었소. [[더 판단하지 않소]].');
+  else { chargeSt(1,'innocent'); await say('judge','normal','혐의 ②. 성왕은 싸움터에서 목숨을 잃었고, 피고가 죽이라 명했다는 증거는 없소. 전해 들은 말과 이름 없는 쪽지로는 벌할 수 없소. [[무죄]].'); }
+  if(S.flags.drop&&S.flags.drop[2]) await say('judge','normal','혐의 ③. 검사가 스스로 거두었소. [[더 판단하지 않소]].');
+  else { chargeSt(2,'innocent'); await say('judge','normal','혐의 ③. 551년에 한강 하류는 백제 땅이었고, 순수비는 그 뒤에 세운 것이오. ‘처음부터’ 노렸다는 것은 증명되지 않았소. [[무죄]].'); }
+  await say('judge','normal','미운 피고에게도, 법정은 [[증명된 만큼만]] 죄를 묻소. 그러나 증명된 죄는 하나도 지우지 않소.');
+}
+const HIST3='553년 신라는 백제가 76년 만에 되찾은 한강 하류를 빼앗아 신주를 두었고, 이듬해 성왕은 관산성을 치다가 목숨을 잃었습니다. 120년 넘게 이어진 나제 동맹은 이렇게 깨졌습니다. 신라는 한강과 서해 바닷길을 얻어 훗날 삼국 통일의 바탕을 마련했습니다. 진흥왕은 새로 넓힌 땅을 돌아보며 순수비를 세웠는데, 북한산비를 언제 세웠는지는 학자마다 의견이 조금씩 다릅니다.';
+
+/* ---------- 변호인 모드 (기본) ---------- */
+async function runDef3(from){
+  if(from<=0){ await prologue3(); bgm('investigate');
+    await say('judge','normal','누리 변호인, 이번 사건의 피고는 신라의 [[진흥왕]]이오. 변호를 맡아 주시오.',{view:'lobby'});
+    await say('rival','shock','…백제를 배신한 왕이요?',{view:'lobby'});
+    await say('player','confident','이번엔 내가 검사야. 봐주지 않을 거야. 혐의가 세 개나 되거든.',{view:'lobby'});
+    await say('rival','think','(세 개 다 증명할 수 있을까? 미운 피고라도 [[증명된 만큼만]] 벌받아야 해.)',{view:'lobby'});
+    await say('judge','normal','변호인은 피고를 [[접견]]할 수 있소. 반월성에서 피고를 만나 보시오.',{view:'lobby'}); }
+  await playDays([
+    {inv:async()=>{ await toneScene(); await invDay(1,'반월성의 [[진흥왕]]과 이야기하고, [[한강 나루]]도 조사하자. 피고를 만나는 접견실에는 돋보기가 없어. [[T]]로 이야기, [[P]]로 증거를 보여 줄 수 있어.'); },
+     court:defD1_3,learned:['553년 신라가 한강 하류를 빼앗은 것은 기록으로 확정된 사실이다.','551년에는 한강 하류가 백제 땅, 상류가 신라 땅이었다.','‘장터에서 들은 말’은 직접 본 말과 무게가 다르다.']},
+    {inv:async()=>{ await invDay(2,'오늘은 [[관산성 터]]가 열렸어. 반월성의 진흥왕에게도 다시 물어볼 게 있어.'); await motiveScene(); },
+     court:defD2_3,learned:['554년 관산성 싸움은 백제가 먼저 공격했다.','김무력이 받은 왕의 명령은 ‘관산성을 구원하라’였다.','싸움터에서 일어난 일과 왕이 명한 일은 나누어 따진다.']},
+    {inv:async()=>{ await invDay(3,'[[북한산 비봉]]과 [[박물관 신라실]]이 열렸어. 로비에 하람이 혼자 있대.'); },
+     court:defD3_3,learned:['북한산 순수비는 553년보다 뒤, 555년 무렵 이후에 세운 것으로 본다.','신라가 한강을 원한 데에는 바닷길이라는 이유가 있었다.','이유가 있다는 것과 잘못이 없다는 것은 다르다.']},
+    {court:defD4_3}
+  ],from);
+}
+async function toneScene(){
+  bgm('testimony');
+  await say('jinheung','base','변호인인가. 어린 변호인을 보냈군.',{view:'banwol'});
+  const c=await choiceSheet('진흥왕에게 첫인사를 어떻게 할까요?',[
+    {t:'안녕하십니까, 폐하. 변호를 맡은 누리입니다. 사실대로만 말씀해 주시면 끝까지 지키겠습니다.',ok:true,tag:'polite'},
+    {t:'백제를 배신하셨다면서요? 저도 변호하기 싫지만 일이니까 하는 거예요.',ok:true,tag:'sharp'}]);
+  S.flags.tone=c.tag; track('tone',{tone:c.tag});
+  if(c.tag==='polite'){ await say('jinheung','serious','…예를 갖추는군. 좋소, 사실대로 말하지.',{view:'banwol'}); }
+  else { await say('jinheung','angry','무례하구나! …변호인이 날 미워한다면, 내 말을 제대로 들을 수 있겠소?',{view:'banwol'}); await say('rival','think','(…미운 피고라도, 말은 끝까지 들어야 하는데.)',{view:'banwol'}); }
+}
+async function motiveScene(){
+  bgm('testimony');
+  await say('jinheung','serious','변호인, 내가 한강을 원한 진짜 까닭을 들었지. [[바닷길]] 말이오.',{view:'banwol'});
+  await say('jinheung','sweat','욕심처럼 들릴 수도 있소. 법정에서 말할 텐가?',{view:'banwol'});
+  const c=await choiceSheet('진흥왕이 한강을 원한 까닭(서해 바닷길)을 법정에서 어떻게 할까요?',[
+    {t:'숨기지 않는다. 이유가 있어도 사실은 사실이고, 이유도 사실이다.',ok:true,tag:'reveal'},
+    {t:'숨긴다. 욕심처럼 들려 피고에게 불리할 수 있다.',ok:true,tag:'hide'}]);
+  S.flags.motive=c.tag; track('path',{motive:c.tag});
+  if(c.tag==='reveal') await say('rival','confident','숨기지 않을게요. 법정은 [[있었던 일]]을 다 보는 곳이니까요.',{view:'banwol'});
+  else await say('rival','think','(…일단은 말하지 않는 게 낫겠어.)',{view:'banwol'});
+}
+async function defD1_3(){
+  await courtOpen(1);
+  await chargesRead();
+  await say('judge','normal','변호인, 혐의마다 입장을 밝히시오. 먼저 혐의 ①.');
+  if(!await choose('혐의 ①(동맹을 깨고 한강 하류를 빼앗은 죄)에 대해 변호인은?',[
+    {t:'혐의 ①은 다툽니다. 진흥왕은 한강을 빼앗지 않았습니다.',ok:false,fb:'553년 신라가 한강 하류를 빼앗아 신주를 둔 것은 기록으로 확정된 사실이오. 변호인도 부정할 수 없소.'},
+    {t:'혐의 ①의 사실은 인정합니다. 다만 혐의 ②와 ③은 증거로 다투겠습니다.',ok:true},
+    {t:'피고는 나라를 위해 그랬으니 죄가 없습니다.',ok:false,fb:'이유가 있다고 해서 일어난 일이 사라지지는 않소.'}])) return false;
+  await say('player','shock','(…혐의 ①을 인정한다고?)');
+  await say('jinheung','angry','변호인! 내 편이 아니었소?');
+  await say('rival','confident','제 일은 폐하를 무죄로 만드는 게 아니에요. [[증명된 만큼만]] 벌받게 지키는 거예요.');
+  await say('player','confident','그럼 증인을 부르죠. 한강 나루에서 평생 고기를 잡은 [[어부]]입니다.');
+  Music.sting('murmur'); await wait(800); await gavel();
+  bgm('testimony'); await say('fisher','angry','백제 사람이오! 할 말이 많소!');
+  const T=T3fish(); T.onHit=async()=>{ bgm('open'); await say('player','sweat','크윽…!'); };
+  if(!await testimony(T,'신라가 모든 것을 빼앗았다')) return false;
+  await say('judge','normal','증인의 말 가운데 [[직접 본 것]]과 [[들은 것]]을 나누어 들어야 하오.');
+  await say('player','sweat','…그래도 성왕이 신라군에게 목숨을 잃은 건 사실이에요! 내일, 그 싸움에 나간 [[신라 장수]]를 부르겠습니다.');
+  await say('judge','normal','좋소. 오늘은 여기까지 하겠소.');
+  await gavel(); await titleCard('― 1일차 끝 ―','관산성에서 무슨 일이 있었나');
+  return true;
+}
+async function defD2_3(){
+  await courtOpen(2);
+  await say('player','confident','증인을 부르겠습니다. 신주의 군주, [[김무력]]입니다.');
+  Music.sting('murmur'); await wait(800); await gavel();
+  bgm('testimony'); await say('muryeok','base','김무력이오. 관산성에서 싸운 장수지.');
+  const T=T3mu('rival');
+  if(!await testimony(T,'나는 왕의 명을 받들었다')) return false;
+  Music.stop(0.02); await shout('objection'); bgm('crisis');
+  await say('player','confident','이의 있습니다! 명령에 없었다 해도 신라 장수가 한 일이에요. 그 나라의 왕이 책임져야죠!',{action:true});
+  if(!await choose('하람의 말에 어떻게 답할까요?',[
+    {t:'싸움터에서 목숨을 잃은 것과, 왕이 죽이라 명한 것은 다릅니다. 혐의 ②는 ‘명한 죄’입니다.',ok:true},
+    {t:'성왕이 먼저 쳐들어왔으니 목숨을 잃어도 어쩔 수 없습니다.',ok:false,fb:'그것은 피해자를 탓하는 말이오. 혐의의 내용을 따지시오.'},
+    {t:'증인이 한 번 거짓말을 했으니, 증인의 말은 하나도 믿을 수 없습니다.',ok:false,fb:'틀린 말이 있었다고 모든 말이 거짓은 아니오. 무엇이 맞고 틀렸는지 가리시오.'}],{hint:'혐의 ②의 이름을 다시 읽어 보시오. 무엇을 한 죄요?'})) return false;
+  if(!await presentFor('왕이 무엇을 명했는지 보여 줄 증거를 고르세요.',['J5'],{say:e=>`왕의 명령은 ‘관산성을 구원하라’였습니다. ‘${e.title}’입니다!`,hint:'김무력이 숨기던 말을 떠올려 보시오.'})) return false;
+  bgm('open');
+  await say('judge','normal','혐의 ②는 ‘죽이라 명한 죄’요. 싸움터에서 일어난 일과 왕의 명령은 나누어 보겠소.');
+  chargeSt(1,'','변호인 쪽 증거');
+  await say('player','sweat','…혐의 ③이 남았어요. 내일은 제가 직접 증언대에 서서 [[논고]]를 하겠습니다.');
+  await gavel(); await titleCard('― 2일차 끝 ―','처음부터 노렸는가');
+  return true;
+}
+async function defD3_3(){
+  await courtOpen(3);
+  await say('judge','normal','오늘은 검사가 증언대에 서서 혐의 ③의 [[논고]]를 하시오. 변호인은 그 논고를 따질 수 있소.');
+  await say('player','stand','좋아요. 처음부터 끝까지 말해 볼게요.',{view:'witness'});
+  const T=T3haram(S.flags.motive==='reveal'); T.onHit=async()=>{ bgm('open'); await say('player','upset','…'); };
+  if(!await testimony(T,'처음부터 한강을 노렸다')) return false;
+  await say('judge','normal','검사의 논고 가운데 [[증명되지 않은 부분]]이 드러났소.');
+  if(S.flags.motive!=='reveal') await say('judge','stern','다만 변호인, 피고가 한강을 원한 까닭은 끝내 말하지 않는군. 숨긴 것은 판결에서 헤아리기 어렵소.');
+  chargeSt(2,'','변호인 쪽 증거');
+  await seongStatement();
+  await say('rival','think','(…있었던 일만큼은 지우지 말아 달라. 그 말은, 혐의 ①을 두고 하는 말이야.)');
+  await gavel(); await titleCard('― 3일차 끝 ―','미운 피고를 지키는 법');
+  return true;
+}
+async function defD4_3(){
+  await courtOpen(4);
+  await say('judge','normal','피고, 최후 진술을 하시오.');
+  bgm('testimony');
+  if(S.flags.tone==='polite') await say('jinheung','serious','변호인이 처음부터 나를 [[사람으로]] 대해 주었소. 그래서 이 말을 하겠소.');
+  if(S.flags.motive==='reveal'){ await say('jinheung','serious','나는 신라가 살 길을 찾았소. 한강과 서해 바닷길이 필요했지.'); await say('jinheung','sweat','그러나… 그 땅이 백제가 되찾은 땅인 줄 알면서 빼앗았소. 그것은 부정하지 않겠소.'); }
+  else { await say('jinheung','base','나는… 그저 땅이 필요했을 뿐이오.'); await say('player','normal','(끝까지 이유를 말하지 않는구나.)'); }
+  await say('judge','normal','변호인, 혐의마다 판결의 [[이유]]와 [[근거]]를 대시오. 먼저 변호인이 인정한 혐의 ①.');
+  if(!await reasonEv('혐의 ①을 유죄로 인정하는 가장 알맞은 이유는?',[
+    {t:'120년 넘게 동맹이었던 나라가 되찾은 땅을 빼앗았다는 기록이 있다.',ok:true,ev:['J3','J1']},
+    {t:'진흥왕은 신라를 크게 키운 왕이므로 무엇을 해도 괜찮다.',ok:false,fb:'공이 있다고 해서 다른 잘못이 사라지지는 않소.'},
+    {t:'백제도 고구려와 싸웠으니 서로 똑같다.',ok:false,fb:'다른 사람의 잘못이 피고의 잘못을 지우지는 않소.'}])) return false;
+  if(!await reasonEv('혐의 ②(성왕을 죽이라 명한 죄)가 무죄인 가장 알맞은 이유는?',[
+    {t:'성왕은 싸움터에서 목숨을 잃었고, 왕이 죽이라 명했다는 증거는 없다. 왕의 명은 ‘구원하라’였다.',ok:true,ev:['J5','J4']},
+    {t:'성왕이 먼저 공격했으니 목숨을 잃어도 어쩔 수 없다.',ok:false,fb:'그것은 피해자를 탓하는 말이오.'},
+    {t:'모두가 그렇게 말하니, 진흥왕이 명한 것이 맞다.',ok:false,fb:'여러 사람이 말한다고 증거가 되지는 않소.'}])) return false;
+  if(!await reasonEv('혐의 ③(처음부터 한강을 홀로 차지하려 한 죄)가 무죄인 가장 알맞은 이유는?',[
+    {t:'551년에 한강 하류는 백제 땅이었고, 순수비는 553년 뒤에 세운 것이라 ‘처음부터’라는 말은 증명되지 않는다.',ok:true,ev:['J2','J7']},
+    {t:'진흥왕은 화랑을 키운 훌륭한 왕이다.',ok:false,fb:'그것은 이 혐의와 관계가 없소.'},
+    {t:'너무 오래된 일이라 아무것도 알 수 없다.',ok:false,fb:'기록이 남은 부분이 있소. 무엇이 증명되고 무엇이 안 되는지 가리시오.'}])) return false;
+  await verdictLines3();
+  if(S.found.has('J10')) await say('player','upset','…이름 없는 쪽지 하나로 혐의를 세운 건, 내 잘못이야.',{view:'lobby'});
+  await say('rival','normal','미운 피고를 변호하는 게 제일 어렵네요. 그래도 증명된 만큼만이에요.',{view:'lobby'});
+  const pts=(S.flags.tone==='polite'?1:0)+(S.flags.motive==='reveal'?1:0)+(S.trust>=3?1:0);
+  const grade=pts>=3?'공정한 변호인':pts===2?'노련한 변호인':'견습 변호인';
+  caseResult({grade:grade,lead:'혐의 ①은 사실대로 인정하고, 증거가 없는 혐의 ②와 ③은 증거로 무죄를 이끌었습니다.',
+    items:[`피고를 대한 말투: ${S.flags.tone==='polite'?'정중함':'날카로움'}`,`진흥왕의 이유(바닷길): ${S.flags.motive==='reveal'?'숨기지 않음':'숨김'}`,`익명의 쪽지 확대: ${S.plums&&S.plums.has('J10')?'매화 얼룩을 찾음':'하지 않음'}`],
+    judge:'미운 피고도 증명된 만큼만. 그것을 지킨 변호인이오.',history:HIST3});
+  return true;
+}
+
+/* ---------- 검사 모드 ('지는 검사') ---------- */
+async function runPros3(from){
+  if(from<=0){ await prologue3(); bgm('investigate');
+    await say('judge','normal','하람 검사, 이번 사건의 피고는 신라의 [[진흥왕]]이오.',{view:'lobby'});
+    await say('rival','confident','이번엔 내가 진흥왕을 변호해. 혐의를 부풀리면 하나씩 무너뜨릴 거야.',{view:'lobby'});
+    await say('guide','normal','재판 전날 밤, 법정 문틈에 접힌 쪽지 하나가 끼워져 있었다.',{view:'lobby'});
+    S.found.add('J10'); Music.sting('get'); showEvidence('J10');
+    await say('player','shock','(“진흥왕이 성왕의 목을 베라 했다는 문서가 있다.” …이거면 혐의를 하나 더 세울 수 있어!)',{view:'lobby'});
+    hideEvidence(); await say('guide','normal','증거 수첩에 [[익명의 쪽지]]를 넣었다.',{view:'lobby'}); }
+  await playDays([
+    {inv:async()=>{ await invDay(1,'백제 유민이 사는 [[한강 나루]]부터 조사하자. 어부에게도 물어볼 수 있어.'); },court:prosD1_3,
+     learned:['553년 신라가 한강 하류를 빼앗은 것은 기록으로 확정된 사실이다.','551년에는 한강 하류가 백제 땅이었다.','내 증인의 말도 직접 본 것과 들은 것을 나누어야 한다.']},
+    {inv:async()=>{ await invDay(2,'[[관산성 터]]가 열렸어. 성왕이 목숨을 잃은 싸움의 흔적을 찾자.'); },court:prosD2_3,
+     learned:['관산성 싸움은 백제가 먼저 공격했다.','김무력이 받은 명령은 ‘관산성을 구원하라’였다.','증거가 없는 혐의는 검사가 스스로 거둘 수 있다.']},
+    {inv:async()=>{ await invDay(3,'[[북한산 비봉]]과 [[박물관 신라실]]이 열렸어. 로비에서 누리가 기다린대.'); },court:prosD3_3,
+     learned:['북한산 순수비는 553년보다 뒤에 세운 것으로 본다.','검사의 일은 이기는 것이 아니라 사실을 세우는 것이다.','아이들 편이 되는 것과 정의 편이 되는 것은 다르다.']},
+    {court:prosD4_3}
+  ],from);
+}
+async function prosD1_3(){
+  await courtOpen(1);
+  await chargesRead();
+  await say('rival','confident','변호인 누리입니다. 혐의 ①의 [[사실]]은 다투지 않겠어요. 하지만 ②와 ③은 증거로 다투겠습니다.');
+  await say('player','confident','증인을 부르겠습니다. 한강 나루에서 평생 고기를 잡은 [[어부]]입니다.');
+  Music.sting('murmur'); await wait(800); await gavel();
+  bgm('testimony'); await titleCard('― 증언 ―','신라가 모든 것을 빼앗았다');
+  const T=T3fish(), vis=T.lines.filter(l=>!l.hidden);
+  for(let i=0;i<vis.length;i++) await say('fisher',vis[i].expr,vis[i].text,{testimony:true,tag:`증언 ${i+1}/${vis.length}`});
+  await say('judge','normal','변호인, 반대 신문을 하시오. 검사는 [[지켜보시오]].');
+  bgm('cross');
+  await shout('objection'); showEvidence('J2');
+  await say('rival','present','551년의 기록입니다. 그해 한강 [[하류 6군은 백제]]가 가졌어요. 이 나루가 신라 땅이 된 건 553년이에요!',{action:true}); hideEvidence();
+  await say('fisher','angry','몇 해 차이가 뭐 그리 대수요!');
+  await shout('hold');
+  await say('rival','think','그리고 증인, 성왕을 죽이라 명한 것이 신라 왕이라는 말… [[직접 보셨나요]]?');
+  await say('fisher','base','…직접 본 건 아니오. 장터에서 다들 그렇게 말하더란 말이오.',{testimony:true,tag:'새 증언'});
+  S.found.add('J8'); Music.sting('get'); showEvidence('J8'); await say('guide','normal','증거 수첩에 [[전해 들은 말]]이 들어왔다.'); hideEvidence();
+  await say('player','sweat','(내 증인의 말이… 들은 이야기였어.)');
+  const c=await choiceSheet('검사는 어떻게 할까요?',[{t:'그래도 밀고 간다. 성왕이 목숨을 잃은 건 사실이니까.',ok:true,tag:'push'},{t:'증언을 다시 확인하겠다. 들은 말로는 혐의를 세울 수 없다.',ok:true,tag:'recheck'}]);
+  S.flags.d1=c.tag;
+  if(c.tag==='push'){ await say('player','confident','그래도 성왕이 신라군에게 목숨을 잃은 건 사실이에요. 혐의는 그대로 갑니다!'); await say('judge','stern','검사, 들은 말로는 아무것도 세울 수 없소. 내일은 [[직접 본 사람]]을 데려오시오.'); }
+  else { await say('player','normal','재판장님, 제 증인의 말을 다시 확인하겠습니다. 내일은 그 싸움에 직접 나간 사람을 부르겠습니다.'); await say('judge','normal','좋소. 검사도 자기 증인의 말을 따져야 하오.'); }
+  await gavel(); await titleCard('― 1일차 끝 ―','관산성에서 무슨 일이 있었나');
+  return true;
+}
+async function prosD2_3(){
+  await courtOpen(2);
+  await say('player','confident','증인을 부르겠습니다. 신주의 군주, [[김무력]]입니다. 관산성에서 직접 싸운 사람이에요.');
+  Music.sting('murmur'); await wait(800); await gavel();
+  bgm('testimony'); await say('muryeok','base','김무력이오. 관산성에서 싸운 장수지.');
+  await say('judge','normal','검사, 오늘은 검사가 직접 증인의 말을 따져 보시오. 자기 증인이라도 틀린 말은 틀린 것이오.');
+  const T=T3mu('player');
+  if(!await testimony(T,'나는 왕의 명을 받들었다','검사도 자기 증인의 말을 따져야 해요')) return false;
+  bgm('crisis');
+  await say('rival','normal','검사, 방금 들으셨죠? 왕의 명은 ‘구원하라’였어요.');
+  if(S.found.has('J10')) await say('rival','think','혐의 ②의 근거가 혹시 그 쪽지라면… 증거 수첩에서 [[확대해]] 보는 게 좋을 거예요.');
+  await say('judge','stern','검사, 혐의 ②를 어떻게 하겠소?');
+  const drop=await withdrawChoice(1,'혐의 ②(성왕을 죽이라 명한 죄)를 어떻게 할까요?','유지합니다. 성왕은 신라군에게 목숨을 잃었습니다.','거둡니다. 왕이 죽이라 명했다는 증거가 없습니다.');
+  if(drop){ await say('guide','normal','방청석에서 야유가 쏟아졌다. “백제 편 아니었어?”'); await say('judge','normal','…용기 있는 검사요.'); await say('rival','shock','하람…!'); }
+  else { await say('rival','normal','그럼 판결로 가리죠. 증거로요.'); await say('judge','stern','검사, 지금 가진 증거로 그 혐의를 증명할 수 있는지 잘 생각하시오.'); }
+  await gavel(); await titleCard('― 2일차 끝 ―','처음부터 노렸는가');
+  return true;
+}
+async function prosD3_3(){
+  await courtOpen(3);
+  await say('rival','confident','혐의 ③을 따지겠습니다. 검사, 피고가 ‘처음부터’ 한강을 노렸다는 근거는요?');
+  await say('player','think','(북한산 순수비… 551년에 세웠다고 들었는데. 확인해 보자.)');
+  if(!await presentFor('순수비를 언제 세웠는지 확인할 증거를 고르세요.',['J7'],{say:()=>'북한산 순수비의 탁본입니다!',hint:'북한산 봉우리에서 뜬 것을 떠올려 보시오.'})) return false;
+  await say('player','sweat','진흥왕이 북한산을 돌아본 해는… [[555년]]. 553년보다 뒤야.');
+  await say('rival','present','그리고 551년에 한강 하류는 백제 땅이었어요. 처음부터 노렸다면 왜 하류를 백제에 두었을까요?');
+  await say('player','upset','(…‘처음부터’라는 건, 내가 그렇게 믿고 싶었던 거야.)');
+  await say('judge','stern','검사, 혐의 ③을 어떻게 하겠소?');
+  const drop=await withdrawChoice(2,'혐의 ③(처음부터 한강을 홀로 차지하려 한 죄)을 어떻게 할까요?','유지합니다. 결국 한강을 다 차지했으니까요.','거둡니다. ‘처음부터’라는 것은 증명되지 않습니다.');
+  if(drop){ await say('guide','normal','방청석이 다시 술렁였다.'); await say('judge','normal','용기 있는 검사요.'); }
+  else await say('rival','normal','좋아요. 판결에서 가리죠.');
+  await say('player','upset','…나도 백제 편이 되고 싶었어. 76년 만에 되찾은 땅이었잖아.',{view:'lobby'});
+  await say('rival','normal','알아. 그래서 증거를 보는 거야.',{view:'lobby'});
+  await gavel(); await titleCard('― 3일차 끝 ―','검사는 무엇을 따라야 하는가');
+  return true;
+}
+async function prosD4_3(){
+  await courtOpen(4);
+  await seongStatement();
+  await say('judge','normal','검사, 혐의 ①을 유죄로 볼 [[이유]]와 [[근거]]를 대시오.');
+  if(!await reasonEv('혐의 ①을 유죄로 보는 가장 알맞은 이유는?',[
+    {t:'120년 넘게 동맹이었던 나라가 되찾은 땅을 빼앗았다는 기록이 있다.',ok:true,ev:['J3','J1']},
+    {t:'성왕이 목숨을 잃었으니 신라 왕은 모든 혐의에서 유죄다.',ok:false,fb:'혐의마다 따로 따지시오. 혐의 ①은 땅을 빼앗은 일이오.'},
+    {t:'신라 사람이 쓴 기록이니 믿을 수 없다.',ok:false,fb:'그 말이라면 검사의 혐의도 세울 수 없소.'}])) return false;
+  const kept=[1,2].filter(i=>!(S.flags.drop&&S.flags.drop[i]));
+  for(const i of kept){
+    await shout('objection'); bgm('crisis');
+    if(i===1){ showEvidence('J5'); await say('rival','present','검사가 유지한 혐의 ②. 왕의 명은 ‘관산성을 [[구원하라]]’였어요. 죽이라는 명은 어디에도 없습니다!',{action:true}); hideEvidence();
+      if(S.found.has('J10')){ await say('rival','confident','검사가 믿은 쪽지는 이름도 없고, 말하는 문서도 없어요.'); } }
+    else { showEvidence('J7'); await say('rival','present','검사가 유지한 혐의 ③. 순수비는 [[553년 뒤]]에 세웠고, 551년의 하류는 백제 땅이었어요!',{action:true}); hideEvidence(); }
+    await say('player','sweat','…!');
+  }
+  await verdictLines3();
+  const drops=2-kept.length, grade=drops===2?'정의로운 검사':drops===1?'고집 센 검사':'감정에 진 검사';
+  if(drops===2) await say('rival','normal','하람. 오늘 진 건 혐의 두 개지, 너는 아니야.',{view:'lobby'});
+  else if(drops===0) await say('rival','normal','하람, 네가 진 건 증거가 없어서야. 마음이 앞서면 이렇게 돼.',{view:'lobby'});
+  await say('player','upset','검사의 일은 이기는 게 아니라… [[사실을 세우는 것]]이었어.',{view:'lobby'});
+  caseResult({grade:grade,lead:drops===2?'증거가 없는 혐의 ②와 ③을 스스로 거두고, 증명된 혐의 ①만 끝까지 지켰습니다.':drops===1?'혐의 하나는 스스로 거두었지만, 다른 하나는 증거 없이 밀고 가다 무죄가 났습니다.':'증거가 없는 혐의까지 끝까지 밀고 가다, 재판장이 무죄를 선고했습니다. 검사는 그 두 혐의에서 졌습니다.',
+    items:[`혐의 ② ${S.flags.drop&&S.flags.drop[1]?'스스로 취하':'유지 → 무죄 (검사 패소)'}`,`혐의 ③ ${S.flags.drop&&S.flags.drop[2]?'스스로 취하':'유지 → 무죄 (검사 패소)'}`,`1일차 판단: ${S.flags.d1==='recheck'?'증언을 다시 확인':'그래도 밀고 감'}`,`익명의 쪽지 확대: ${S.plums&&S.plums.has('J10')?'매화 얼룩을 찾음':'하지 않음'}`],
+    judge:drops===2?'용기 있는 검사요. 이기려는 마음보다 사실을 따랐소.':'검사는 이기려고 법정에 서는 사람이 아니오.',history:HIST3});
+  return true;
+}
+
+regCase(3,{title:'한강의 배신',desc:'진흥왕 · 변호인(기본)·검사 · 난이도 3',ev:EVIDENCE3,locs:LOCS3,terms:TERMS3,defName:'진흥왕',time:'90~110분',main:'def',
+  lead:'사건 3은 변호인 자리가 기본이에요. 미운 피고를 변호해 보세요. 검사 자리에서는 ‘지는 법’을 배워요.',
+  openLine:'지금부터 [[역사 법정]]을 엽니다. 피고는 신라의 진흥왕.',history:HIST3,
+  views:{prologue3:{bg:BG.witness,desk:'',pos:['50%','0%','90%'],nochar:true},banwol:{bg:BG.side,desk:'',pos:['50%','-4%','96%'],posImg:['50%','-6%','94%']}},
+  gojeung:['433년 나제 동맹 결성, 493년 혼인 동맹','475년 한성 함락부터 551년 회복까지의 기간(76년)','551년 한강 유역 회복과 백제 6군·신라 10군 (「일본서기」·거칠부 열전)','553년 신주 설치와 김무력 군주 임명','554년 관산성 전투 경위: 백제의 선공, 성왕이 목숨을 잃은 상황(「일본서기」)','진흥왕의 북한산 순행(555)과 북한산 순수비 건립 연대(555년설·568년설 등)','당항성을 통한 신라의 대중국 교통','김무력이 받은 명령 ‘관산성 구원’은 게임 속 상상 대사임(기록상 구원하러 간 것은 사실)'],
+  roles:{def:runDef3,pros:runPros3}});
+
+renderRoles();
 })();
 </script>
 </body>

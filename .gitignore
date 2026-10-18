@@ -7,3 +7,4 @@ __pycache__/
 src/assets.js
 src/dist/
 src/v03.html
+.claude/

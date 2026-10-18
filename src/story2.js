@@ -9,7 +9,8 @@ const EVIDENCE2=[
   {id:'C7',type:'사료',title:'주변을 아우른 기록',body:'위만은 군사력과 재물을 바탕으로 이웃한 진번, 임둔을 복속시켜 땅을 넓혔다.',src:'「사기」 조선열전',trust:3,note:'위만 조선이 커진 모습이에요.'},
   {id:'C8',type:'사료',title:'남쪽으로 간 준왕',body:'쫓겨난 준왕은 측근과 백성을 이끌고 바닷길로 남쪽에 가서 새로 자리를 잡고 스스로 ‘한왕’이라 하였다.',src:'「위략」',trust:2,note:'같은 시대, 다른 선택을 한 사람이에요.'},
   {id:'C9',type:'유물',title:'비파형 동검',body:'고조선을 대표하는 청동 검. 위만이 오기 훨씬 전부터 쓰였다.',src:'박물관 고조선실',trust:3,note:'고조선 문화를 보여 주는 유물이에요.'},
-  {id:'C10',type:'문서',title:'준왕의 밀서',body:'“위만을 없애라. 그리고 [[낙랑]]의 군사로 서쪽을 막으라.” 끝에 준왕의 도장이 찍혀 있다.',src:'피고 위만이 내놓은 문서',trust:1,note:'누가, 언제 쓴 문서일까요? 낱말 하나하나를 의심해 보세요.'},
+  {id:'C10',type:'문서',title:'준왕의 밀서',body:'“위만을 없애라. 그리고 [[낙랑]]의 군사로 서쪽을 막으라.” 끝에 준왕의 도장이 찍혀 있다.',src:'피고 위만이 내놓은 문서',trust:1,note:'누가, 언제 쓴 문서일까요? 낱말 하나하나를 의심해 보세요.',
+   zoom:{say:['밀서의 귀퉁이를 크게 확대해 보았다.','오른쪽 위에 작은 [[매화 모양 먹 얼룩]]이 있다. 도장과는 다른 먹이다.','…누가 이런 얼룩을 남겼을까?'],plum:true,note:'오른쪽 위에 매화 모양 먹 얼룩이 있다.'}},
   {id:'C11',type:'증언',title:'포구의 뱃사공 이야기',body:'그날 밤 준왕 일행은 허둥지둥 배에 올라 남쪽 바닷길로 떠났다. 누구에게 편지를 남길 틈도 없었다.',src:'바닷가 포구에서 들은 이야기 (상상)',trust:2,note:'그날 밤 준왕이 무엇을 할 수 있었는지 생각해 보세요.'},
   {id:'P1',type:'물건',title:'통행패',body:'서쪽 망루로 올라가는 사람에게 내주던 나무패.',src:'철기 공방',trust:3,note:'잠긴 곳을 여는 물건이에요.'}
 ];
@@ -90,7 +91,7 @@ let CASE=1;
 const C1DATA={ev:EVIDENCE.slice(), locs:LOCS.slice()};
 function setCase(n){
   CASE=n;
-  const ev=n===2?EVIDENCE2:C1DATA.ev, lc=n===2?LOCS2:C1DATA.locs;
+  const X=CASE_DATA[n], ev=X?X.ev:n===2?EVIDENCE2:C1DATA.ev, lc=X?X.locs:n===2?LOCS2:C1DATA.locs;
   EVIDENCE.length=0; ev.forEach(e=>EVIDENCE.push(e));
   Object.keys(EV_BY_ID).forEach(k=>delete EV_BY_ID[k]); EVIDENCE.forEach(e=>{ EV_BY_ID[e.id]=e; });
   LOCS.length=0; lc.forEach(l=>LOCS.push(l));
@@ -101,7 +102,7 @@ function hasSave2(role){ try{ const v=JSON.parse(store.get(SAVE2(role))||'null')
 function saveAt2(phase){ store.set(SAVE2(S.me==='rival'?'def':'pros'),JSON.stringify({phase:phase,found:[...S.found],seen:[...(S.seen||[])],trust:S.trust,misses:S.misses||0,presses:S.presses||0,log:S.log||[],forged:!!S.forged,used:[...(S.used||[])],talked:[...(S.talked||[])],unlocked:[...(S.unlocked||[])],when:Date.now()})); }
 function clearSave2(role){ try{ localStorage.removeItem(SAVE2(role)); }catch(e){} }
 function startCase2(role,resume){
-  setCase(2); const sub=document.querySelector('.brand small,.brand span'); if(sub) sub.textContent='사건 2 「왕검성의 밤」';
+  setCase(2); S.case=2; S.role=role; const sub=document.querySelector('.brand small,.brand span'); if(sub) sub.textContent='사건 2 「왕검성의 밤」';
   prepStory(); S.case=2; S.p2at=9; S.me=role==='def'?'rival':'player'; S.lines=[];
   let from=0; const v=resume?hasSave2(role):null;
   if(v){ S.found=new Set(v.found); S.seen=new Set(v.seen||[]); S.trust=v.trust||5; S.misses=v.misses||0; S.presses=v.presses||0; S.log=v.log||[]; S.forged=!!v.forged; S.used=new Set(v.used||[]); S.talked=new Set(v.talked||[]); S.unlocked=new Set(v.unlocked||[]); renderGauge(); from=v.phase; }
@@ -340,10 +341,13 @@ async function verdict2(role){
   await say('judge','normal',role==='pros'?'혐의 ②. 검사가 공소를 거두었으므로 [[더 판단하지 않소]].':'혐의 ②. 피고가 고조선을 이었다는 근거가 있고, 혐의는 증명되지 않았소. [[무죄]].');
   await say('judge','normal','같은 시대, 쫓겨난 준왕은 남쪽으로 가서 [[새로 자리를 잡았소]]. 사람마다 다른 선택이 있었소.');
   Music.stop(1); clearSave2(role);
-  const used=S.log.filter(x=>!x.ok).length, found=EVIDENCE2.filter(e=>!['C2','C10'].includes(e.id)&&S.found.has(e.id)).length;
+  // 포구의 뱃사공 이야기(C11)는 검사 모드 3일차에만 나오므로 변호인 모드의 셈에서 뺀다
+  const notCounted=role==='def'?['C2','C10','C11']:['C2','C10'];
+  const used=S.log.filter(x=>!x.ok).length, found=EVIDENCE2.filter(e=>!notCounted.includes(e.id)&&S.found.has(e.id)).length;
+  track('case_end',{grade:'',trust:S.trust,wrongs:used,found:found});
   openSheet(`<h2>사건 2 결과 · ${role==='pros'?'검사':'변호인'}</h2>
     <p class="lead">${role==='pros'?'거짓 경보를 두 증거로 밝히고, 가짜 밀서의 시대착오를 잡고, 증명되지 않은 혐의를 스스로 거두었습니다.':'가짜 증거의 유혹을 '+(S.ethics?'이겨 내고':'이기지 못했지만')+', 증인의 거짓을 잡고, 확정 사실은 지키면서 참작할 사정을 세웠습니다.'}</p>
-    <ul class="res-list"><li>남은 해치 방울 ${S.trust}/5</li><li>헛 제시 ${used}번</li><li>조사에서 헛짚음 ${S.misses||0}번</li><li>스스로 찾은 증거 ${found}/${EVIDENCE2.filter(e=>!['C2','C10'].includes(e.id)).length}</li>${role==='def'?`<li>변호인의 진실 의무 ${S.ethics?'지킴':'놓침'}</li>`:''}</ul>
+    <ul class="res-list"><li>남은 해치 방울 ${S.trust}/5</li><li>헛 제시 ${used}번</li><li>조사에서 헛짚음 ${S.misses||0}번</li><li>스스로 찾은 증거 ${found}/${EVIDENCE2.filter(e=>!notCounted.includes(e.id)).length}</li>${role==='def'?`<li>변호인의 진실 의무 ${S.ethics?'지킴':'놓침'}</li>`:''}</ul>
     <h3>실제 역사에서는</h3>
     <p>위만이 세운 나라(위만 조선)는 철기 문화를 바탕으로 크게 성장했습니다. 그러나 손자 우거왕 때 한나라의 공격을 받아 기원전 108년에 무너졌고, 한나라는 그 땅에 낙랑 등의 군을 두었습니다.</p>
     <div class="sheet-foot"><button class="abtn primary" type="button" id="r2back">처음 화면으로</button></div>`,false);
