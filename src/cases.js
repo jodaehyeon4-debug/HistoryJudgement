@@ -76,7 +76,7 @@ function chargeSt(i,st,note){ if(!S.charges) return; const c=S.charges.list[i]; 
 const SH=`<svg viewBox="0 0 1600 900" preserveAspectRatio="xMidYMid slice" xmlns="http://www.w3.org/2000/svg">`;
 function shPerson(x,y,k,o){ o=o||{}; k=k||1; const c=o.c||'#000';
   const head=`<circle cx="0" cy="-150" r="30" fill="${c}"/>`;
-  const plume=o.plume?`<path d="M0,-180 C20,-240 70,-250 92,-226 C60,-226 34,-206 18,-176 Z" fill="${c}"/>`:'';
+  const plume=o.plume?`<path d="M0,-180 C20,-240 70,-250 92,-226 C60,-226 34,-206 18,-176 Z" fill="${c}"/><path d="M-6,-182 C-6,-252 34,-276 60,-262 C30,-254 10,-226 6,-180 Z" fill="${c}"/>`:'';
   const helm=o.helm?`<path d="M-34,-150 C-34,-196 34,-196 34,-150 Z" fill="${c}"/>`:'';
   const body=o.seated?`<path d="M-44,-118 L44,-118 L58,-30 L90,-30 L90,0 L-60,0 L-52,-60 Z" fill="${c}"/>`:o.lying?'':`<path d="M-40,-118 L40,-118 L52,0 L16,0 L10,80 L-10,80 L-16,0 L-52,0 Z" fill="${c}"/>`;
   const armUp=o.armUp?`<path d="M30,-110 L74,-200 L86,-194 L46,-104 Z" fill="${c}"/>`:'';
@@ -150,7 +150,9 @@ function addCast(id,o){
   CAST[id]=Object.assign({name:o.name},o.spec||{skin:'#e8c4a0',robe:'#5a6a80',robe2:'#3e4a5c',collar:'cross',hat:'short',hair:'#1c1a20',beard:'none',iris:'#3a2a20'});
   NAMES[id]=o.label||o.name; VIEW_OF[id]=o.view||'witness'; ACTION_COL[id]=o.col||'#5a4a3a';
 }
-NAMES.daon='다온 판사'; VIEW_OF.daon='judge'; ACTION_COL.daon='#3a2f55';
+NAMES.daon='다온 판사'; VIEW_OF.daon='bench'; ACTION_COL.daon='#3a2f55';
+/* 판사 모드: 다온의 말은 판사석에서 내려다본 법정으로 보여 준다(판결을 읽을 때만 앞모습) */
+VIEWS.bench={bg:BG.judge,desk:'',pos:['50%','0%','90%'],nochar:true};
 
 /* ---------- 사건 등록과 저장 ---------- */
 function regCase(n,def){

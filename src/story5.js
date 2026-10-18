@@ -6,7 +6,7 @@
 addCast('gojong',{name:'고종',label:'피고 고종',col:'#8a2a2a',spec:{skin:'#efc9a2',robe:'#b3352b',robe2:'#86241d',collar:'round',hat:'ikseon',hair:'#1c1a20',beard:'thin',emblem:true,iris:'#3a2a20'}});
 addCast('choewoo',{name:'최우',label:'방청석의 최우',col:'#2a2b33',spec:{skin:'#e8bf96',robe:'#2a2b33',robe2:'#17181d',collar:'round',hat:'gat',hair:'#1c1a20',beard:'long',beardColor:'#2a2220',iris:'#2e2018'}});
 addCast('yuseungdan',{name:'유승단',label:'증인 유승단',col:'#2f5d8a',spec:{skin:'#ecc8a4',robe:'#2f5d8a',robe2:'#1f3f60',collar:'round',hat:'gat',hair:'#d8d8d8',beard:'long',beardColor:'#e6e0d4',iris:'#3a2a20'}});
-addCast('gatekeeper',{name:'궁궐 지기',label:'궁궐 지기',col:'#5a4a3a',spec:{skin:'#d9a77c',robe:'#6a5a48',robe2:'#4a3e30',collar:'cross',hat:'short',hair:'#8a8a8a',beard:'thin',iris:'#3a2a20'}});
+addCast('gatekeeper',{name:'궁궐 지기',label:'궁궐 지기',col:'#2f4a3a',spec:{skin:'#e2b896',robe:'#2f4a3a',robe2:'#3e2e24',collar:'cross',hat:'bun',hair:'#a8a8a8',beard:'none',iris:'#3a2a20'}});
 addCast('yunhu',{name:'김윤후',label:'증인 김윤후',col:'#6a5a30',spec:{skin:'#e2b48a',robe:'#8a6a2a',robe2:'#5e4818',collar:'cross',hat:'short',hair:'#e2b48a',beard:'none',iris:'#3a2a20'}});
 addCast('wallkeeper',{name:'성벽 지기',label:'성벽 지기',col:'#4a4a3a',spec:{skin:'#d9a77c',robe:'#5a5a48',robe2:'#3e3e30',collar:'cross',hat:'short',hair:'#2a2220',beard:'thin',iris:'#3a2a20'}});
 addCast('carver',{name:'대장경 장인',label:'장인',col:'#5a3a20',spec:{skin:'#e2b48a',robe:'#7a5a3a',robe2:'#5a3e24',collar:'cross',hat:'short',hair:'#1c1a20',beard:'thin',iris:'#3a2a20'}});
@@ -30,16 +30,16 @@ const EVIDENCE5=[
 const LOCS5=[
   {id:'gaegyeong',name:'개경 빈 궁궐',time:'흐린 아침',rooms:[
     {id:'gk-throne',name:'왕의 자리',intro:'개경 궁궐의 빈 왕좌. 주인이 떠난 지 오래다.',miss:['먼지 쌓인 바닥이다.','텅 빈 방이다.','아무것도 없다.','바람 소리뿐이다.'],
-     spots:[{x:38,y:30,w:24,h:36,label:'빈 왕좌',say:['아무도 앉지 않은 왕좌다. 먼지가 두껍게 쌓였다.']},{x:6,y:20,w:14,h:50,label:'찢어진 휘장',say:['휘장이 바람에 펄럭인다.']},{x:76,y:60,w:16,h:22,label:'깨진 향로',say:['깨진 향로다. 단서는 아니다.']}]},
+     spots:[{x:47,y:44,w:15,h:16,label:'빈 왕좌',say:['아무도 앉지 않은 왕좌다. 먼지가 두껍게 쌓였다.']},{x:42,y:20,w:33,h:22,label:'해와 달 병풍',say:['해와 달을 그린 병풍이다. 거미줄이 걸렸다.']},{x:4,y:12,w:22,h:42,label:'햇살 드는 창살',say:['창살 사이로 햇살이 들어온다.']},{x:31,y:66,w:11,h:12,label:'넘어진 향로',say:['넘어진 향로다. 단서는 아니다.']}]},
     {id:'gk-office',name:'빈 관청',intro:'나랏일을 보던 관청이다. 서류가 흩어져 있다.',miss:['흩어진 종이다.','빈 책상이다.','아무것도 없다.'],
-     spots:[{x:56,y:22,w:22,h:30,label:'벽에 붙은 방',ev:'Q1',say:['벽에 낡은 방(알리는 글)이 붙어 있다.','“1232년, 서울을 [[강화도로 옮긴다].” 수도를 옮긴다는 알림이다.']},{x:10,y:56,w:24,h:24,label:'빈 책상',say:['관리들이 쓰던 책상이다.']},{x:40,y:70,w:14,h:14,label:'떨어진 붓',say:['말라붙은 붓이다.']}]},
-    {id:'gk-gate',name:'궁궐 문',intro:'굳게 닫힌 궁궐 문이다. 늙은 궁궐 지기가 지키고 있다.',miss:['돌계단이다.','문틈의 먼지다.','아무것도 없다.'],
-     spots:[{x:20,y:16,w:30,h:60,label:'닫힌 문',say:['커다란 문이 굳게 닫혀 있다.']},{x:6,y:76,w:16,h:14,label:'돌사자',say:['문 앞을 지키는 돌사자다.']}],
-     npcs:[{who:'gatekeeper',expr:'base',place:{x:72,h:62,b:2},topics:[
+     spots:[{x:63,y:56,w:22,h:12,label:'책상 위 두루마리',ev:'Q1',say:['책상 위에 두루마리가 펼쳐져 있다. 나라에 알리는 글(방)을 베껴 둔 것이다.','“1232년, 서울을 [[강화도로 옮긴다]].” 수도를 옮긴다는 알림이다.']},{x:0,y:12,w:28,h:50,label:'빈 책장',say:['서랍이 다 열린 책장이다. 서류를 급히 챙겨 간 것 같다.']},{x:30,y:79,w:9,h:11,label:'엎어진 먹통',say:['엎어진 먹통이다. 먹이 말라붙었다.']},{x:41,y:7,w:20,h:11,label:'들보의 판자',say:['글씨가 다 지워진 판자다.']},{x:80,y:6,w:18,h:44,label:'부서진 창살',say:['창살이 부서져 바람이 들이친다.']}]},
+    {id:'gk-gate',name:'궁궐 문',intro:'활짝 열린 궁궐 문이다. 지키는 군사는 없고, 늙은 궁궐 지기만 남았다.',miss:['돌바닥이다.','낙엽이다.','아무것도 없다.'],
+     spots:[{x:30,y:22,w:40,h:38,label:'활짝 열린 문',say:['커다란 문이 활짝 열려 있다. 닫을 사람도 없다.']},{x:3,y:42,w:20,h:34,label:'쓰러진 나무 울타리',say:['적을 막으려 세운 나무 울타리가 쓰러져 있다.']},{x:44,y:68,w:20,h:24,label:'수레바퀴 자국',say:['수레바퀴 자국이 문 밖으로 길게 이어진다. 모두 짐을 싣고 떠난 모양이다.']}],
+     npcs:[{who:'gatekeeper',expr:'base',place:{x:80,h:62,b:2},topics:[
       {id:'gk-hi',t:'궁궐은 왜 비었나요?',lines:[['gatekeeper','base','다들 강화도로 갔소. 나만 남아 문을 지키지.']]},
       {id:'gk-meet',t:'회의는 어디서',lock:'Q1',must:true,lockSay:'(궁궐 지기는 문만 바라본다. 수도를 옮긴 일을 보여 주면 이야기해 줄지도 모른다.)',
        lines:[['gatekeeper','base','천도 말이오? 그건 궁궐에서 정한 게 아니오.'],['gatekeeper','base','대신들이 [[최씨 댁]]에 불려 가서 정했소. 왕께서는… 그 자리에 계셨는지도 모르겠구려.'],['ME','think','(궁궐이 아니라 최씨 댁에서… 결정한 사람은 누구였을까?)']],gives:['Q2']}],
-      present:{Q1:{lines:[['gatekeeper','base','그 방 말이오? 내가 붙였지. 그런데 그걸 정한 곳은…']],unlock:'gk-meet'}},
+      present:{Q1:{lines:[['gatekeeper','base','그 알림 말이오? 내가 성문에 붙였지. 그런데 그걸 정한 곳은…']],unlock:'gk-meet'}},
       def:[['gatekeeper','base','늙은이는 잘 모르는 물건이오.']]}]}]},
   {id:'choegate',name:'최씨 집 대문 앞',time:'낮',intro:'최씨 집안의 대문이다. 궁궐 문보다 크고, 군사들이 지키고 있다.',
    miss:['돌바닥이다.','말발굽 자국이다.','아무것도 없다.'],
@@ -48,17 +48,17 @@ const LOCS5=[
     {x:80,y:64,w:14,h:20,label:'박힌 화살',ev:'QD2',say:['담장에 몽골 화살 한 대가 박혀 있다.','몽골이 쳐들어온 건 다 아는 사실인데…']}]},
   {id:'cheoin',name:'처인성',time:'아침',from:2,intro:'1232년 김윤후와 백성들이 몽골군과 싸운 처인성(지금의 용인)이다.',
    miss:['흙 성벽이다.','풀이다.','아무것도 없다.'],
-   spots:[{x:56,y:30,w:20,h:30,label:'성벽에 꽂힌 화살',ev:'Q4',say:['성벽 위에 화살 자국이 가득하다.','이곳에서 김윤후와 [[백성들이]] 몽골 장수 살리타를 쓰러뜨렸다.']},{x:8,y:60,w:24,h:24,label:'낮은 흙 성벽',say:['그리 높지 않은 흙 성벽이다. 여기서 이겼다니.']}]},
+   spots:[{x:24,y:40,w:8,h:16,label:'성문 옆 화살통',ev:'Q4',say:['성문 옆에 화살통과 활이 기대어 있다. 화살 깃이 닳도록 쏘았다.','이곳에서 김윤후와 [[백성들이]] 몽골 장수 살리타를 쓰러뜨렸다.']},{x:12,y:3,w:24,h:28,label:'나무 성벽',say:['통나무로 세운 성벽이다. 그리 높지 않다. 여기서 이겼다니.']},{x:3,y:34,w:12,h:24,label:'세워 둔 농기구',say:['쇠스랑과 창이 세워져 있다. 농사짓던 사람들도 성을 지켰나 보다.']},{x:5,y:62,w:15,h:16,label:'쇠솥',say:['큰 쇠솥이다. 성 안 사람들이 밥을 지었나 보다.']},{x:80,y:52,w:20,h:30,label:'나무 말뚝',say:['말이 넘어오지 못하게 엮은 말뚝이다.']}]},
   {id:'ganghwa',name:'강화도 궁궐',time:'낮',from:2,rooms:[
     {id:'gh-yard',name:'궁궐 마당',intro:'강화도에 새로 지은 궁궐의 마당이다.',miss:['새 돌바닥이다.','아무것도 없다.','바닷바람이 분다.'],
-     spots:[{x:60,y:20,w:24,h:30,label:'게시판의 명령',ev:'Q5',say:['게시판에 명령이 붙어 있다.','“백성은 [[산성과 섬으로]] 들어가 몽골군을 피하라.”']},{x:10,y:40,w:20,h:30,label:'새 기둥',say:['새로 세운 기둥이다.']}]},
+     spots:[{x:60,y:44,w:12,h:16,label:'전각 기둥',ev:'Q5',say:['전각 기둥에 작은 종이가 붙어 있다. 나라의 명령이다.','“백성은 [[산성과 섬으로]] 들어가 몽골군을 피하라.”']},{x:2,y:0,w:16,h:64,label:'큰 소나무',say:['바닷바람에 굽은 소나무다.']},{x:22,y:44,w:28,h:10,label:'바다 건너 육지',say:['바다 건너편이 육지다. 이 바다가 몽골군을 막아 주었다.']},{x:56,y:28,w:40,h:14,label:'새 기와지붕',say:['새로 올린 기와지붕이다.']},{x:76,y:82,w:20,h:12,label:'바위',say:['마당 끝의 바위들이다.']}]},
     {id:'gh-garden',name:'최씨 집안 정원',from:3,intro:'강화도 최씨 집안의 넓은 정원이다. 전쟁 중이라고는 믿기지 않는다.',miss:['잘 가꾼 풀밭이다.','연못이다.','아무것도 없다.'],
      spots:[{x:30,y:22,w:30,h:30,label:'비단 장식',ev:'Q8',say:['나무마다 비단과 꽃 장식이 걸려 있다.','최우가 [[큰 잔치]]를 열었다는 기록이 있다. 전쟁이 이어지던 때다.']},
       {x:70,y:70,w:14,h:12,label:'풀밭의 종이',ev:'QF',say:['풀밭에 종이 한 장이 떨어져 있다.','“최우의 잔치에 1만 명이 모여 열흘 밤낮을 놀았다.” …쓴 사람도 날짜도 없다.']},
       {x:6,y:60,w:20,h:24,label:'연못',say:['잔잔한 연못이다.']}]},
     {id:'gh-wall',name:'성벽',intro:'강화도를 두른 성벽이다. 아직 쌓고 있는 곳도 있다.',miss:['돌무더기다.','흙이다.','아무것도 없다.'],
-     spots:[{x:10,y:20,w:40,h:40,label:'쌓다 만 성벽',say:['돌을 쌓다 만 성벽이다.']},{x:40,y:70,w:14,h:16,label:'지게',say:['돌을 나르던 지게다.']}],
-     npcs:[{who:'wallkeeper',expr:'base',place:{x:74,h:60,b:2},topics:[
+     spots:[{x:2,y:40,w:26,h:20,label:'쌓다 만 성벽',say:['돌을 쌓다 만 성벽이다.']},{x:29,y:38,w:7,h:29,label:'세워 둔 삽',say:['흙 묻은 삽이 세워져 있다.']},{x:2,y:63,w:20,h:28,label:'흙 바구니',say:['흙을 가득 담은 바구니들이다.']},{x:22,y:79,w:18,h:13,label:'나무 달구',say:['땅을 다지는 나무 달구다. 손잡이가 반질반질하다.']},{x:67,y:77,w:30,h:16,label:'지게',say:['돌을 나르던 지게다. 끈이 닳았다.']},{x:72,y:48,w:28,h:24,label:'돌무더기',say:['쌓으려고 모아 둔 돌무더기다.']}],
+     npcs:[{who:'wallkeeper',expr:'base',place:{x:56,h:60,b:2},topics:[
       {id:'wk-hi',t:'성벽은 누가 쌓나요?',lines:[['wallkeeper','base','성벽 쌓는 거 말이오? 바빠서 길게 말 못 하오.']]},
       {id:'wk-work',t:'성벽 공사',lock:'Q1',must:true,lockSay:'(성벽 지기는 돌만 나른다. 수도를 옮긴 일을 보여 주며 물어볼까?)',
        lines:[['wallkeeper','base','수도를 옮기니 성이 있어야 하잖소. 성도 궁궐도 다 [[백성들이 불려 와서]] 쌓았지.'],['wallkeeper','base','농사철에도 불려 왔소.']],gives:['Q6']}],
@@ -66,8 +66,8 @@ const LOCS5=[
       def:[['wallkeeper','base','바쁘오.']]}]}]},
   {id:'carving',name:'대장경 판각소',time:'오후',from:3,intro:'나무판에 불경을 새기는 판각소다. 나무 깎는 소리가 끊이지 않는다.',
    miss:['나무 부스러기다.','먹 냄새가 난다.','아무것도 없다.'],
-   spots:[{x:40,y:30,w:24,h:30,label:'쌓인 경판',ev:'Q7',say:['글자를 새긴 나무판이 높이 쌓여 있다.','1236년부터 16년 동안 새긴 [[대장경]]이다. 부처의 힘으로 나라를 지키려 했다.']},{x:8,y:60,w:20,h:24,label:'조각칼',say:['날이 닳은 조각칼이다.']}],
-   npcs:[{who:'carver',expr:'base',place:{x:78,h:60,b:2},topics:[
+   spots:[{x:84,y:4,w:16,h:52,label:'경판 선반',ev:'Q7',say:['선반마다 글자를 새긴 나무판이 빽빽하게 쌓여 있다.','1236년부터 16년 동안 새긴 [[대장경]]이다. 부처의 힘으로 나라를 지키려 했다.']},{x:2,y:55,w:34,h:30,label:'나무 담근 물통',say:['나무판을 물에 담가 두었다. 갈라지지 않게 하려는 것이다.']},{x:82,y:72,w:7,h:11,label:'조각칼 통',say:['날이 닳은 조각칼이 꽂혀 있다.']},{x:62,y:55,w:20,h:12,label:'작업대',say:['새기다 만 나무판이 놓여 있다.']},{x:65,y:77,w:11,h:13,label:'바닥의 나무판',say:['바닥에 내려놓은 나무판이다.']}],
+   npcs:[{who:'carver',expr:'base',place:{x:46,h:60,b:2},topics:[
      {id:'cv-hi',t:'무엇을 새기나요?',lines:[['carver','base','부처님 말씀이오. 한 글자 새길 때마다 절을 하지.']]},
      {id:'cv-wood',t:'나무 값',lock:'Q6',must:true,lockSay:'(장인은 칼질만 한다. 백성들이 불려 온 이야기를 꺼내면 대답할지도 모른다.)',
       lines:[['carver','base','나무와 일손은 [[백성에게서]] 나왔지. 그건 맞소.'],['carver','base','그래도 우리는 나라를 지키려고 새겼소. 잔치하고는 다르오.']]}],
@@ -92,8 +92,8 @@ const T5yu=()=>({key:'유승단',who:'yuseungdan',allReveal:true,lines:[
   {text:'…최우 공이 칼자루를 쥐고 앉아 있었소. 아무도 그 앞에서 다른 말을 하지 못했지.',expr:'base',hidden:true}
 ]});
 const T5go=()=>({key:'고종',who:'gojong',allReveal:true,lines:[
-  {text:'내가 천도를 정했다고 하시오.',expr:'base',reveal:1,press:[['daon','think','‘정했다고 하시오’라니… 정했다는 건가요, 그렇게 말하라는 건가요?'],['gojong','sweat','그, 그건…'],['judge','normal','피고, 판사의 물음에 답하시오.']]},
-  {text:'…그렇게 말하지 않으면 나도 [[무사하지 못했을]] 것이오.',expr:'sweat',hidden:true},
+  {text:'내가 천도를 정했다고 하시오.',expr:'base',reveal:1,press:[['daon','think','‘정했다고 하시오’라니… 정했다는 건가요, 그렇게 말하라는 건가요?'],['gojong','fear','그, 그건…'],['judge','normal','피고, 판사의 물음에 답하시오.']]},
+  {text:'…그렇게 말하지 않으면 나도 [[무사하지 못했을]] 것이오.',expr:'fear',hidden:true},
   {text:'백성을 걱정하지 않은 것은 아니오.',expr:'base',press:[['daon','normal','걱정만으로는 무엇을 했는지 알 수 없어요.'],['gojong','base','…']]}
 ]});
 const T5yh=()=>({key:'김윤후',who:'yunhu',allReveal:true,lines:[
@@ -105,7 +105,7 @@ const T5yh=()=>({key:'김윤후',who:'yunhu',allReveal:true,lines:[
 
 async function prologue5(){
   bgm('crisis');
-  await say('guide','normal','1232년, 고려의 수도 개경.',{view:'prologue5'});
+  await say('guide','normal','1232년, 고려의 수도 개경.',{view:'gk-throne'});
   await playShadow('emptypalace');
   await say('guide','normal','몽골군이 쳐들어오자, 조정은 바다 건너 강화도로 떠났다. 궁궐은 텅 비었다.',{view:'prologue5'});
   await say('voice','normal','역사가 묻는다. 이름만 왕인 사람과 실제로 결정한 사람이 다르다면, [[누구에게 책임을 물어야 하는가]].',{view:'prologue5'});
@@ -134,7 +134,7 @@ async function switchDefendant(){
   await say('judge','normal','판사는 겉의 자리가 아니라 [[실제로 한 일]]을 보오.');
   Music.sting('thud'); flash(); await wait(400);
   await say('guide','normal','방청석 앞줄에 앉아 있던 사람이 천천히 일어섰다.');
-  await say('choewoo','base','…판사가 나를 부르는군. 좋소. 나는 최우요.',{view:'witness'});
+  await say('choewoo','gallery','…판사가 나를 부르는군. 좋소. 나는 최우요.',{view:'witness'});
   await say('player','confident','그럼 피고 최우의 혐의를 다시 세우겠어요. 첫째, [[백성을 두고 지배층만 강화도로 옮긴 죄]]. 둘째, [[전쟁 중 사치를 누린 죄]].');
 }
 async function d1_5(){
@@ -174,7 +174,7 @@ async function d2_5(){
   await say('judge','normal','판사, 피고의 주장을 가르시오.');
   if(!await sortClaims([
     {who:'choewoo',expr:'base',text:'백성에게도 피할 길을 열어 주었소.',ans:'ok',ev:['Q5']},
-    {who:'choewoo',expr:'base',text:'그래서 백성은 모두 안전했소.',ans:'no',after:[['judge','normal','‘모두 안전했다’는 증거는 아직 없소. 피해를 입은 사람의 말을 들어 봐야 하오.']]}])) return false;
+    {who:'choewoo',expr:'cold',text:'그래서 백성은 모두 안전했소.',ans:'no',after:[['judge','normal','‘모두 안전했다’는 증거는 아직 없소. 피해를 입은 사람의 말을 들어 봐야 하오.']]}])) return false;
   await say('player','normal','증인을 부를게요. 처인성의 승려 [[김윤후]]입니다.');
   bgm('testimony'); await say('yunhu','base','김윤후요.');
   if(!await testimony(T5yh(),'처인성에서','판사는 더 묻기로 숨은 말을 끌어내요')) return false;
@@ -198,6 +198,7 @@ async function d3_5(){
     {who:'rival',expr:'confident',text:'그 잔치도 군사들의 사기를 높이려던 것이었다.',ans:'op',after:[['judge','normal','그렇게 볼 수도 있다는 생각이오. 확인할 기록은 없소.']]}])) return false;
   await say('judge','normal','판사, 잔치가 열린 때가 언제였는지 [[두 증거를 맞대어]] 보이시오.');
   if(!await presentPair('잔치가 열린 때를 보여 줄 두 증거를 고르세요.','Q8','Q6',{say:'백성이 성 쌓기에 불려 가던 바로 그때, 최씨 집에서는 비단으로 꾸민 큰 잔치가 열렸어요!',hint:'잔치 기록과, 그때 백성이 무엇을 하고 있었는지를 함께 보시오.'})) return false;
+  await say('choewoo','sweat','…잔치를 연 때까지 맞춰 볼 줄은 몰랐소.');
   bgm('open');
   await victim('farmer5',[['base','산성으로 피했던 농부요.'],['base','산성까지 걸어가는 동안 [[마을이 불탔소]].'],['base','강화도는 멀었소. 우리 같은 사람이 갈 수 있는 곳이 아니었지.'],['base','…그 뒤엔 성 쌓으러 불려 갔소.']]);
   await gavel(); await titleCard('― 3일차 끝 ―','성벽 밖에 남은 사람들');
@@ -243,6 +244,6 @@ regCase(5,{title:'텅 빈 궁궐',desc:'최우 · 판사(첫 판사 모드) · �
   lead:'사건 5는 판사 자리예요. 주장을 가르고, 판결 저울을 달고, 필요하면 피고를 바꿀 수 있어요.',
   locked:{pros:'판사 사건',def:'판사 사건'},
   openLine:'지금부터 [[역사 법정]]을 엽니다. 오늘은 판사석에 다온 판사가 앉습니다.',history:HIST5,
-  views:{prologue5:prologueView('#2e2a24','#0e0c0a')},
+  views:{prologue5:prologueView('#2e2a24','#0e0c0a'),'gk-throne':prologueView('#2e2a24','#0e0c0a')},
   gojeung:['1232년 천도 결정 과정(최우의 집에서 재상 회의), 유승단의 반대','무신 정권기 왕과 최씨 집권자의 관계(정방·도방)','입보(산성·섬으로 옮기기) 명령','1232년 처인성 전투, 김윤후의 벼슬 사양','대장경 조판 기간(1236~1251)과 목적','최우의 잔치 기록(채붕 등)','잔치 기록 한 장(1만 명·열흘)은 게임 속 가짜'],
   roles:{judge:runJudge5}});
