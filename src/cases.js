@@ -42,7 +42,7 @@ function teacherDataHTML(){
     <p class="lead">학생의 조사·추궁·판단을 사건·날짜·행동 단위로 이 기기 안에만 모읍니다. 이름 대신 첫 화면의 <b>번호나 별명</b>으로 저장합니다. 지금 ${E.length}개의 기록이 있어요.</p>
     ${sum.length?`<div class="tblwrap"><table class="tbl-sm"><thead><tr><th>번호·별명</th><th>사건·역할</th><th>며칠째</th><th>가장 많이 헤맨 곳</th><th>가장 많이 틀린 곳</th><th>힌트</th><th>피고 인상 변화</th><th>걸린 시간</th></tr></thead><tbody>
       ${sum.map(r=>`<tr><td>${esc(r.sid)}</td><td>${esc(r.cr)}</td><td>${esc(r.day)}</td><td>${esc(r.miss)}</td><td>${esc(r.wrong)}</td><td>${r.hints}</td><td>${esc(r.imp)}</td><td>${r.mins}분</td></tr>`).join('')}</tbody></table></div>`:'<p>아직 모인 기록이 없어요.</p>'}
-    <div class="sheet-foot" style="justify-content:flex-start"><button class="abtn" type="button" id="tCsv">CSV 내려받기</button><button class="abtn" type="button" id="tClear">이 기기의 기록 지우기</button></div>`;
+    <div class="cb-ctl"><button class="abtn" type="button" id="tCsv">CSV 내려받기</button><button class="abtn" type="button" id="tClear">이 기기의 기록 지우기</button></div>`;
 }
 function bindTeacherData(){
   const b=$('#tCsv'); if(b) b.addEventListener('click',()=>{
