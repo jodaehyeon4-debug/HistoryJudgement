@@ -319,6 +319,7 @@ async function caseResult(o){
     ${v4ResultHTML(o.record||D.record)}
     <ul class="res-list"><li>남은 해치 방울 ${S.storyMode?'(이야기 모드)':S.trust+'/'+bellsMax()}</li><li>헛 제시 ${wrongs}번</li><li>조사에서 헛짚음 ${S.misses||0}번</li>${(o.items||[]).map(x=>`<li>${esc(x)}</li>`).join('')}</ul>
     ${o.judge?`<p class="grade-note">해치: “${esc(o.judge)}”</p>`:''}
+    ${o.real?`<h3>이번 시리즈에서 여러분이 쓴 진짜 기록</h3><p class="real-rec">${o.real.map(x=>`<span class="chip">${esc(x)}</span>`).join(' ')}</p><p>가짜는 끼워 넣은 낱장 몇 장뿐이었어요. 대부분의 기록은 진짜였고, 그래서 맞대 볼 수 있었어요.</p>`:''}
     <h3>실제 역사에서는</h3><p>${esc(o.history||D.history||'')}</p>
     <div class="sheet-foot"><button class="abtn" type="button" id="rTeach">교사용 기록</button><button class="abtn primary" type="button" id="r2back">처음 화면으로</button></div>`,false);
   $('#r2back').addEventListener('click',()=>{ closeSheet(); backToRoles(); });
