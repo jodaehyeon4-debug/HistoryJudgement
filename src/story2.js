@@ -420,7 +420,7 @@ async function verdict2(role){
   await say('judge','normal','같은 시대, 쫓겨난 준왕은 남쪽으로 가서 [[새로 자리를 잡았소]]. 사람마다 다른 선택이 있었소.');
   if(role==='def') await say('judge','normal','변호인은 피고의 죄를 없애는 사람이 아니라, [[받아야 할 몫만큼만]] 받게 하는 사람이오.');
   await filePaper({id:'C10',anach:'낙랑',say:'그리고 이 밀서는 [[따로 보관하시오]]. 법정 서고에서 흘러나온 종이 같소. ‘수상한 종이’ 묶음의 첫 장이오.'});
-  await lessonPick(XD(2).lesson);
+  await textbookCompare(); await lessonPick(XD(2).lesson);
   Music.stop(1); clearSave2(role);
   // 포구의 뱃사공 이야기(C11)는 검사 모드 3일차에만 나오므로 변호인 모드의 셈에서 뺀다
   const notCounted=role==='def'?['C2','C10','C11','C12']:['C2','C10','C12'];

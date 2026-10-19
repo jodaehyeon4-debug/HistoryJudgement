@@ -257,7 +257,26 @@ async function recallQuiz(){
   track('recall',{ok:c.right});
   await say('judge','normal',c.right?(R.yes||'잘 기억하고 있구려.'):(R.no||'다시 떠올려 보시오.'),{view:'lobby'});
 }
-async function caseIntro(){ await roleCard(); await recallQuiz(); }
+async function caseIntro(){ await roleCard(); await textbookCard(); await recallQuiz(); }
+/* 교과서와 잇기: 시작할 때 펼 쪽, 끝날 때 교과서 내용과 재판에서 더 알게 된 것을 맞대 보기 */
+function textbookCard(){
+  const T=TEXTBOOK[S.case]; if(!T) return Promise.resolve();
+  return new Promise(res=>{
+    openSheet(`<h2>교과서를 펴요</h2><div class="bgcard tbcard"><span class="bg-ic" aria-hidden="true">📖</span><div><p class="tb-where"><b>${TB_BOOK} ${esc(T.pages)}</b><br><small>${esc(T.unit)} · 「${esc(T.topic)}」</small></p><p>${esc(T.book)}</p></div></div><p class="lead">재판에서는 교과서에 짧게 나온 일을 증거로 더 깊이 따져요.</p><div class="sheet-foot"><button class="abtn primary" type="button" id="sheetGo">재판 시작</button></div>`,false);
+    $('#sheetGo').addEventListener('click',()=>{ closeSheet(); res(); });
+  });
+}
+function textbookCompare(){
+  const T=TEXTBOOK[S.case]; if(!T) return Promise.resolve();
+  track('textbook',{pages:T.pages});
+  return new Promise(res=>{
+    openSheet(`<h2>교과서와 맞대 보기</h2><div class="tbcmp"><section><h3>📖 교과서 ${esc(T.pages)}</h3><p>${esc(T.book)}</p></section><section><h3>⚖️ 재판에서 더 따진 것</h3><ul>${T.more.map(m=>`<li>${esc(m)}</li>`).join('')}</ul></section></div><p class="lead">교과서를 다시 펴서, 재판에서 알게 된 것을 그 쪽 여백에 한 줄 적어 보세요.</p><div class="sheet-foot"><button class="abtn primary" type="button" id="sheetGo">다음</button></div>`,false);
+    $('#sheetGo').addEventListener('click',()=>{ closeSheet(); res(); });
+  });
+}
+function textbookTableHTML(){
+  return `<h3>교과서 연결 (${TB_BOOK})</h3><div class="tbl-wrap"><table class="tbtable"><thead><tr><th>사건</th><th>쪽</th><th>단원 · 주제</th><th>재판에서 더 따지는 것</th></tr></thead><tbody>${Object.entries(TEXTBOOK).map(([n,T])=>`<tr><td>사건 ${n}</td><td>${esc(T.pages)}</td><td>${esc(T.unit)}<br><small>「${esc(T.topic)}」</small></td><td>${T.more.map(esc).join('<br>')}</td></tr>`).join('')}</tbody></table></div>`;
+}
 async function bgCard(day){
   const B=XD(S.case).bgCards, C=B&&B[day]; if(!C) return;
   await new Promise(res=>{
@@ -373,7 +392,7 @@ function scaleViz(title,out){
 }
 
 /* ---------- 결과 화면 앞: 가장 중요한 것 → 수상한 종이 → 등급 ---------- */
-async function caseFinale(){ const X=XD(S.case); if(X.lesson) await lessonPick(X.lesson); if(X.paper) await filePaper(X.paper); if(X.teaser) await teaserCard(X.teaser); }
+async function caseFinale(){ const X=XD(S.case); await textbookCompare(); if(X.lesson) await lessonPick(X.lesson); if(X.paper) await filePaper(X.paper); if(X.teaser) await teaserCard(X.teaser); }
 /* 4일차 끝: 다음 사건 예고 한 컷 */
 function teaserCard(t){
   return new Promise(res=>{

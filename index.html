@@ -661,6 +661,14 @@ pre.code{background:var(--surface2);color:var(--ink);border:2px solid var(--line
 .real-rec{line-height:2}.real-rec .chip{margin:2px 0}
 .chip.yr{background:#3a3f5c;color:#f3ead6}.chip.tag-hearsay{background:#8a5a1a;color:#fff}.chip.tag-disputed{background:#7a3a6a;color:#fff}.chip.tag-imagined{background:#4a5a6a;color:#fff}
 .case-tab .yr{display:block;font-style:normal;font-size:12px;font-weight:900;color:var(--gold);margin-top:2px}
+.case-tab .tbp{display:block;font-style:normal;font-size:11.5px;font-weight:800;color:var(--muted);margin-top:1px}
+.tbcard{align-items:flex-start}.tbcard p{margin:0 0 6px;line-height:1.6}.tb-where small{color:var(--muted);font-weight:700}
+.tbcmp{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,15rem),1fr));gap:12px}
+.tbcmp section{background:var(--surface2);border:2px solid var(--line);border-radius:14px;padding:12px 14px}
+.tbcmp h3{margin:0 0 6px;font-size:15px}.tbcmp p,.tbcmp li{line-height:1.6}.tbcmp ul{margin:0;padding-left:1.2em}
+.tbl-wrap{overflow-x:auto}.tbtable{border-collapse:collapse;width:100%;font-size:13px}.tbtable th,.tbtable td{border-bottom:1px solid var(--line);padding:6px 8px;text-align:left;vertical-align:top}.tbtable small{color:var(--muted)}
+.tpw input{font:inherit;font-size:20px;letter-spacing:4px;padding:8px 12px;border:2px solid var(--line);border-radius:10px;width:100%;max-width:14rem;background:var(--surface2);color:inherit}
+.tpw-err{color:#c0392b;font-weight:800;margin:6px 0 0}
 .go-gag{display:flex;align-items:center;gap:12px;background:var(--surface2);border-radius:12px;padding:6px 12px;margin:6px 0}
 .go-gag .go-tb svg{width:90px;height:auto}.go-gag .go-tb img{width:110px;height:auto;display:block}.go-gag p{font-weight:800;line-height:1.6;margin:0}
 .scalev{display:grid;place-items:center}.scalev svg{width:min(360px,80vw);height:auto}
@@ -2362,7 +2370,8 @@ function openGameOver(){
   $('#gTeacher').addEventListener('click',openTeacher);
   $('#gRetry').addEventListener('click',()=>{ if(!S.story){ startTrial(); return; } if((S.case||1)>=3) startCaseX(S.case,S.role,true); else if(S.case===2) startCase2(S.role||(S.me==='rival'?'def':'pros'),true); else resumeStory(); });
 }
-function openTeacher(){
+async function openTeacher(){ if(await teacherOk()) openTeacherIn(); }
+function openTeacherIn(){
   // 사건 1(과 맛보기 재판)만 openResult로 돌아가고, 사건 2부터는 결과 화면의 '처음 화면으로'와 같게
   const back=S.done?((S.case||1)>=2?backToRoles:openResult):null;
   let body='';
@@ -2383,7 +2392,7 @@ function openTeacher(){
     ${S.classified?`<h3>분류 결과</h3><p>${S.lines.map((L,i)=>`${i+1}번 ${CAT_NAME[S.classify[i]]||'-'} ${S.classify[i]===correctCat(L)?'○':'×'}`).join(', ')}</p>`:''}`;
   }
   const gj=(CASE_DATA[S.case]&&CASE_DATA[S.case].gojeung)||GOJEUNG;
-  openSheet(`<h2>교사용</h2>${classBoardSection()}${teacherDataHTML()}<h3>이번 판</h3>${body}
+  openSheet(`<h2>교사용</h2>${classBoardSection()}${textbookTableHTML()}${teacherDataHTML()}<h3>이번 판</h3>${body}
     <h3>고증 확인 목록${S.case>=3?` (사건 ${S.case})`:''}</h3><ol class="check">${gj.map(x=>`<li>${esc(x)}</li>`).join('')}</ol>${laughHTML()}
     <div class="sheet-foot"><button class="abtn primary" id="tClose" type="button">${back===openResult?'재판 기록으로':back?'처음 화면으로':'닫기'}</button></div>`,!back);
   bindClassBoard(); bindTeacherData(); bindLaugh();
@@ -2471,13 +2480,41 @@ function storyButtons(r){
   const v=hasSave();
   return `${v?`<button class="go" type="button" data-role="resume">이어 하기<small>${PHASE_NAME[v.phase]||''}부터</small></button>`:''}<button class="go${v?' alt':''}" type="button" data-role="story">본편 ${v?'처음부터':'시작'}<small>사건 1 · 75~100분 · 자동 저장</small></button><button class="go alt" type="button" data-role="pros">맛보기 재판<small>증언 하나만, 10분</small></button>`;
 }
+/* 우리 반 사회 5-2 교과서(2022 개정)와 잇기: 찾아보기와 본문 쪽 번호. 교과서 문장은 옮기지 않고 줄여 씀 */
+const TEXTBOOK={
+ 1:{pages:'34~36, 41쪽',unit:'1단원 2. 고대 사람들의 생활 모습',topic:'백제의 성장 · 신라의 삼국 통일',book:'백제는 한강 유역에서 일어나 4세기에 전성기를 맞았고, 660년 신라와 당의 연합군에게 무너졌어요. 41쪽에는 삼국 통일을 서로 다르게 평가한 두 글이 실려 있어요.',more:['백제가 무너진 까닭을 왕 한 사람의 탓으로만 볼 수 있을까?','‘3천 궁녀’처럼 전해 들은 말과 기록을 가르기']},
+ 2:{pages:'24~26쪽',unit:'1단원 1. 선사 시대와 고조선 사람들의 생활 모습',topic:'고조선의 등장과 사회 모습',book:'고조선은 우리나라 첫 국가로, 8조법으로 사회 질서를 지켰고 철기 문화를 바탕으로 힘을 키웠어요. 교과서는 고조선이 멸망할 무렵 여러 나라가 생겼다고 말해요.',more:['교과서에 나오지 않는 위만과 준왕의 이야기','다른 나라 역사책(「사기」)의 기록을 의심하며 읽기']},
+ 3:{pages:'37, 41쪽',unit:'1단원 2. 고대 사람들의 생활 모습',topic:'신라의 성장',book:'진흥왕은 백제와 함께 고구려를 쳐서 한강 유역을 얻은 뒤, 백제와 싸워 한강을 모두 차지했어요. 37쪽에는 554년 관산성 싸움을 적은 「삼국사기」 글과 북한산 순수비가 있어요.',more:['동맹을 깬 일을 죄로 물을지, 나라의 판단으로 볼지','한강을 차지한 뒤 일어난 일(41쪽 백제의 반격)까지 함께 보기']},
+ 4:{pages:'50~51쪽',unit:'1단원 3. 고려 사람들의 생활 모습',topic:'고려의 건국과 후삼국 통일',book:'신라 말 견훤이 후백제를, 궁예가 후고구려를 세웠어요. 견훤은 아들에게 왕위를 빼앗긴 뒤 고려에 몸을 맡겼고, 936년 고려가 후삼국을 통일했어요.',more:['927년 경주에서 신라 왕이 목숨을 잃은 일의 책임','이긴 쪽이 남긴 기록을 따져 읽기']},
+ 5:{pages:'56~57, 61쪽',unit:'1단원 3. 고려 사람들의 생활 모습',topic:'몽골의 침입과 항전 · 인쇄술의 발달',book:'몽골이 쳐들어오자 김윤후는 처인성과 충주성에서 백성과 함께 싸웠어요. 몽골의 침입 때 팔만대장경을 만들었어요.',more:['교과서에 이름이 나오지 않는 최우는 섬으로 옮긴 뒤 무엇을 했을까?','백성과 지배층이 겪은 전쟁은 어떻게 달랐을까?']},
+ 6:{pages:'86~90쪽',unit:'2단원 1. 유교 문화를 바탕으로 한 조선',topic:'임진왜란과 병자호란 · 전쟁 피해 극복',book:'임진왜란 뒤 만주에서 후금이 힘을 키웠어요. 조선은 전쟁의 피해를 이겨 내려고 궁궐과 성을 고치고 군대를 새로 만들었으며, 허준이 「동의보감」을 펴냈어요.',more:['교과서에 이름이 나오지 않는 광해군의 외교와 궁궐 공사','같은 왕을 두고 서로 다르게 쓴 기록 맞대기']},
+ 7:{pages:'88쪽',unit:'2단원 1. 유교 문화를 바탕으로 한 조선',topic:'병자호란의 전개',book:'청이 다시 쳐들어오자 인조는 남한산성으로 피해 맞섰지만 결국 항복했어요. 세자와 많은 백성이 청으로 끌려가 고통을 겪었어요.',more:['항복을 고른 왕의 책임을 어떻게 볼까?','끌려간 백성과 돌아온 세자의 이야기']},
+ 8:{pages:'101쪽',unit:'2단원 2. 조선 후기의 사회 변화와 근대 문물의 수용',topic:'세도 정치',book:'어린 왕이 이어지자 왕실과 혼인한 몇몇 가문이 권력을 마음대로 휘둘렀어요(세도 정치). 관리들의 부정부패가 심해져 백성의 삶이 어려워졌어요.',more:['가상 인물 김 대감으로 세도 정치의 책임 나누기','1862년 진주 농민 봉기가 일어난 까닭']},
+ 9:{pages:'101~102쪽',unit:'2단원 2. 조선 후기의 사회 변화와 근대 문물의 수용',topic:'흥선 대원군의 개혁 정치 · 병인양요와 신미양요',book:'흥선 대원군은 서원을 정리하고 양반에게도 세금을 거두었지만, 경복궁을 다시 지으며 백성을 동원했어요. 서양의 침입을 물리친 뒤 척화비를 세웠어요. 101쪽은 개혁의 장점과 단점을 이야기해 보자고 해요.',more:['검사·변호인·판사 자리에서 같은 증거로 다른 결론 세우기','1866년 천주교 박해의 책임']},
+ 10:{pages:'108~109, 124, 132~133쪽',unit:'2단원 2 · 3단원 1. 일제의 침략과 나라를 되찾기 위한 노력',topic:'독립 협회 · 을사늑약 · 3·1 운동',book:'독립 협회는 자주독립의 상징으로 독립문을 세웠어요. 1905년 일제는 을사늑약으로 대한 제국의 외교권을 빼앗았고, 민영환과 헤이그 특사 등 많은 사람이 맞섰어요. 1919년 3·1 운동이 전국으로 퍼졌어요.',more:['교과서에 이름이 나오지 않는 이완용이 독립 협회에서 을사늑약 찬성까지 간 길','같은 시대에 다른 길을 고른 사람들']}};
+const TB_BOOK='사회 5-2 교과서';
+/* 교사용 화면 잠금: 비밀번호는 코드에 쓰지 않고, 바꾼 값만 맞대 본다 (학급용 잠금. 화면을 숨기는 정도이며 강한 보안은 아님) */
+const TEACHER_KEY='88c0cc17';
+function pwHash(v){ const h=s=>{ let x=0x811c9dc5; for(const b of new TextEncoder().encode(s)){ x^=b; x=Math.imul(x,0x01000193)>>>0; } return x>>>0; }; let r='yj-teacher:'+v; for(let i=0;i<1000;i++) r=h(r+i).toString(16).padStart(8,'0')+r.slice(0,8); return r.slice(0,8); }
+function teacherOk(){
+  if(window.__yjFast) return Promise.resolve(true);
+  try{ if(sessionStorage.getItem('yj-t')==='1') return Promise.resolve(true); }catch(e){}
+  return new Promise(res=>{
+    openSheet(`<h2>교사용</h2><p>선생님만 들어갈 수 있어요. 비밀번호를 넣어 주세요.</p><form id="tPwForm" class="tpw"><input id="tPw" type="password" inputmode="numeric" autocomplete="off" maxlength="16" aria-label="비밀번호"><p class="tpw-err" id="tPwErr" hidden>비밀번호가 맞지 않아요.</p><div class="sheet-foot"><button class="abtn" type="button" id="tPwNo">닫기</button><button class="abtn primary" type="submit" id="tPwGo">들어가기</button></div></form>`,false);
+    const inp=$('#tPw'); setTimeout(()=>inp&&inp.focus(),30);
+    $('#tPwNo').addEventListener('click',()=>{ closeSheet(); res(false); });
+    $('#tPwForm').addEventListener('submit',e=>{ e.preventDefault();
+      if(pwHash(inp.value.trim())===TEACHER_KEY){ try{ sessionStorage.setItem('yj-t','1'); }catch(e){} closeSheet(); res(true); }
+      else{ $('#tPwErr').hidden=false; inp.value=''; inp.focus(); Music.sting('miss'); } });
+  });
+}
 const CASE_YEAR={1:'660년',2:'기원전 194년',3:'553년',4:'927년',5:'1232년',6:'1618년',7:'1636년',8:'1862년',9:'1866년',10:'1905년'};
 const CASES=[{n:1,t:'백제는 왜 무너졌나',d:'의자왕 · 튜토리얼',ready:['pros']},{n:2,t:'왕검성의 밤',d:'위만 · 난이도 2',ready:['pros','def']}];
 function renderRoles(){
   const C=CASES.find(c=>c.n===CASE_SEL)||CASES[0];
   rolesEl.innerHTML=`<h2 class="roles-h">사건과 역할을 고르세요</h2>
     <label class="sid-row">신참 법관 이름표 (번호나 별명) <input id="sidIn" type="text" maxlength="12" autocomplete="off" placeholder="예) 5반 12번" value="${esc(store.get('yj-sid')||'')}"> <small>이름은 쓰지 마세요. 선생님이 기록을 모을 때만 써요.</small></label>
-    <div class="case-tabs" role="tablist">${CASES.map(c=>`<button class="case-tab${c.n===C.n?' on':''}" type="button" role="tab" aria-selected="${c.n===C.n}" data-case="${c.n}"><b>사건 ${c.n}</b>${c.t}<small>${c.d}</small><i class="yr">${c.n===1?'첫 재판 · ':''}${CASE_YEAR[c.n]||''}</i></button>`).join('')}</div>
+    <div class="case-tabs" role="tablist">${CASES.map(c=>`<button class="case-tab${c.n===C.n?' on':''}" type="button" role="tab" aria-selected="${c.n===C.n}" data-case="${c.n}"><b>사건 ${c.n}</b>${c.t}<small>${c.d}</small><i class="yr">${c.n===1?'첫 재판 · ':''}${CASE_YEAR[c.n]||''}</i>${TEXTBOOK[c.n]?`<i class="tbp">📖 교과서 ${TEXTBOOK[c.n].pages}</i>`:''}</button>`).join('')}</div>
     <p class="roles-lead">${C.n===1?'사건 1은 검사 자리에서 해 볼 수 있어요.':C.lead||'사건 2부터는 변호인 자리도 열립니다. 같은 사건을 다른 자리에서 다시 해 보세요.'}</p>
     <div class="role-grid">${ROLES.map(r=>{ const ok=C.ready.includes(r.id), lockTxt=(C.locked&&C.locked[r.id])||'준비 중'; return `<div class="role${ok?' ready':''}${C.main===r.id?' main':''}">${ok?(C.main===r.id?'<span class="lock main">기본</span>':''):`<span class="lock">${esc(lockTxt)}</span>`}<div class="role-pic" style="--glow:${r.glow}">${rolePic(r)}</div><h3>${r.name}<span>${r.who}</span></h3><p class="goal">${r.goal}</p><p class="how">${r.how}</p>${ok?storyButtons(r):`<button class="go" type="button" disabled>${C.locked&&C.locked[r.id]?esc(C.locked[r.id])+'이에요':'기획 확인 뒤 제작'}</button>`}</div>`; }).join('')}</div>`;
   { const si=$('#sidIn'); if(si) si.addEventListener('change',()=>store.set('yj-sid',si.value.trim().slice(0,12))); }
@@ -3502,7 +3539,7 @@ async function verdict2(role){
   await say('judge','normal','같은 시대, 쫓겨난 준왕은 남쪽으로 가서 [[새로 자리를 잡았소]]. 사람마다 다른 선택이 있었소.');
   if(role==='def') await say('judge','normal','변호인은 피고의 죄를 없애는 사람이 아니라, [[받아야 할 몫만큼만]] 받게 하는 사람이오.');
   await filePaper({id:'C10',anach:'낙랑',say:'그리고 이 밀서는 [[따로 보관하시오]]. 법정 서고에서 흘러나온 종이 같소. ‘수상한 종이’ 묶음의 첫 장이오.'});
-  await lessonPick(XD(2).lesson);
+  await textbookCompare(); await lessonPick(XD(2).lesson);
   Music.stop(1); clearSave2(role);
   // 포구의 뱃사공 이야기(C11)는 검사 모드 3일차에만 나오므로 변호인 모드의 셈에서 뺀다
   const notCounted=role==='def'?['C2','C10','C11','C12']:['C2','C10','C12'];
@@ -4108,7 +4145,26 @@ async function recallQuiz(){
   track('recall',{ok:c.right});
   await say('judge','normal',c.right?(R.yes||'잘 기억하고 있구려.'):(R.no||'다시 떠올려 보시오.'),{view:'lobby'});
 }
-async function caseIntro(){ await roleCard(); await recallQuiz(); }
+async function caseIntro(){ await roleCard(); await textbookCard(); await recallQuiz(); }
+/* 교과서와 잇기: 시작할 때 펼 쪽, 끝날 때 교과서 내용과 재판에서 더 알게 된 것을 맞대 보기 */
+function textbookCard(){
+  const T=TEXTBOOK[S.case]; if(!T) return Promise.resolve();
+  return new Promise(res=>{
+    openSheet(`<h2>교과서를 펴요</h2><div class="bgcard tbcard"><span class="bg-ic" aria-hidden="true">📖</span><div><p class="tb-where"><b>${TB_BOOK} ${esc(T.pages)}</b><br><small>${esc(T.unit)} · 「${esc(T.topic)}」</small></p><p>${esc(T.book)}</p></div></div><p class="lead">재판에서는 교과서에 짧게 나온 일을 증거로 더 깊이 따져요.</p><div class="sheet-foot"><button class="abtn primary" type="button" id="sheetGo">재판 시작</button></div>`,false);
+    $('#sheetGo').addEventListener('click',()=>{ closeSheet(); res(); });
+  });
+}
+function textbookCompare(){
+  const T=TEXTBOOK[S.case]; if(!T) return Promise.resolve();
+  track('textbook',{pages:T.pages});
+  return new Promise(res=>{
+    openSheet(`<h2>교과서와 맞대 보기</h2><div class="tbcmp"><section><h3>📖 교과서 ${esc(T.pages)}</h3><p>${esc(T.book)}</p></section><section><h3>⚖️ 재판에서 더 따진 것</h3><ul>${T.more.map(m=>`<li>${esc(m)}</li>`).join('')}</ul></section></div><p class="lead">교과서를 다시 펴서, 재판에서 알게 된 것을 그 쪽 여백에 한 줄 적어 보세요.</p><div class="sheet-foot"><button class="abtn primary" type="button" id="sheetGo">다음</button></div>`,false);
+    $('#sheetGo').addEventListener('click',()=>{ closeSheet(); res(); });
+  });
+}
+function textbookTableHTML(){
+  return `<h3>교과서 연결 (${TB_BOOK})</h3><div class="tbl-wrap"><table class="tbtable"><thead><tr><th>사건</th><th>쪽</th><th>단원 · 주제</th><th>재판에서 더 따지는 것</th></tr></thead><tbody>${Object.entries(TEXTBOOK).map(([n,T])=>`<tr><td>사건 ${n}</td><td>${esc(T.pages)}</td><td>${esc(T.unit)}<br><small>「${esc(T.topic)}」</small></td><td>${T.more.map(esc).join('<br>')}</td></tr>`).join('')}</tbody></table></div>`;
+}
 async function bgCard(day){
   const B=XD(S.case).bgCards, C=B&&B[day]; if(!C) return;
   await new Promise(res=>{
@@ -4224,7 +4280,7 @@ function scaleViz(title,out){
 }
 
 /* ---------- 결과 화면 앞: 가장 중요한 것 → 수상한 종이 → 등급 ---------- */
-async function caseFinale(){ const X=XD(S.case); if(X.lesson) await lessonPick(X.lesson); if(X.paper) await filePaper(X.paper); if(X.teaser) await teaserCard(X.teaser); }
+async function caseFinale(){ const X=XD(S.case); await textbookCompare(); if(X.lesson) await lessonPick(X.lesson); if(X.paper) await filePaper(X.paper); if(X.teaser) await teaserCard(X.teaser); }
 /* 4일차 끝: 다음 사건 예고 한 컷 */
 function teaserCard(t){
   return new Promise(res=>{
@@ -6394,7 +6450,7 @@ regCase(8,{title:'장부 속의 이름',desc:'김 대감(가상) · 판사 · �
   record:['빌리지도 않은 곡식을 몇 배로 갚아야 했던 진주의 농민들','세 가지 세금에 시달린 조선 곳곳의 백성들'],
   lesson:{opts:[{t:'법정에 서는 것은 언제나 한 사람이다.',r:'그렇소. 가문은 법정에 설 수 없소.'},{t:'고발한 사람의 말도 증거로 따진다.',r:'그렇소. 박수 받는 고발인이라도 예외는 없소.'},{t:'직접 원인과 자리의 책임은 나누어 본다.',r:'그렇소. 하나로 뭉뚱그리면 둘 다 흐려지오.'}]},
   paper:{id:'SF',anach:'철종'},
-  teaser:'1866년, 닫힌 문 앞에 선 흥선대원군. 이번에는 [[네가 자리를 고른다]]. 검사, 변호인, 판사 가운데.',
+  teaser:'1866년, 닫힌 문 앞에 선 흥선 대원군. 이번에는 [[네가 자리를 고른다]]. 검사, 변호인, 판사 가운데.',
   gag:{scene:'겸인 아부 「베개를 아끼시는 분」',
     inv:{1:[['ttolbang','bang','진주에 왔어요! 증거 나와라, 뚝딱!'],['guide','normal','(메밀묵이 나왔다. 장터에서 누가 “그거 얼마요?” 묻는다.)'],['ttolbang','shock','파, 팔 거 아니에요!']],
       2:[['ttolbang','base','겸인 아저씨는 칭찬을 멈추지 않는대요. 그 속에 중요한 말이 섞일지도!']],
@@ -6410,7 +6466,7 @@ regCase(8,{title:'장부 속의 이름',desc:'김 대감(가상) · 판사 · �
    혐의 ② 천주교 신자를 박해해 많은 사람이 목숨을 잃게 한 죄 → 유죄(잠금). 1868년 도굴을 1866년 박해의 이유로 내면 −1(연표 대기)
    혐의 ③ 나라의 문을 닫아 근대화를 늦춘 죄 → 역할별: 검사 ‘책임 있음’ / 변호인 ‘무죄’·‘판단 보류’ / 판사 셋 중 근거가 맞으면 모두 (유죄 선택지 없음)
    공으로 기록: 서원 정리, 호포제. 박해는 장면 없이(빈 강가와 바람), 특정 종교를 좋다·나쁘다 하지 않음. */
-addCast('daewon',{name:'흥선대원군',label:'피고 흥선대원군',col:'#3a2a20',spec:{skin:'#efc9a2',robe:'#e8e4dc',robe2:'#a8a090',collar:'round',hat:'gat',hair:'#1c1a20',beard:'long',beardColor:'#2a2220',iris:'#3a2a20'}});
+addCast('daewon',{name:'흥선 대원군',label:'피고 흥선 대원군',col:'#3a2a20',spec:{skin:'#efc9a2',robe:'#e8e4dc',robe2:'#a8a090',collar:'round',hat:'gat',hair:'#1c1a20',beard:'long',beardColor:'#2a2220',iris:'#3a2a20'}});
 addCast('mason',{name:'경복궁 공사의 석수',label:'증인 석수',col:'#6a6a5a',spec:{skin:'#d9a77c',robe:'#8a8a78',robe2:'#5a5a48',collar:'cross',hat:'short',hair:'#2a2220',beard:'thin',iris:'#3a2a20'}});
 addCast('riceman',{name:'장터의 쌀가게 주인',label:'증인 쌀가게 주인',col:'#8a6a2a',spec:{skin:'#efc8a0',robe:'#a8803a',robe2:'#7c5e28',collar:'cross',hat:'short',hair:'#1c1a20',beard:'thin',iris:'#2e2018'}});
 addCast('mari',{name:'신자의 딸 마리',label:'피해자 마리',col:'#6a6a8a',spec:{skin:'#f0caa4',robe:'#e8e4dc',robe2:'#a8a8b8',collar:'cross',hat:'bun',hair:'#2a2220',beard:'none',iris:'#3a2a20'}});
@@ -6491,7 +6547,7 @@ const LOCS9=[
    spots:[{x:40,y:16,w:20,h:56,label:'척화비',ev:'U12',say:['비석에 글이 새겨져 있다.','“서양 오랑캐가 쳐들어오는데 싸우지 않고 [[화친하자는 것은 나라를 파는 것]]이다.”']}]}
 ];
 const TERMS9=[
-  {w:'대원군',d:'왕의 아버지예요. 열두 살 고종 대신 흥선대원군이 나라를 다스렸어요.',ic:'👑'},
+  {w:'대원군',d:'왕의 아버지예요. 열두 살 고종 대신 흥선 대원군이 나라를 다스렸어요.',ic:'👑'},
   {w:'서원',d:'선비들이 공부하고 제사를 지내던 곳이에요. 세금을 피하는 곳이 되기도 했어요.',ic:'🏫'},
   {w:'호포제',d:'양반에게도 군포(군대 대신 내는 베)를 걷게 한 제도예요.',ic:'🧵'},
   {w:'당백전',d:'한 닢을 백 닢 값으로 쓰게 한 돈이에요. 물건값이 크게 올랐어요.',ic:'🪙'},
@@ -6509,7 +6565,7 @@ const T9mason=()=>{ const me=ME(); return {key:'석수',who:'mason',lines:[
    hit:[[me,'present','증인의 말입니다. [[처음엔 품삯을 받고]] 신이 나서 온 사람도 많았다고요.'],[me,'normal','억지는 뒤로 갈수록 늘었어요. ‘처음부터 끝까지’는 부풀린 말입니다.'],['mason','sweat','크흠… 뒤가 워낙 힘들어서.']]}),
   {text:'돈이 모자라자 원납전을 억지로 걷었소. 똑똑히 봤지.',expr:'base',press:[[me,'think','(이건 기록과 맞아.)']]}
 ]}; };
-const T9dw2=()=>{ const me=ME(); return {key:'흥선대원군',who:'daewon',allReveal:true,lines:[
+const T9dw2=()=>{ const me=ME(); return {key:'흥선 대원군',who:'daewon',allReveal:true,lines:[
   lie9({text:'나는 처음부터 서양 신부들을 나라의 적으로 보았소.',expr:'angry',lie:true,ev:'U6',press:[[me,'normal','처음부터요?'],['daewon','angry','그렇소!']],
    hit:[[me,'present','1866년 초의 편지입니다. 피고는 러시아를 막으려 [[프랑스 신부들을 통해]] 프랑스와 손잡으려 했어요!'],[me,'confident','처음부터 적이었다는 말은 거짓입니다!'],['daewon','sweat','크…!']]}),
   {text:'박해는 나라를 지키기 위한 일이었소.',expr:'base',reveal:2,press:[[me,'think','그것뿐인가요? 계획이 틀어진 뒤에 무슨 일이 있었죠?'],['daewon','sweat','……'],['judge','stern','피고, 숨기지 마시오.']]},
@@ -6524,7 +6580,7 @@ async function prologue9(){
 async function run9(from){
   if(from<=0){ await prologue9(); bgm('investigate');
     const R={pros:'검사 하람',def:'변호인 누리',judge:'판사 다온'}[R9()];
-    await say('judge','normal',`그대는 [[${R}]]이오. 피고는 [[흥선대원군]].`,{view:'lobby'});
+    await say('judge','normal',`그대는 [[${R}]]이오. 피고는 [[흥선 대원군]].`,{view:'lobby'});
     if(R9()==='pros') await say('rival','confident','개혁가를 재판하는 건 쉽지 않을걸.',{view:'lobby'});
     else if(R9()==='def') await say('player','confident','박해의 책임은 봐주지 않을 거야.',{view:'lobby'});
     else { await say('player','confident','검사 하람이에요.',{view:'lobby'}); await say('rival','confident','변호인 누리예요. 셋째 혐의는 쉽게 못 가르실걸요.',{view:'lobby'}); } }
@@ -6574,7 +6630,7 @@ async function d1_9(){
   await say('daewon','angry','팻말은 엄살이오! 당백전이 나온 뒤에도 [[하루아침에]] 값이 오르진 않았소.',{view:'witness'});
   const MUKHIT=[['guide','normal','(법정이 조용해졌다. 모두 메밀묵을 본다.)'],['judge','stern','…똘방. 그 메밀묵, 어디서 샀소?'],['ttolbang','base','운현궁 앞 주막이요. [[어제는 한 냥]]이었는데, [[오늘은 두 냥]]이던데요?'],['daewon','sweat','크…! 메, 메밀묵 따위로…!'],['judge','normal','하루 만에 두 배가 되었구려. …똘방, 이번 달 메밀묵은 [[깎지 않겠소]].'],['ttolbang','muk','흐어엉… 재판장님…! (울면서 웃는다)']];
   if(R9()==='pros'){
-    const T={key:'흥선대원군',who:'daewon',lines:[
+    const T={key:'흥선 대원군',who:'daewon',lines:[
       {text:'당백전은 텅 빈 나라 곳간을 채웠소. 공사도 그 덕에 했지.',expr:'base',press:[['player','normal','곳간을 채웠다고요?'],['daewon','base','그렇소.']]},
       {text:'그 돈이 나온 뒤에도 [[하루아침에]] 값이 오르는 일은 없었소.',expr:'angry',lie:true,ev:'MUK',press:[['player','think','하루아침에는 아니라고…? 하루 사이를 보여 줄 게 있을까?'],['daewon','angry','증거가 있으면 내 보시오!']],
        hit:[['player','present','이의 있습니다! …이걸 보시죠. [[메밀묵]]입니다.']].concat(MUKHIT)}],onHit:async()=>{ bgm('open'); }};
@@ -6719,14 +6775,14 @@ async function d4_9(){
     judge:'같은 증거로도 자리마다 다른 결론이 나올 수 있소.',history:HIST9});
   return true;
 }
-const HIST9='흥선대원군은 1863년부터 약 10년 동안 어린 고종을 대신해 나라를 다스렸습니다. 세도 정치를 누르고 서원을 정리했으며, 양반에게도 군포를 걷었습니다(호포제). 그러나 경복궁을 다시 지으며 원납전과 당백전으로 백성의 부담을 키웠습니다. 1866년 천주교 박해(병인박해)로 많은 사람이 목숨을 잃었고, 그해 프랑스가(병인양요), 1871년 미국이(신미양요) 강화도에 쳐들어왔습니다. 1868년 오페르트의 남연군 묘 도굴 시도도 있었습니다. 대원군은 척화비를 세워 문을 굳게 닫았는데, 이를 두고는 지금도 평가가 엇갈립니다.';
-regCase(9,{title:'닫힌 문',desc:'흥선대원군 · 셋 중 고르기 · 난이도 8',ev:EVIDENCE9,locs:LOCS9,terms:TERMS9,defName:'흥선대원군',time:'100~120분',p2at:2,
+const HIST9='흥선 대원군은 1863년부터 약 10년 동안 어린 고종을 대신해 나라를 다스렸습니다. 세도 정치를 누르고 서원을 정리했으며, 양반에게도 군포를 걷었습니다(호포제). 그러나 경복궁을 다시 지으며 원납전과 당백전으로 백성의 부담을 키웠습니다. 1866년 천주교 박해(병인박해)로 많은 사람이 목숨을 잃었고, 그해 프랑스가(병인양요), 1871년 미국이(신미양요) 강화도에 쳐들어왔습니다. 1868년 오페르트의 남연군 묘 도굴 시도도 있었습니다. 대원군은 척화비를 세워 문을 굳게 닫았는데, 이를 두고는 지금도 평가가 엇갈립니다.';
+regCase(9,{title:'닫힌 문',desc:'흥선 대원군 · 셋 중 고르기 · 난이도 8',ev:EVIDENCE9,locs:LOCS9,terms:TERMS9,defName:'흥선 대원군',time:'100~120분',p2at:2,
   lead:'검사·변호인·판사 가운데 하나를 골라요. 역할을 나눠 결론을 비교해 보세요. (교사 사전 확인 권장)',
-  openLine:'지금부터 [[역사 법정]]을 엽니다. 피고는 왕의 아버지, 흥선대원군.',history:HIST9,
+  openLine:'지금부터 [[역사 법정]]을 엽니다. 피고는 왕의 아버지, 흥선 대원군.',history:HIST9,
   views:{prologue9:prologueView('#2a2622','#0c0a09')},
   goal:{pros:'공과 과를 나누고, 혐의 ③은 ‘책임 있음’으로 이끌어요.',def:'박해의 책임은 지우지 않되, 혐의 ③은 시대 상황으로 다퉈요.',judge:'혐의 ③은 근거만 맞으면 판단 보류까지 어느 판결이든 돼요.'},
   recall:{q:'지난 사건에서 ‘가문 전체를 벌하라’는 요구를 물리친 원칙은?',opts:[{t:'남의 죄로 벌받지 않는다(연좌제 금지)',ok:true},{t:'양반은 벌하지 않는다'},{t:'증거가 너무 많아서 고를 수 없다'}],yes:'잘 기억하는구려.',no:'…남의 죄로 벌받지 않는다, 헌법 카드였소.'},
-  bgCards:{1:{ic:'👑',t:'1863년 열두 살 고종이 왕이 되자, 아버지 흥선대원군이 약 10년 동안 나라를 다스렸어요.'},2:{ic:'📅',t:'1866년에는 많은 일이 한꺼번에 일어났어요. 증거의 연도를 잘 보세요.'},3:{ic:'⚓',t:'서양의 배가 강화도에 두 번 쳐들어왔어요(1866년 프랑스, 1871년 미국).'},4:{ic:'⚖️',t:'판결하는 날이에요. 혐의 ③은 자리마다 결론이 달라요.'}},
+  bgCards:{1:{ic:'👑',t:'1863년 열두 살 고종이 왕이 되자, 아버지 흥선 대원군이 약 10년 동안 나라를 다스렸어요.'},2:{ic:'📅',t:'1866년에는 많은 일이 한꺼번에 일어났어요. 증거의 연도를 잘 보세요.'},3:{ic:'⚓',t:'서양의 배가 강화도에 두 번 쳐들어왔어요(1866년 프랑스, 1871년 미국).'},4:{ic:'⚖️',t:'판결하는 날이에요. 혐의 ③은 자리마다 결론이 달라요.'}},
   record:['당백전이 나온 뒤 쌀을 살 수 없었던 한양의 백성들','원납전을 억지로 내고 공사에 끌려간 사람들'],
   lesson:{opts:[{t:'잘한 일과 잘못한 일은 따로 판결한다.',r:'그렇소. 공이 과를 지우지도, 과가 공을 지우지도 않소.'},{t:'그 시대의 눈으로 보되, 목숨을 잃은 일은 지우지 않는다.',r:'그렇소. 이해하는 것과 지우는 것은 다르오.'},{t:'시간 순서를 지켜야 원인과 결과가 보인다.',r:'그렇소. 뒤의 일은 앞의 일의 이유가 될 수 없소.'}]},
   teaser:'1919년 3월, 독립문 앞. 시리즈의 마지막 재판. 그리고 방청석 맨 뒤의 [[그 사람]].',

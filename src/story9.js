@@ -3,7 +3,7 @@
    혐의 ② 천주교 신자를 박해해 많은 사람이 목숨을 잃게 한 죄 → 유죄(잠금). 1868년 도굴을 1866년 박해의 이유로 내면 −1(연표 대기)
    혐의 ③ 나라의 문을 닫아 근대화를 늦춘 죄 → 역할별: 검사 ‘책임 있음’ / 변호인 ‘무죄’·‘판단 보류’ / 판사 셋 중 근거가 맞으면 모두 (유죄 선택지 없음)
    공으로 기록: 서원 정리, 호포제. 박해는 장면 없이(빈 강가와 바람), 특정 종교를 좋다·나쁘다 하지 않음. */
-addCast('daewon',{name:'흥선대원군',label:'피고 흥선대원군',col:'#3a2a20',spec:{skin:'#efc9a2',robe:'#e8e4dc',robe2:'#a8a090',collar:'round',hat:'gat',hair:'#1c1a20',beard:'long',beardColor:'#2a2220',iris:'#3a2a20'}});
+addCast('daewon',{name:'흥선 대원군',label:'피고 흥선 대원군',col:'#3a2a20',spec:{skin:'#efc9a2',robe:'#e8e4dc',robe2:'#a8a090',collar:'round',hat:'gat',hair:'#1c1a20',beard:'long',beardColor:'#2a2220',iris:'#3a2a20'}});
 addCast('mason',{name:'경복궁 공사의 석수',label:'증인 석수',col:'#6a6a5a',spec:{skin:'#d9a77c',robe:'#8a8a78',robe2:'#5a5a48',collar:'cross',hat:'short',hair:'#2a2220',beard:'thin',iris:'#3a2a20'}});
 addCast('riceman',{name:'장터의 쌀가게 주인',label:'증인 쌀가게 주인',col:'#8a6a2a',spec:{skin:'#efc8a0',robe:'#a8803a',robe2:'#7c5e28',collar:'cross',hat:'short',hair:'#1c1a20',beard:'thin',iris:'#2e2018'}});
 addCast('mari',{name:'신자의 딸 마리',label:'피해자 마리',col:'#6a6a8a',spec:{skin:'#f0caa4',robe:'#e8e4dc',robe2:'#a8a8b8',collar:'cross',hat:'bun',hair:'#2a2220',beard:'none',iris:'#3a2a20'}});
@@ -84,7 +84,7 @@ const LOCS9=[
    spots:[{x:40,y:16,w:20,h:56,label:'척화비',ev:'U12',say:['비석에 글이 새겨져 있다.','“서양 오랑캐가 쳐들어오는데 싸우지 않고 [[화친하자는 것은 나라를 파는 것]]이다.”']}]}
 ];
 const TERMS9=[
-  {w:'대원군',d:'왕의 아버지예요. 열두 살 고종 대신 흥선대원군이 나라를 다스렸어요.',ic:'👑'},
+  {w:'대원군',d:'왕의 아버지예요. 열두 살 고종 대신 흥선 대원군이 나라를 다스렸어요.',ic:'👑'},
   {w:'서원',d:'선비들이 공부하고 제사를 지내던 곳이에요. 세금을 피하는 곳이 되기도 했어요.',ic:'🏫'},
   {w:'호포제',d:'양반에게도 군포(군대 대신 내는 베)를 걷게 한 제도예요.',ic:'🧵'},
   {w:'당백전',d:'한 닢을 백 닢 값으로 쓰게 한 돈이에요. 물건값이 크게 올랐어요.',ic:'🪙'},
@@ -102,7 +102,7 @@ const T9mason=()=>{ const me=ME(); return {key:'석수',who:'mason',lines:[
    hit:[[me,'present','증인의 말입니다. [[처음엔 품삯을 받고]] 신이 나서 온 사람도 많았다고요.'],[me,'normal','억지는 뒤로 갈수록 늘었어요. ‘처음부터 끝까지’는 부풀린 말입니다.'],['mason','sweat','크흠… 뒤가 워낙 힘들어서.']]}),
   {text:'돈이 모자라자 원납전을 억지로 걷었소. 똑똑히 봤지.',expr:'base',press:[[me,'think','(이건 기록과 맞아.)']]}
 ]}; };
-const T9dw2=()=>{ const me=ME(); return {key:'흥선대원군',who:'daewon',allReveal:true,lines:[
+const T9dw2=()=>{ const me=ME(); return {key:'흥선 대원군',who:'daewon',allReveal:true,lines:[
   lie9({text:'나는 처음부터 서양 신부들을 나라의 적으로 보았소.',expr:'angry',lie:true,ev:'U6',press:[[me,'normal','처음부터요?'],['daewon','angry','그렇소!']],
    hit:[[me,'present','1866년 초의 편지입니다. 피고는 러시아를 막으려 [[프랑스 신부들을 통해]] 프랑스와 손잡으려 했어요!'],[me,'confident','처음부터 적이었다는 말은 거짓입니다!'],['daewon','sweat','크…!']]}),
   {text:'박해는 나라를 지키기 위한 일이었소.',expr:'base',reveal:2,press:[[me,'think','그것뿐인가요? 계획이 틀어진 뒤에 무슨 일이 있었죠?'],['daewon','sweat','……'],['judge','stern','피고, 숨기지 마시오.']]},
@@ -117,7 +117,7 @@ async function prologue9(){
 async function run9(from){
   if(from<=0){ await prologue9(); bgm('investigate');
     const R={pros:'검사 하람',def:'변호인 누리',judge:'판사 다온'}[R9()];
-    await say('judge','normal',`그대는 [[${R}]]이오. 피고는 [[흥선대원군]].`,{view:'lobby'});
+    await say('judge','normal',`그대는 [[${R}]]이오. 피고는 [[흥선 대원군]].`,{view:'lobby'});
     if(R9()==='pros') await say('rival','confident','개혁가를 재판하는 건 쉽지 않을걸.',{view:'lobby'});
     else if(R9()==='def') await say('player','confident','박해의 책임은 봐주지 않을 거야.',{view:'lobby'});
     else { await say('player','confident','검사 하람이에요.',{view:'lobby'}); await say('rival','confident','변호인 누리예요. 셋째 혐의는 쉽게 못 가르실걸요.',{view:'lobby'}); } }
@@ -167,7 +167,7 @@ async function d1_9(){
   await say('daewon','angry','팻말은 엄살이오! 당백전이 나온 뒤에도 [[하루아침에]] 값이 오르진 않았소.',{view:'witness'});
   const MUKHIT=[['guide','normal','(법정이 조용해졌다. 모두 메밀묵을 본다.)'],['judge','stern','…똘방. 그 메밀묵, 어디서 샀소?'],['ttolbang','base','운현궁 앞 주막이요. [[어제는 한 냥]]이었는데, [[오늘은 두 냥]]이던데요?'],['daewon','sweat','크…! 메, 메밀묵 따위로…!'],['judge','normal','하루 만에 두 배가 되었구려. …똘방, 이번 달 메밀묵은 [[깎지 않겠소]].'],['ttolbang','muk','흐어엉… 재판장님…! (울면서 웃는다)']];
   if(R9()==='pros'){
-    const T={key:'흥선대원군',who:'daewon',lines:[
+    const T={key:'흥선 대원군',who:'daewon',lines:[
       {text:'당백전은 텅 빈 나라 곳간을 채웠소. 공사도 그 덕에 했지.',expr:'base',press:[['player','normal','곳간을 채웠다고요?'],['daewon','base','그렇소.']]},
       {text:'그 돈이 나온 뒤에도 [[하루아침에]] 값이 오르는 일은 없었소.',expr:'angry',lie:true,ev:'MUK',press:[['player','think','하루아침에는 아니라고…? 하루 사이를 보여 줄 게 있을까?'],['daewon','angry','증거가 있으면 내 보시오!']],
        hit:[['player','present','이의 있습니다! …이걸 보시죠. [[메밀묵]]입니다.']].concat(MUKHIT)}],onHit:async()=>{ bgm('open'); }};
@@ -312,14 +312,14 @@ async function d4_9(){
     judge:'같은 증거로도 자리마다 다른 결론이 나올 수 있소.',history:HIST9});
   return true;
 }
-const HIST9='흥선대원군은 1863년부터 약 10년 동안 어린 고종을 대신해 나라를 다스렸습니다. 세도 정치를 누르고 서원을 정리했으며, 양반에게도 군포를 걷었습니다(호포제). 그러나 경복궁을 다시 지으며 원납전과 당백전으로 백성의 부담을 키웠습니다. 1866년 천주교 박해(병인박해)로 많은 사람이 목숨을 잃었고, 그해 프랑스가(병인양요), 1871년 미국이(신미양요) 강화도에 쳐들어왔습니다. 1868년 오페르트의 남연군 묘 도굴 시도도 있었습니다. 대원군은 척화비를 세워 문을 굳게 닫았는데, 이를 두고는 지금도 평가가 엇갈립니다.';
-regCase(9,{title:'닫힌 문',desc:'흥선대원군 · 셋 중 고르기 · 난이도 8',ev:EVIDENCE9,locs:LOCS9,terms:TERMS9,defName:'흥선대원군',time:'100~120분',p2at:2,
+const HIST9='흥선 대원군은 1863년부터 약 10년 동안 어린 고종을 대신해 나라를 다스렸습니다. 세도 정치를 누르고 서원을 정리했으며, 양반에게도 군포를 걷었습니다(호포제). 그러나 경복궁을 다시 지으며 원납전과 당백전으로 백성의 부담을 키웠습니다. 1866년 천주교 박해(병인박해)로 많은 사람이 목숨을 잃었고, 그해 프랑스가(병인양요), 1871년 미국이(신미양요) 강화도에 쳐들어왔습니다. 1868년 오페르트의 남연군 묘 도굴 시도도 있었습니다. 대원군은 척화비를 세워 문을 굳게 닫았는데, 이를 두고는 지금도 평가가 엇갈립니다.';
+regCase(9,{title:'닫힌 문',desc:'흥선 대원군 · 셋 중 고르기 · 난이도 8',ev:EVIDENCE9,locs:LOCS9,terms:TERMS9,defName:'흥선 대원군',time:'100~120분',p2at:2,
   lead:'검사·변호인·판사 가운데 하나를 골라요. 역할을 나눠 결론을 비교해 보세요. (교사 사전 확인 권장)',
-  openLine:'지금부터 [[역사 법정]]을 엽니다. 피고는 왕의 아버지, 흥선대원군.',history:HIST9,
+  openLine:'지금부터 [[역사 법정]]을 엽니다. 피고는 왕의 아버지, 흥선 대원군.',history:HIST9,
   views:{prologue9:prologueView('#2a2622','#0c0a09')},
   goal:{pros:'공과 과를 나누고, 혐의 ③은 ‘책임 있음’으로 이끌어요.',def:'박해의 책임은 지우지 않되, 혐의 ③은 시대 상황으로 다퉈요.',judge:'혐의 ③은 근거만 맞으면 판단 보류까지 어느 판결이든 돼요.'},
   recall:{q:'지난 사건에서 ‘가문 전체를 벌하라’는 요구를 물리친 원칙은?',opts:[{t:'남의 죄로 벌받지 않는다(연좌제 금지)',ok:true},{t:'양반은 벌하지 않는다'},{t:'증거가 너무 많아서 고를 수 없다'}],yes:'잘 기억하는구려.',no:'…남의 죄로 벌받지 않는다, 헌법 카드였소.'},
-  bgCards:{1:{ic:'👑',t:'1863년 열두 살 고종이 왕이 되자, 아버지 흥선대원군이 약 10년 동안 나라를 다스렸어요.'},2:{ic:'📅',t:'1866년에는 많은 일이 한꺼번에 일어났어요. 증거의 연도를 잘 보세요.'},3:{ic:'⚓',t:'서양의 배가 강화도에 두 번 쳐들어왔어요(1866년 프랑스, 1871년 미국).'},4:{ic:'⚖️',t:'판결하는 날이에요. 혐의 ③은 자리마다 결론이 달라요.'}},
+  bgCards:{1:{ic:'👑',t:'1863년 열두 살 고종이 왕이 되자, 아버지 흥선 대원군이 약 10년 동안 나라를 다스렸어요.'},2:{ic:'📅',t:'1866년에는 많은 일이 한꺼번에 일어났어요. 증거의 연도를 잘 보세요.'},3:{ic:'⚓',t:'서양의 배가 강화도에 두 번 쳐들어왔어요(1866년 프랑스, 1871년 미국).'},4:{ic:'⚖️',t:'판결하는 날이에요. 혐의 ③은 자리마다 결론이 달라요.'}},
   record:['당백전이 나온 뒤 쌀을 살 수 없었던 한양의 백성들','원납전을 억지로 내고 공사에 끌려간 사람들'],
   lesson:{opts:[{t:'잘한 일과 잘못한 일은 따로 판결한다.',r:'그렇소. 공이 과를 지우지도, 과가 공을 지우지도 않소.'},{t:'그 시대의 눈으로 보되, 목숨을 잃은 일은 지우지 않는다.',r:'그렇소. 이해하는 것과 지우는 것은 다르오.'},{t:'시간 순서를 지켜야 원인과 결과가 보인다.',r:'그렇소. 뒤의 일은 앞의 일의 이유가 될 수 없소.'}]},
   teaser:'1919년 3월, 독립문 앞. 시리즈의 마지막 재판. 그리고 방청석 맨 뒤의 [[그 사람]].',

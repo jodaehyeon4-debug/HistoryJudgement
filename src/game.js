@@ -862,7 +862,8 @@ function openGameOver(){
   $('#gTeacher').addEventListener('click',openTeacher);
   $('#gRetry').addEventListener('click',()=>{ if(!S.story){ startTrial(); return; } if((S.case||1)>=3) startCaseX(S.case,S.role,true); else if(S.case===2) startCase2(S.role||(S.me==='rival'?'def':'pros'),true); else resumeStory(); });
 }
-function openTeacher(){
+async function openTeacher(){ if(await teacherOk()) openTeacherIn(); }
+function openTeacherIn(){
   // 사건 1(과 맛보기 재판)만 openResult로 돌아가고, 사건 2부터는 결과 화면의 '처음 화면으로'와 같게
   const back=S.done?((S.case||1)>=2?backToRoles:openResult):null;
   let body='';
@@ -883,7 +884,7 @@ function openTeacher(){
     ${S.classified?`<h3>분류 결과</h3><p>${S.lines.map((L,i)=>`${i+1}번 ${CAT_NAME[S.classify[i]]||'-'} ${S.classify[i]===correctCat(L)?'○':'×'}`).join(', ')}</p>`:''}`;
   }
   const gj=(CASE_DATA[S.case]&&CASE_DATA[S.case].gojeung)||GOJEUNG;
-  openSheet(`<h2>교사용</h2>${classBoardSection()}${teacherDataHTML()}<h3>이번 판</h3>${body}
+  openSheet(`<h2>교사용</h2>${classBoardSection()}${textbookTableHTML()}${teacherDataHTML()}<h3>이번 판</h3>${body}
     <h3>고증 확인 목록${S.case>=3?` (사건 ${S.case})`:''}</h3><ol class="check">${gj.map(x=>`<li>${esc(x)}</li>`).join('')}</ol>${laughHTML()}
     <div class="sheet-foot"><button class="abtn primary" id="tClose" type="button">${back===openResult?'재판 기록으로':back?'처음 화면으로':'닫기'}</button></div>`,!back);
   bindClassBoard(); bindTeacherData(); bindLaugh();
@@ -971,13 +972,41 @@ function storyButtons(r){
   const v=hasSave();
   return `${v?`<button class="go" type="button" data-role="resume">이어 하기<small>${PHASE_NAME[v.phase]||''}부터</small></button>`:''}<button class="go${v?' alt':''}" type="button" data-role="story">본편 ${v?'처음부터':'시작'}<small>사건 1 · 75~100분 · 자동 저장</small></button><button class="go alt" type="button" data-role="pros">맛보기 재판<small>증언 하나만, 10분</small></button>`;
 }
+/* 우리 반 사회 5-2 교과서(2022 개정)와 잇기: 찾아보기와 본문 쪽 번호. 교과서 문장은 옮기지 않고 줄여 씀 */
+const TEXTBOOK={
+ 1:{pages:'34~36, 41쪽',unit:'1단원 2. 고대 사람들의 생활 모습',topic:'백제의 성장 · 신라의 삼국 통일',book:'백제는 한강 유역에서 일어나 4세기에 전성기를 맞았고, 660년 신라와 당의 연합군에게 무너졌어요. 41쪽에는 삼국 통일을 서로 다르게 평가한 두 글이 실려 있어요.',more:['백제가 무너진 까닭을 왕 한 사람의 탓으로만 볼 수 있을까?','‘3천 궁녀’처럼 전해 들은 말과 기록을 가르기']},
+ 2:{pages:'24~26쪽',unit:'1단원 1. 선사 시대와 고조선 사람들의 생활 모습',topic:'고조선의 등장과 사회 모습',book:'고조선은 우리나라 첫 국가로, 8조법으로 사회 질서를 지켰고 철기 문화를 바탕으로 힘을 키웠어요. 교과서는 고조선이 멸망할 무렵 여러 나라가 생겼다고 말해요.',more:['교과서에 나오지 않는 위만과 준왕의 이야기','다른 나라 역사책(「사기」)의 기록을 의심하며 읽기']},
+ 3:{pages:'37, 41쪽',unit:'1단원 2. 고대 사람들의 생활 모습',topic:'신라의 성장',book:'진흥왕은 백제와 함께 고구려를 쳐서 한강 유역을 얻은 뒤, 백제와 싸워 한강을 모두 차지했어요. 37쪽에는 554년 관산성 싸움을 적은 「삼국사기」 글과 북한산 순수비가 있어요.',more:['동맹을 깬 일을 죄로 물을지, 나라의 판단으로 볼지','한강을 차지한 뒤 일어난 일(41쪽 백제의 반격)까지 함께 보기']},
+ 4:{pages:'50~51쪽',unit:'1단원 3. 고려 사람들의 생활 모습',topic:'고려의 건국과 후삼국 통일',book:'신라 말 견훤이 후백제를, 궁예가 후고구려를 세웠어요. 견훤은 아들에게 왕위를 빼앗긴 뒤 고려에 몸을 맡겼고, 936년 고려가 후삼국을 통일했어요.',more:['927년 경주에서 신라 왕이 목숨을 잃은 일의 책임','이긴 쪽이 남긴 기록을 따져 읽기']},
+ 5:{pages:'56~57, 61쪽',unit:'1단원 3. 고려 사람들의 생활 모습',topic:'몽골의 침입과 항전 · 인쇄술의 발달',book:'몽골이 쳐들어오자 김윤후는 처인성과 충주성에서 백성과 함께 싸웠어요. 몽골의 침입 때 팔만대장경을 만들었어요.',more:['교과서에 이름이 나오지 않는 최우는 섬으로 옮긴 뒤 무엇을 했을까?','백성과 지배층이 겪은 전쟁은 어떻게 달랐을까?']},
+ 6:{pages:'86~90쪽',unit:'2단원 1. 유교 문화를 바탕으로 한 조선',topic:'임진왜란과 병자호란 · 전쟁 피해 극복',book:'임진왜란 뒤 만주에서 후금이 힘을 키웠어요. 조선은 전쟁의 피해를 이겨 내려고 궁궐과 성을 고치고 군대를 새로 만들었으며, 허준이 「동의보감」을 펴냈어요.',more:['교과서에 이름이 나오지 않는 광해군의 외교와 궁궐 공사','같은 왕을 두고 서로 다르게 쓴 기록 맞대기']},
+ 7:{pages:'88쪽',unit:'2단원 1. 유교 문화를 바탕으로 한 조선',topic:'병자호란의 전개',book:'청이 다시 쳐들어오자 인조는 남한산성으로 피해 맞섰지만 결국 항복했어요. 세자와 많은 백성이 청으로 끌려가 고통을 겪었어요.',more:['항복을 고른 왕의 책임을 어떻게 볼까?','끌려간 백성과 돌아온 세자의 이야기']},
+ 8:{pages:'101쪽',unit:'2단원 2. 조선 후기의 사회 변화와 근대 문물의 수용',topic:'세도 정치',book:'어린 왕이 이어지자 왕실과 혼인한 몇몇 가문이 권력을 마음대로 휘둘렀어요(세도 정치). 관리들의 부정부패가 심해져 백성의 삶이 어려워졌어요.',more:['가상 인물 김 대감으로 세도 정치의 책임 나누기','1862년 진주 농민 봉기가 일어난 까닭']},
+ 9:{pages:'101~102쪽',unit:'2단원 2. 조선 후기의 사회 변화와 근대 문물의 수용',topic:'흥선 대원군의 개혁 정치 · 병인양요와 신미양요',book:'흥선 대원군은 서원을 정리하고 양반에게도 세금을 거두었지만, 경복궁을 다시 지으며 백성을 동원했어요. 서양의 침입을 물리친 뒤 척화비를 세웠어요. 101쪽은 개혁의 장점과 단점을 이야기해 보자고 해요.',more:['검사·변호인·판사 자리에서 같은 증거로 다른 결론 세우기','1866년 천주교 박해의 책임']},
+ 10:{pages:'108~109, 124, 132~133쪽',unit:'2단원 2 · 3단원 1. 일제의 침략과 나라를 되찾기 위한 노력',topic:'독립 협회 · 을사늑약 · 3·1 운동',book:'독립 협회는 자주독립의 상징으로 독립문을 세웠어요. 1905년 일제는 을사늑약으로 대한 제국의 외교권을 빼앗았고, 민영환과 헤이그 특사 등 많은 사람이 맞섰어요. 1919년 3·1 운동이 전국으로 퍼졌어요.',more:['교과서에 이름이 나오지 않는 이완용이 독립 협회에서 을사늑약 찬성까지 간 길','같은 시대에 다른 길을 고른 사람들']}};
+const TB_BOOK='사회 5-2 교과서';
+/* 교사용 화면 잠금: 비밀번호는 코드에 쓰지 않고, 바꾼 값만 맞대 본다 (학급용 잠금. 화면을 숨기는 정도이며 강한 보안은 아님) */
+const TEACHER_KEY='88c0cc17';
+function pwHash(v){ const h=s=>{ let x=0x811c9dc5; for(const b of new TextEncoder().encode(s)){ x^=b; x=Math.imul(x,0x01000193)>>>0; } return x>>>0; }; let r='yj-teacher:'+v; for(let i=0;i<1000;i++) r=h(r+i).toString(16).padStart(8,'0')+r.slice(0,8); return r.slice(0,8); }
+function teacherOk(){
+  if(window.__yjFast) return Promise.resolve(true);
+  try{ if(sessionStorage.getItem('yj-t')==='1') return Promise.resolve(true); }catch(e){}
+  return new Promise(res=>{
+    openSheet(`<h2>교사용</h2><p>선생님만 들어갈 수 있어요. 비밀번호를 넣어 주세요.</p><form id="tPwForm" class="tpw"><input id="tPw" type="password" inputmode="numeric" autocomplete="off" maxlength="16" aria-label="비밀번호"><p class="tpw-err" id="tPwErr" hidden>비밀번호가 맞지 않아요.</p><div class="sheet-foot"><button class="abtn" type="button" id="tPwNo">닫기</button><button class="abtn primary" type="submit" id="tPwGo">들어가기</button></div></form>`,false);
+    const inp=$('#tPw'); setTimeout(()=>inp&&inp.focus(),30);
+    $('#tPwNo').addEventListener('click',()=>{ closeSheet(); res(false); });
+    $('#tPwForm').addEventListener('submit',e=>{ e.preventDefault();
+      if(pwHash(inp.value.trim())===TEACHER_KEY){ try{ sessionStorage.setItem('yj-t','1'); }catch(e){} closeSheet(); res(true); }
+      else{ $('#tPwErr').hidden=false; inp.value=''; inp.focus(); Music.sting('miss'); } });
+  });
+}
 const CASE_YEAR={1:'660년',2:'기원전 194년',3:'553년',4:'927년',5:'1232년',6:'1618년',7:'1636년',8:'1862년',9:'1866년',10:'1905년'};
 const CASES=[{n:1,t:'백제는 왜 무너졌나',d:'의자왕 · 튜토리얼',ready:['pros']},{n:2,t:'왕검성의 밤',d:'위만 · 난이도 2',ready:['pros','def']}];
 function renderRoles(){
   const C=CASES.find(c=>c.n===CASE_SEL)||CASES[0];
   rolesEl.innerHTML=`<h2 class="roles-h">사건과 역할을 고르세요</h2>
     <label class="sid-row">신참 법관 이름표 (번호나 별명) <input id="sidIn" type="text" maxlength="12" autocomplete="off" placeholder="예) 5반 12번" value="${esc(store.get('yj-sid')||'')}"> <small>이름은 쓰지 마세요. 선생님이 기록을 모을 때만 써요.</small></label>
-    <div class="case-tabs" role="tablist">${CASES.map(c=>`<button class="case-tab${c.n===C.n?' on':''}" type="button" role="tab" aria-selected="${c.n===C.n}" data-case="${c.n}"><b>사건 ${c.n}</b>${c.t}<small>${c.d}</small><i class="yr">${c.n===1?'첫 재판 · ':''}${CASE_YEAR[c.n]||''}</i></button>`).join('')}</div>
+    <div class="case-tabs" role="tablist">${CASES.map(c=>`<button class="case-tab${c.n===C.n?' on':''}" type="button" role="tab" aria-selected="${c.n===C.n}" data-case="${c.n}"><b>사건 ${c.n}</b>${c.t}<small>${c.d}</small><i class="yr">${c.n===1?'첫 재판 · ':''}${CASE_YEAR[c.n]||''}</i>${TEXTBOOK[c.n]?`<i class="tbp">📖 교과서 ${TEXTBOOK[c.n].pages}</i>`:''}</button>`).join('')}</div>
     <p class="roles-lead">${C.n===1?'사건 1은 검사 자리에서 해 볼 수 있어요.':C.lead||'사건 2부터는 변호인 자리도 열립니다. 같은 사건을 다른 자리에서 다시 해 보세요.'}</p>
     <div class="role-grid">${ROLES.map(r=>{ const ok=C.ready.includes(r.id), lockTxt=(C.locked&&C.locked[r.id])||'준비 중'; return `<div class="role${ok?' ready':''}${C.main===r.id?' main':''}">${ok?(C.main===r.id?'<span class="lock main">기본</span>':''):`<span class="lock">${esc(lockTxt)}</span>`}<div class="role-pic" style="--glow:${r.glow}">${rolePic(r)}</div><h3>${r.name}<span>${r.who}</span></h3><p class="goal">${r.goal}</p><p class="how">${r.how}</p>${ok?storyButtons(r):`<button class="go" type="button" disabled>${C.locked&&C.locked[r.id]?esc(C.locked[r.id])+'이에요':'기획 확인 뒤 제작'}</button>`}</div>`; }).join('')}</div>`;
   { const si=$('#sidIn'); if(si) si.addEventListener('change',()=>store.set('yj-sid',si.value.trim().slice(0,12))); }
