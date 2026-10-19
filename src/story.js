@@ -105,7 +105,7 @@ function prepStory(){
   { const sub=document.querySelector('.brand span'); if(sub && (S.case||1)===1) sub.textContent='사건 1 「백제는 왜 무너졌나」'; }
   S.p2at=3; S.talked=new Set(); S.unlocked=new Set(); S.hist=[]; S.allowUsed=false; S.expect=null;
   S.flags={}; S.terms=new Set(); S.zoomed=new Set(); S.plums=new Set(); S.observes=0; S.charges=null; setCharges(null); dayStart();
-  S.verdicts=[]; S.vkMiss=0; S.stamps=0; S.gagDone={}; S.clicks={}; S.shown=new Set(); S.mukN=0;
+  S.verdicts=[]; S.vkMiss=0; S.claimMiss=0; S.stamps=0; S.gagDone={}; S.clicks={}; S.shown=new Set(); S.mukN=0;
   closeSheet(); Music.resume(); titleEl.hidden=true; rolesEl.hidden=true; controlsEl.hidden=true;
   $('#invbar').hidden=true; $('#lens').hidden=true; stageEl.classList.remove('inv');
   resetState(); S.story=true; S.inTrial=true; S.found=new Set(); S.seen=new Set(); S.misses=0;

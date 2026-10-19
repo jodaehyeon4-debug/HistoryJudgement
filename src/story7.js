@@ -1,9 +1,12 @@
-/* ===== 사건 7 「남한산성의 겨울」: 검사 하람 · 새 장치 ‘자기 혐의 내려놓기’ =====
+/* ===== 사건 7 「남한산성의 겨울」: 검사 하람 · 새 장치 ‘자기 혐의 내려놓기’ (판사 모드 선택 가능) =====
    v3: 혐의 ① 바뀐 정세를 보지 않은 외교로 두 번의 전쟁을 부른 죄 → 책임 있음 (사건 6과 같은 기준)
    혐의 ② 전쟁 대비를 소홀히 해 백성이 큰 피해를 입은 죄 → 책임 있음(무거움, 경고를 알고도 대비하지 않음)
    혐의 ③ 소현세자의 가족에게 지나치게 가혹한 벌을 내린 죄 → 유죄 (이 사건의 진짜 쟁점)
    혐의 ④ 소현세자를 죽게 한 죄 → 증명 부족 (‘안 했다’가 아니라 ‘증명되지 않았다’)
-   프롤로그 그림자는 일부러 누구인지, 병인지 독인지 알 수 없게 한다. 어린 손자들의 일은 장면 없이 사실만. */
+   프롤로그 그림자는 일부러 누구인지, 병인지 독인지 알 수 없게 한다. 어린 손자들의 일은 장면 없이 사실만.
+   판사 모드: 하람은 그대로 검사. 판사는 증언을 증거로 깨지 않고 주장 가르기로 가리며, 궁녀 단비에게는 더 묻기로 숨은 말을 끌어낸다.
+   3일차 갈림길은 판사의 몫인 ‘검사에게 물을까(ask) / 묻지 않을까(wait)’. 혐의를 거두는 것은 언제나 검사(하람)가 정한다.
+   ask → 하람이 혐의 ④를 거둠(피고의 고백). wait → 하람이 유지, 4일차에 판사가 ‘의원은 벌받지 않았다’ 함정을 가르고 증명 부족을 선고. */
 addCast('injo',{name:'인조',label:'피고 인조',col:'#a8322a',spec:{skin:'#eec8a2',robe:'#b3352b',robe2:'#86241d',collar:'round',hat:'ikseon',hair:'#1c1a20',beard:'king',emblem:true,iris:'#3a2a20'}});
 addCast('myeonggil',{name:'최명길',label:'증인 최명길',col:'#2f5d8a',spec:{skin:'#ecc8a4',robe:'#2f5d8a',robe2:'#1f3f60',collar:'round',hat:'gat',hair:'#1c1a20',beard:'long',beardColor:'#2a2220',iris:'#3a2a20'}});
 addCast('sangheon',{name:'김상헌',label:'증인 김상헌',col:'#5a2a3a',spec:{skin:'#ecc8a4',robe:'#6a2a3a',robe2:'#4a1c28',collar:'round',hat:'gat',hair:'#d8d8d8',beard:'long',beardColor:'#e6e0d4',iris:'#3a2a20'}});
@@ -65,7 +68,7 @@ const LOCS7=[
      npcs:[{who:'servant7',expr:'base',place:{x:78,h:58,b:2},topics:[
       {id:'s7-hi',t:'여기서 일하셨나요?',lines:[['servant7','base','약 심부름을 했지요.']]},
       {id:'s7-night',t:'그날 밤',lock:'I5',must:true,lockSay:'(하인은 눈을 피한다. 세자가 언제 세상을 떠났는지 보여 주면 말할지도 모른다.)',
-       lines:[['servant7','base','…저는 그날 거처에 없었습니다.'],['servant7','base','다만 [[단비]]라는 궁녀가 다 봤다고 떠들고 다녔지요.'],['ME','think','(단비… 내일 법정에 부를 증인이야.)']]}],
+       lines:[['servant7','base','…저는 그날 거처에 없었습니다.'],['servant7','base','다만 [[단비]]라는 궁녀가 다 봤다고 떠들고 다녔지요.'],['ME','think','(단비… 내일 법정에 설 증인이야.)']]}],
       present:{I5:{lines:[['servant7','sweat','그날 일을… 아시는군요.']],unlock:'s7-night'}},def:[['servant7','base','잘 모르겠습니다.']]}]},
     {id:'sj-yard',name:'마당',intro:'거처의 마당이다.',miss:['봄풀이다.','아무것도 없다.'],
      spots:[{x:30,y:30,w:30,h:30,label:'매화나무',say:['매화가 피어 있다.']}],
@@ -110,6 +113,22 @@ const T7injo3=()=>({key:'인조',who:'injo',lines:[
   {text:'어린 손자들은 편히 지내도록 보냈소.',expr:'base',lie:true,ev:'I9',press:[['player','normal','편히요?'],['injo','base','그렇소.']],
    hit:[['player','present','어린 세 손자는 [[제주도로 귀양]]을 갔고, 그중 둘은 그곳에서 세상을 떠났어요.'],['player','confident','그것은 편히 지내도록 보낸 것이 아닙니다!'],['injo','sweat','…….']]}
 ]});
+/* 판사 모드: 궁녀 단비는 판사가 더 물어 숨은 말을 끌어낸다 (재증언 명령) */
+const T7danbi=()=>({key:'단비',who:'danbi',allReveal:true,lines:[
+  {text:'세자 저하의 몸이 [[검게 변해]] 있었습니다!',expr:'base',reveal:1,press:[['daon','normal','증인, 그날 거처 [[안에]] 있었나요?'],['danbi','sweat','그, 그건…'],['judge','normal','판사의 물음이오. 증인은 답하시오.']]},
+  {text:'…아니요. 저는 문밖에 있었습니다. 염하는 걸 본 [[종친 부인]]이 그렇게 말하는 걸… [[들었어요]].',expr:'sweat',hidden:true,gives:['I6']},
+  {text:'그날 밤 약을 드신 뒤였어요. 다들 쉬쉬했지요.',expr:'base',press:[['daon','normal','약은 누가 지었고, 누가 날랐나요?'],['danbi','base','그건… 저는 잘 모릅니다.']]}
+]});
+const J7=()=>S.role==='judge';
+/* 피고 증언: 검사는 증거로 깨고, 판사는 증언을 들은 뒤 주장 가르기로 가린다 */
+async function iTestimony(T,title,claims){
+  if(!J7()) return await testimony(T,title);
+  bgm('testimony'); await titleCard('― 증언 ―',title);
+  const vis=T.lines.filter(l=>!l.hidden);
+  for(let i=0;i<vis.length;i++) await say(T.who,vis[i].expr||'base',vis[i].text,{testimony:true,tag:`증언 ${i+1}/${vis.length}`});
+  await say('judge','normal','판사, 피고의 말을 가르시오.');
+  return await sortClaims(claims);
+}
 
 async function prologue7(){
   bgm('crisis');
@@ -120,18 +139,24 @@ async function prologue7(){
   await say('voice','normal','역사가 묻는다. 모두가 ‘그랬을 것’이라 믿는 일도, [[증거가 없으면 벌할 수 없는가]].',{view:'prologue7'});
   await titleCard('사건 7','남한산성의 겨울');
 }
-async function runPros7(from){
+async function run7(from){
   if(from<=0){ await prologue7(); bgm('investigate');
-    await say('judge','normal','하람 검사, 피고는 조선의 왕 [[인조]]이오. 혐의가 넷이오.',{view:'lobby'});
-    await say('player','confident','그중에서도 [[소현세자 독살]]! 다들 아는 이야기잖아요. 이번엔 확실히 이길 거예요.',{view:'lobby'});
-    await say('rival','normal','다들 안다고 증명되는 건 아니야, 하람.',{view:'lobby'}); }
+    if(J7()){
+      await say('judge','normal','판사, 이번에는 그대가 [[판사석]]에 앉으시오. 피고는 조선의 왕 [[인조]]이오. 혐의가 넷이오.',{view:'lobby'});
+      await say('player','confident','그중에서도 [[소현세자 독살]]! 다들 아는 이야기잖아요. 판사님, 이번엔 확실해요.',{view:'lobby'});
+      await say('rival','normal','다들 안다고 증명되는 건 아니야, 하람.',{view:'lobby'});
+      await say('judge','normal','판사는 주장을 가르고, 증인에게 [[더 물어]] 숨은 말을 끌어내오. 증거로 증언을 공격하지는 않소.',{view:'lobby'});
+    } else {
+      await say('judge','normal','하람 검사, 피고는 조선의 왕 [[인조]]이오. 혐의가 넷이오.',{view:'lobby'});
+      await say('player','confident','그중에서도 [[소현세자 독살]]! 다들 아는 이야기잖아요. 이번엔 확실히 이길 거예요.',{view:'lobby'});
+      await say('rival','normal','다들 안다고 증명되는 건 아니야, 하람.',{view:'lobby'}); } }
   await playDays([
     {inv:async()=>{ await invDay(1,'[[남한산성]]과 [[삼전도 나루]]를 조사하자. 남한산성은 구역이 네 곳이야.'); },court:d1_7,
      learned:['1636년 병자호란 때 인조는 남한산성에서 47일을 버티다 삼전도에서 항복했다.','최명길과 김상헌은 다른 길을 말했지만, 둘 다 나라를 위한 선택이었다.','전쟁 전부터 청의 위협을 알리는 말이 있었다.']},
     {inv:async()=>{ await invDay(2,'[[소현세자의 거처]]가 열렸어. 세자의 죽음을 ‘봤다’는 증인이 있대.'); },court:d2_7,
      learned:['‘독살’의 증인은 문밖에서 들은 말뿐이었다.','실록에 적힌 그 말도 들은 말이고, 바깥사람은 자세히 알 수 없었다고 적혀 있다.','필사본의 ‘보았다’는 ‘들었다’를 긁어내고 고친 것이었다.']},
     {inv:async()=>{ await invDay(3,'[[강빈의 옛 집]]과 [[왕실 의원의 방]]이 열렸어. 세자가 죽은 뒤 피고가 한 일을 보자.'); },court:d3_7,
-     learned:['세자빈 강씨는 대신들의 반대에도 사약을 받았다.','어린 세 손자는 제주도로 귀양 갔고 둘이 그곳에서 세상을 떠났다.','검사가 스스로 혐의를 내려놓는 것도 용기다.']},
+     learned:['세자빈 강씨는 대신들의 반대에도 사약을 받았다.','어린 세 손자는 제주도로 귀양 갔고 둘이 그곳에서 세상을 떠났다.',J7()?'판사는 검사에게 물을 수는 있지만, 혐의를 거두라고 시키지는 않는다.':'검사가 스스로 혐의를 내려놓는 것도 용기다.']},
     {court:d4_7}
   ],from);
 }
@@ -147,17 +172,22 @@ async function d1_7(){
   bgm('testimony');
   await say('myeonggil','base','최명길이오. 나는 청과 화해하자고 했소. [[살아야 다음이 있소]].');
   await say('sangheon','base','김상헌이오. 나는 끝까지 싸우자고 했소. [[의리를 버리면 나라가 아니오]].');
-  await say('rival','smug','자, 검사. 둘 중 누가 [[나쁜 신하]]였나요? 고르세요.');
+  await say('rival','smug',J7()?'자, 판사님. 둘 중 누가 [[나쁜 신하]]였나요? 고르세요.':'자, 검사. 둘 중 누가 [[나쁜 신하]]였나요? 고르세요.');
   const c=await choiceSheet('누가 ‘나쁜 신하’였을까요?',[{t:'최명길. 적과 화해하자고 했다.',ok:true,tag:'myeonggil'},{t:'김상헌. 싸우자고만 해서 백성이 더 다쳤다.',ok:true,tag:'sangheon'},{t:'둘 다 나라를 위한 선택이었다.',ok:true,tag:'both'}]);
   S.flags.badMinister=c.tag; track('bad_minister',{v:c.tag});
-  if(c.tag!=='both'){ await say('judge','stern','잠깐! 둘 다 나라를 위한 선택이었소. 그리고 [[이 재판의 피고는 그들이 아니오]].'); await say('player','sweat','(…누리의 유도에 넘어갔어.)'); }
+  if(c.tag!=='both'){ await say('judge','stern','잠깐! 둘 다 나라를 위한 선택이었소. 그리고 [[이 재판의 피고는 그들이 아니오]].'); await say(ME(),'sweat','(…누리의 유도에 넘어갔어.)'); }
   else await say('judge','normal','그렇소. 정답이 하나가 아닌 물음도 있소. 그리고 이 재판의 피고는 그들이 아니오.');
   await say('judge','normal','피고 인조, 증언하시오.');
-  if(!await testimony(T7injo1(),'나는 최선을 다했다')) return false;
+  if(!await iTestimony(T7injo1(),'나는 최선을 다했다',[
+    {who:'injo',expr:'base',text:'나는 남한산성에서 47일을 버텼소. 그것이 최선이었소.',ans:'op',opPhrase:'그것이 최선이었소',
+     fb:{ok:'47일을 버틴 것은 기록에 있소. 그러나 이 주장의 중심은 ‘최선이었다’는 피고의 [[생각]]이오.',no:'47일을 버틴 것은 기록에 있소. 이 주장의 중심은 ‘최선이었다’는 피고의 [[생각]]이오.'},
+     after:[['judge','normal','‘최선’은 피고가 스스로 매긴 점수요. 무엇을 했는지는 증거로 보아야 하오.']]},
+    {who:'injo',expr:'sweat',text:'청이 그렇게 빨리 쳐들어올 줄은 아무도 몰랐소.',ans:'no',ev:['I2'],after:[['judge','normal','전쟁 전부터 [[청의 위협을 알리는 말]]이 있었소. 피고의 말은 확인되지 않소.'],['injo','sweat','크…!']]}])) return false;
   await say('player','confident','재판장님, 내일은 [[세자의 죽음을 직접 본 증인]]을 부르겠습니다!');
   Music.sting('cheer'); await wait(600);
   setCharges([{t:'약을 지은 의원',st:'sus'},{t:'약을 나른 궁녀 단비',st:'sus'},{t:'인조',st:'sus'}],'독살의 용의자');
-  await say('player','think','(독살이라면 누가 했을까. 약을 지은 사람, 나른 사람, 그리고 피고.)');
+  if(J7()){ await say('player','confident','독살이라면 셋 중 하나예요. 약을 지은 사람, 나른 사람, 그리고 피고!'); await say('judge','normal','판사, 용의 카드 석 장이오. 셋 다 [[증거로]] 가려야 하오.'); }
+  else await say('player','think','(독살이라면 누가 했을까. 약을 지은 사람, 나른 사람, 그리고 피고.)');
   await gavel(); await titleCard('― 1일차 끝 ―','세자의 죽음을 본 사람');
   return true;
 }
@@ -165,35 +195,62 @@ async function d2_7(){
   await courtOpen(2);
   setCharges([{t:'약을 지은 의원',st:'sus'},{t:'약을 나른 궁녀 단비',st:'sus'},{t:'인조',st:'sus'}],'독살의 용의자');
   await say('player','confident','증인을 부르겠습니다. 세자의 죽음을 본 궁녀, [[단비]]입니다.');
-  bgm('testimony');
-  await say('danbi','base','세자 저하의 몸이 [[검게 변해]] 있었습니다!',{testimony:true,tag:'증언 1/2'});
-  await say('danbi','base','그날 밤 약을 드신 뒤였어요. 다들 쉬쉬했지요.',{testimony:true,tag:'증언 2/2'});
-  Music.sting('murmur'); await wait(700);
-  await say('injo','sweat','…!');
-  await say('player','confident','(됐어! 직접 본 증인이야!)');
-  await say('judge','normal','변호인, 반대 신문을 하시오. 검사는 지켜보시오.');
-  bgm('cross'); await shout('hold');
-  await say('rival','normal','증인, 하나만 묻겠어요. 그날 거처 [[안에]] 있었나요?',{action:true});
-  await say('danbi','base','…아니요. 저는 문밖에 있었습니다.',{testimony:true,tag:'새 증언'});
-  await say('danbi','base','염하는 걸 본 [[종친 부인]]이 그렇게 말하는 걸… [[들었어요]].',{testimony:true,tag:'새 증언'});
-  Music.sting('realize'); flash();
-  await gotEv('I6','증거 수첩에 [[전해 들은 말]]이 들어왔다. 실록에도 이 일은 ‘들은 말’로 적혀 있다.');
-  await say('player','shock','(직접 본 게 아니었어…!)');
+  if(J7()){
+    await say('judge','normal','판사, 증언을 듣고 [[더 물어]] 보시오. 숨긴 말이 있으면 다시 증언하게 하시오.');
+    if(!await testimony(T7danbi(),'세자 저하의 몸이 검게 변해 있었소','판사는 더 묻기로 숨은 말을 끌어내요')) return false;
+    await say('guide','normal','실록에도 이 일은 [[‘들은 말’]]로 적혀 있다.');
+    await say('player','shock','…직접 본 게 아니었어?');
+  } else {
+    bgm('testimony');
+    await say('danbi','base','세자 저하의 몸이 [[검게 변해]] 있었습니다!',{testimony:true,tag:'증언 1/2'});
+    await say('danbi','base','그날 밤 약을 드신 뒤였어요. 다들 쉬쉬했지요.',{testimony:true,tag:'증언 2/2'});
+    Music.sting('murmur'); await wait(700);
+    await say('injo','sweat','…!');
+    await say('player','confident','(됐어! 직접 본 증인이야!)');
+    await say('judge','normal','변호인, 반대 신문을 하시오. 검사는 지켜보시오.');
+    bgm('cross'); await shout('hold');
+    await say('rival','normal','증인, 하나만 묻겠어요. 그날 거처 [[안에]] 있었나요?',{action:true});
+    await say('danbi','base','…아니요. 저는 문밖에 있었습니다.',{testimony:true,tag:'새 증언'});
+    await say('danbi','base','염하는 걸 본 [[종친 부인]]이 그렇게 말하는 걸… [[들었어요]].',{testimony:true,tag:'새 증언'});
+    Music.sting('realize'); flash();
+    await gotEv('I6','증거 수첩에 [[전해 들은 말]]이 들어왔다. 실록에도 이 일은 ‘들은 말’로 적혀 있다.');
+    await say('player','shock','(직접 본 게 아니었어…!)');
+  }
   await say('danbi','sweat','그, 그래도! 여기 필사본엔 [[‘보았다’]]고 적혀 있어요!');
   S.found.add('IF'); showEvidence('IF'); await say('guide','normal','단비가 종이 한 장을 내밀었다.'); hideEvidence();
-  const z=await choiceSheet('검사는 이 필사본을 어떻게 할까요?',[{t:'증거 확대로 자세히 살펴본다.',ok:true,tag:'zoom'},{t:'내 증인이 낸 것이니 그대로 받아들인다.',ok:false,tag:'accept'}]);
-  if(z.tag!=='zoom'){ await say('judge','stern','검사, 자기 증인이 낸 종이라도 따져 보아야 하오.'); await loseTrust(); if(S.trust<=0){ await loseTrial(); return false; } }
+  const z=await choiceSheet(J7()?'판사는 이 필사본을 어떻게 할까요?':'검사는 이 필사본을 어떻게 할까요?',[{t:'증거 확대로 자세히 살펴본다.',ok:true,tag:'zoom'},{t:J7()?'증인이 낸 것이니 그대로 받아들인다.':'내 증인이 낸 것이니 그대로 받아들인다.',ok:false,tag:'accept'}]);
+  if(z.tag!=='zoom'){ await say('judge','stern',J7()?'판사, 누가 낸 종이라도 따져 보아야 하오.':'검사, 자기 증인이 낸 종이라도 따져 보아야 하오.'); await loseTrust(); if(S.trust<=0){ await loseTrial(); return false; } }
   await openZoomScene('IF');
-  await say('player','sweat','(‘들었다’를 긁어내고 ‘보았다’로 고쳤어. 그리고 또… [[매화 얼룩]].)');
-  await say('player','normal','재판장님, 이 필사본은 원래 ‘들었다’였던 것을 고친 것입니다. 증거로 쓰지 않겠습니다.');
-  await say('judge','normal','검사가 스스로 밝혔군. 원본 기록은 ‘들은 말’이오.');
+  if(J7()){
+    await say('daon','base','이 필사본은 원래 ‘들었다’였던 것을 고친 것입니다. 그리고 [[매화 얼룩]]. 증거로 받아들이지 않겠습니다.',{view:'judge'});
+    await say('player','sweat','…내 증인이 낸 종이였는데.');
+    await say('judge','normal','원본 기록은 ‘들은 말’이오. 판사, 이제 [[용의 카드]]를 가려 보시오.');
+    if(!await sortClaims([
+      {who:'player',expr:'confident',text:'궁녀 단비는 세자의 죽음을 직접 보았다.',ans:'no',ev:['I6'],after:[['judge','normal','증인은 문밖에서 [[들었을]] 뿐이오.']]},
+      {who:'player',expr:'confident',text:'약을 지은 의원이 약에 독을 넣었다.',ans:'no',after:[['judge','normal','약에 독이 들었다는 기록은 [[어디에도 없소]]. 독이 없었다는 것이 밝혀진 것도 아니오. 증명할 기록이 없는 것이오.']]},
+      {who:'rival',expr:'confident',text:'피고는 세자의 아버지다. 그런 일을 할 사람이 아니다.',ans:'op',opPhrase:'그런 일을 할 사람이 아니다',after:[['judge','normal','아버지라는 것은 사실이오. 그러나 ‘그럴 사람이 아니다’는 변호인의 생각이오. 의심만으로 벌하지 않듯, 생각만으로 풀어 주지도 않소.']]}])) return false;
+    await say('judge','normal','판사, 세자의 죽음에서 [[확인된 것]]과 [[들은 말]]을 두 증거로 나누어 보이시오.');
+    if(!await presentPair('세자의 죽음에서 확인된 것과 들은 말을 보여 줄 두 증거를 고르세요.','I5','I6',{hint:'세자가 언제 세상을 떠났는지의 기록과, 단비가 끝내 털어놓은 말을 함께 보시오.',say:'세자가 1645년 4월, 돌아온 지 두 달 만에 세상을 떠난 것은 [[기록으로 확인돼요]]. 그러나 ‘몸이 검게 변했다’는 것은 [[문밖에서 들은 말]]뿐이에요.'})) return false;
+  } else {
+    await say('player','sweat','(‘들었다’를 긁어내고 ‘보았다’로 고쳤어. 그리고 또… [[매화 얼룩]].)');
+    await say('player','normal','재판장님, 이 필사본은 원래 ‘들었다’였던 것을 고친 것입니다. 증거로 쓰지 않겠습니다.');
+    await say('judge','normal','검사가 스스로 밝혔군. 원본 기록은 ‘들은 말’이오.');
+  }
   chargeSt(0,'clear','증명할 수 없음'); chargeSt(1,'clear','증명할 수 없음'); chargeSt(2,'clear','증명할 수 없음');
-  await say('judge','normal','의원도, 궁녀도, 피고도 [[증명할 수 없소]]. 범인을 못 찾은 것이 아니라, 범죄가 있었는지부터 증명되지 않았소.');
+  if(J7()){ await say('daon','base','의원도, 궁녀도, 피고도 [[증명할 수 없습니다]].',{view:'judge'}); await say('judge','normal','범인을 못 찾은 것이 아니라, 범죄가 있었는지부터 증명되지 않았소.'); }
+  else await say('judge','normal','의원도, 궁녀도, 피고도 [[증명할 수 없소]]. 범인을 못 찾은 것이 아니라, 범죄가 있었는지부터 증명되지 않았소.');
   setCharges(C7CH());
   await victim('captive',[['base','청으로 끌려갔다 돌아온 사람이오.'],['base','몇 해 만에 겨우 돌아왔는데…'],['base','고향 사람들이 [[손가락질]]했소. 끌려간 게 우리 잘못이오?']]);
-  await say('player','think','(혐의 ②의 무게야. 백성은 이렇게 다쳤어.)');
+  await say(ME(),'think','(혐의 ②의 무게야. 백성은 이렇게 다쳤어.)');
   await gavel(); await titleCard('― 2일차 끝 ―','들은 말과 본 것');
   bgm('investigate');
+  if(J7()){
+    await say('guide','normal','재판이 끝난 밤, 로비에 하람이 혼자 남아 있었다.',{view:'lobby'});
+    await say('player','upset','…증명할 수 없다니. 다들 안다고 생각했는데.',{view:'lobby'});
+    await say('judge','normal','판사, 모두가 독만 보느라 놓친 것이 있소. 세자가 죽은 뒤, 피고가 [[무엇을 했는지]] 보시오.',{view:'lobby'});
+    await say('guide','normal','판사의 머릿속에 이름 하나가 떠올랐다. [[세자빈 강씨]].',{view:'lobby'});
+    return true;
+  }
   await say('guide','normal','재판이 끝난 밤, 하람이 혼자 로비에 남았다.',{view:'lobby'});
   await say('player','upset','…증명할 수 없다니. 다들 안다고 생각했는데.',{view:'lobby'});
   await say('judge','normal','검사, 혐의 ④를 [[증명할 수 있소]]?',{view:'lobby'});
@@ -201,15 +258,41 @@ async function d2_7(){
   await say('guide','normal','하람의 머릿속에 이름 하나가 떠올랐다. [[세자빈 강씨]].',{view:'lobby'});
   return true;
 }
+/* 판사 모드 3일차: 혐의를 거두는 것은 검사의 일. 판사는 물을 수만 있다 */
+async function judgeAsk7(){
+  await say('judge','normal','판사, 검사가 혐의 넷을 그대로 들고 왔소. 혐의를 세우고 거두는 것은 [[검사의 일]]이오. 다만 판사는 검사에게 [[물을 수]]는 있소.');
+  const q=await choiceSheet('판사는 검사에게 어떻게 할까요?',[{t:'묻는다. “검사, 혐의 ④를 증명할 새 증거가 있습니까?”',ok:true,tag:'ask'},{t:'묻지 않는다. 혐의는 검사가 정하고, 판사는 마지막 날 증거로 판결한다.',ok:true,tag:'wait'}]);
+  const drop=q.tag==='ask';
+  S.flags.judgeAsk=q.tag; S.flags.drop=S.flags.drop||{}; S.flags.drop[3]=drop; track('withdraw',{charge:3,drop:drop,ask:q.tag});
+  if(drop){
+    await say('daon','base','검사, 혐의 ④를 증명할 [[새 증거]]가 있습니까?');
+    await say('player','sweat','…없습니다. 직접 본 사람의 기록이 없어요.');
+    await say('player','normal','재판장님, 판사님. 검사는 혐의 ④를 [[스스로 거두겠습니다]]. 혐의 ③에 집중하겠습니다.');
+    Music.sting('boo'); await wait(600); chargeSt(3,'dropped');
+    await say('guide','normal','방청석에서 야유가 쏟아졌다. “세자를 죽인 왕을 봐주는 거냐!”');
+    await say('judge','normal','…[[용기 있는 검사요]]. 그리고 판사, 묻는 것과 시키는 것은 다르오. 잘 물었소.');
+    await say('rival','shock','하람…');
+  } else {
+    await say('player','confident','검사는 혐의 ④를 [[끝까지 유지합니다]]. 모두가 독살이라고 믿어요!');
+    await say('rival','normal','그럼 판결로 가리자. 증거로.');
+    await say('judge','normal','판사, 그 혐의도 마지막 날 [[증거로]] 판결하게 될 것이오.');
+  }
+}
 async function d3_7(){
   await courtOpen(3);
-  await say('judge','stern','검사, 혐의 ④를 계속 유지하겠소?');
-  const drop=await withdrawChoice(3,'혐의 ④(소현세자를 죽게 한 죄)를 어떻게 할까요?','끝까지 밀고 갑니다. 모두가 독살이라고 믿어요.','스스로 거둡니다. 직접 본 사람의 기록이 없습니다. 혐의 ③에 집중하겠습니다.');
-  if(drop){ await say('guide','normal','방청석에서 야유가 쏟아졌다. “세자를 죽인 왕을 봐주는 거냐!”'); await say('judge','normal','…[[용기 있는 검사요]].'); await say('rival','shock','하람…'); }
-  else { await say('rival','normal','그럼 판결로 가리자. 증거로.'); }
+  if(J7()) await judgeAsk7();
+  else {
+    await say('judge','stern','검사, 혐의 ④를 계속 유지하겠소?');
+    const drop=await withdrawChoice(3,'혐의 ④(소현세자를 죽게 한 죄)를 어떻게 할까요?','끝까지 밀고 갑니다. 모두가 독살이라고 믿어요.','스스로 거둡니다. 직접 본 사람의 기록이 없습니다. 혐의 ③에 집중하겠습니다.');
+    if(drop){ await say('guide','normal','방청석에서 야유가 쏟아졌다. “세자를 죽인 왕을 봐주는 거냐!”'); await say('judge','normal','…[[용기 있는 검사요]].'); await say('rival','shock','하람…'); }
+    else { await say('rival','normal','그럼 판결로 가리자. 증거로.'); }
+  }
   await say('player','confident','그리고 혐의 ③. 모두가 독만 볼 때, [[기록으로 증명되는 비극]]이 있었어요.');
   await say('judge','normal','피고, 증언하시오.');
-  if(!await testimony(T7injo3(),'강빈은 죄를 지었다')) return false;
+  if(!await iTestimony(T7injo3(),'강빈은 죄를 지었다',[
+    {who:'injo',expr:'angry',text:'강빈은 왕의 음식에 독을 넣으려 했소.',ans:'no',after:[['judge','normal','그것은 피고의 [[의심]]이었소. 증거는 분명하지 않았소.']]},
+    {who:'injo',expr:'angry',text:'대신들도 모두 강빈을 벌해야 한다고 했소.',ans:'no',ev:['I8'],after:[['judge','normal','대신들은 [[줄지어 엎드려 말렸소]].'],['injo','sweat','…!']]},
+    {who:'injo',expr:'base',text:'어린 손자들은 편히 지내도록 보냈소.',ans:'no',ev:['I9'],after:[['judge','normal','어린 세 손자는 [[제주도로 귀양]]을 갔고, 그중 둘은 그곳에서 세상을 떠났소.'],['injo','sweat','…….']]}])) return false;
   await victim('kangbin',[['base','소현세자의 아내였던 사람입니다.'],['base','남편은 [[새로운 세상을 보고 왔을 뿐]]입니다.'],['base','저는 그 아내였을 뿐이고요.'],['base','…아이들만은, 기억해 주세요.']],'판결에 앞서, 피해를 입은 사람의 이야기를 듣겠습니다.');
   await playShadow('emptyroom');
   await gavel();
@@ -223,9 +306,12 @@ async function d4_7(){
   await say('judge','normal','피고, 최후 진술을 하시오.');
   if(S.flags.drop&&S.flags.drop[3]) { await say('injo','sweat','…검사가 내 독살 혐의를 거두었구려.'); await say('injo','sweat','그러니 말하겠소. 나는 아들이 [[청을 등에 업고 내 자리를 빼앗을까]] 두려웠소.'); }
   else await say('injo','angry','나는 아들을 죽이지 않았소! …그 이상은 할 말이 없소.');
-  await say('rival','normal','판결 전에 하나만. 사건 6에서 우리는 광해군의 외교를 [[죄로 보지 않았어]]. 인조의 외교도 [[같은 기준]]으로 봐야 해.');
-  await say('player','think','(같은 기준… 원칙 카드다. 외교는 판단이지 행위가 아니야. 다만 광해군은 위험을 알고 전쟁을 피했고, 인조는 [[경고를 알고도 대비하지 않았어]].)');
-  await say('judge','normal','검사, 혐의마다 판결의 종류와 이유, 근거를 대시오. 원칙 카드는 사건이 바뀌어도 [[같은 말]]이오.');
+  if(J7()){ if(!await judgeWeigh7()) return false; }
+  else {
+    await say('rival','normal','판결 전에 하나만. 사건 6에서 우리는 광해군의 외교를 [[죄로 보지 않았어]]. 인조의 외교도 [[같은 기준]]으로 봐야 해.');
+    await say('player','think','(같은 기준… 원칙 카드다. 외교는 판단이지 행위가 아니야. 다만 광해군은 위험을 알고 전쟁을 피했고, 인조는 [[경고를 알고도 대비하지 않았어]].)');
+    await say('judge','normal','검사, 혐의마다 판결의 종류와 이유, 근거를 대시오. 원칙 카드는 사건이 바뀌어도 [[같은 말]]이오.');
+  }
   if(!await verdictKind('혐의 ① 외교로 두 번의 전쟁을 부른 죄','resp',{q:'외교는 나라의 판단이에요. 사건 6과 같은 기준으로 판결해 보세요. 다만 인조는 경고를 알고도 대비하지 않았어요.',idx:0,fb:{guilty:'사건 6의 광해군처럼, 외교는 처음부터 [[죄]]로 볼 수 없소. 같은 기준을 지키시오.',innocent:'광해군은 위험을 알고 전쟁을 피했소. 인조는 [[경고를 알고도]] 대비하지 않았고, 두 번의 전쟁이 났소.'}})) return false;
   if(!await reasonEv('혐의 ①을 ‘책임 있음’으로 보는 가장 알맞은 이유는?',[
     {t:'청의 위협을 알리는 경고가 있었는데도 명만 따르는 외교를 고집했다. 명과의 의리를 중히 여긴 시대 분위기는 참작한다.',ok:true,ev:['I2']},
@@ -242,11 +328,13 @@ async function d4_7(){
     {t:'세자빈은 청과 가까웠으니 벌받아 마땅했다.',ok:false,fb:'그것은 피고의 의심이었지 증거가 아니오.'},
     {t:'왕의 집안일이니 법정이 따질 일이 아니다.',ok:false,fb:'벌을 내린 것은 왕의 권력이었소.'}])) return false;
   if(!(S.flags.drop&&S.flags.drop[3])){
-    await say('judge','stern','검사가 유지한 혐의 ④. 유죄로 볼 근거를 대시오.');
-    if(!await choose('혐의 ④의 근거로 무엇을 내겠습니까?',[
-      {t:'의원은 벌받지 않았다. 왕이 의원을 감싼 것은 수상하다.',ok:false,fb:'수상한 것과 증명된 것은 다르오.'},
-      {t:'궁녀 단비의 증언.',ok:false,fb:'그것은 문밖에서 들은 말이었소.'},
-      {t:'…직접 본 사람의 기록이 없어 증명할 수 없습니다.',ok:true}])) return false;
+    if(!J7()){
+      await say('judge','stern','검사가 유지한 혐의 ④. 유죄로 볼 근거를 대시오.');
+      if(!await choose('혐의 ④의 근거로 무엇을 내겠습니까?',[
+        {t:'의원은 벌받지 않았다. 왕이 의원을 감싼 것은 수상하다.',ok:false,fb:'수상한 것과 증명된 것은 다르오.'},
+        {t:'궁녀 단비의 증언.',ok:false,fb:'그것은 문밖에서 들은 말이었소.'},
+        {t:'…직접 본 사람의 기록이 없어 증명할 수 없습니다.',ok:true}])) return false;
+    }
     if(!await verdictKind('혐의 ④ 소현세자를 죽게 한 죄','unproven',{q:'직접 본 사람의 기록이 없어요. ‘안 했다’도 ‘했다’도 증명되지 않았어요.',idx:3,fb:{innocent:'‘안 했다’가 증명된 것이 아니오. 증명이 [[모자란]] 것이오.',guilty:'의심만으로는 벌할 수 없소.'}})) return false;
   }
   await playShadow('sickbed',true);
@@ -254,27 +342,72 @@ async function d4_7(){
   const post=await choiceSheet('지금은 어떻게 생각하나요? 세자는 독살당했을까요? (정답은 없어요)',[{t:'독살이다.',ok:true,tag:'post-poison'},{t:'모르겠다. 증거로는 알 수 없다.',ok:true,tag:'post-unknown'},{t:'독살이 아니다.',ok:true,tag:'post-illness'}]);
   S.flags.post=post.tag; track('belief',{when:'after',v:post.tag,before:S.flags.pre});
   bgm('verdict'); await gavel();
-  await say('judge','normal','판결을 내리겠소.');
-  chargeSt(0,'resp'); await say('judge','normal','혐의 ①, [[책임 있음]]. 경고를 알고도 바뀐 정세를 보지 않았소. 명과의 의리를 중히 여긴 시대 분위기는 참작하오.');
-  chargeSt(1,'resp','무거움'); await say('judge','stern','혐의 ②, [[책임 있음]]. 그 무게는 무겁소. 성 밖 백성과 끌려간 백성의 피해를 역사에 크게 기록하오.');
-  chargeSt(2,'guilty'); await say('judge','stern','혐의 ③, [[유죄]]. 증거 없이 세자빈에게 사약을 내리고, 어린 손자들을 귀양 보냈소.');
-  if(S.flags.drop&&S.flags.drop[3]) await say('judge','normal','혐의 ④. 검사가 스스로 거두었소. 다만 판결 이유에 남기오. [[증명되지 않았다]]는 것이지, [[없었다]]는 뜻은 아니오.');
-  else { chargeSt(3,'unproven','증명 부족'); await say('judge','normal','혐의 ④, [[증명 부족]]. 이것은 피고가 ‘안 했다’는 뜻이 아니라 [[증명되지 않았다]]는 뜻이오.'); }
+  const dropped=!!(S.flags.drop&&S.flags.drop[3]);
+  if(J7()){
+    /* 판사 모드: 판결은 판사가 읽는다 (판결을 읽을 때만 앞모습) */
+    const rv={view:'judge'};
+    await say('judge','normal','판사, 판결을 읽으시오.');
+    chargeSt(0,'resp'); await say('daon','base','혐의 ①, [[책임 있음]]. 경고를 알고도 바뀐 정세를 보지 않았습니다. 명과의 의리를 중히 여긴 시대 분위기는 참작합니다.',rv);
+    chargeSt(1,'resp','무거움'); await say('daon','base','혐의 ②, [[책임 있음]]. 그 무게는 무겁습니다. 성 밖 백성과 끌려간 백성의 피해를 역사에 크게 기록합니다.',rv);
+    chargeSt(2,'guilty'); await say('daon','base','혐의 ③, [[유죄]]. 분명한 증거 없이 세자빈에게 사약을 내리고, 어린 손자들을 귀양 보냈습니다.',rv);
+    if(dropped) await say('daon','base','혐의 ④. 검사가 스스로 거두었습니다. 다만 판결 이유에 남깁니다. [[증명되지 않았다]]는 것이지, [[없었다]]는 뜻은 아닙니다.',rv);
+    else { chargeSt(3,'unproven','증명 부족'); await say('daon','base','혐의 ④, [[증명 부족]]. 피고가 ‘안 했다’는 뜻이 아니라 [[증명되지 않았다]]는 뜻입니다.',rv);
+      Music.sting('boo'); await wait(600);
+      await say('guide','normal','방청석에서 야유가 쏟아졌다. “세자를 죽인 왕을 봐주는 거냐!”');
+      await say('judge','normal','…[[용기 있는 판사요]].'); }
+  } else {
+    await say('judge','normal','판결을 내리겠소.');
+    chargeSt(0,'resp'); await say('judge','normal','혐의 ①, [[책임 있음]]. 경고를 알고도 바뀐 정세를 보지 않았소. 명과의 의리를 중히 여긴 시대 분위기는 참작하오.');
+    chargeSt(1,'resp','무거움'); await say('judge','stern','혐의 ②, [[책임 있음]]. 그 무게는 무겁소. 성 밖 백성과 끌려간 백성의 피해를 역사에 크게 기록하오.');
+    chargeSt(2,'guilty'); await say('judge','stern','혐의 ③, [[유죄]]. 증거 없이 세자빈에게 사약을 내리고, 어린 손자들을 귀양 보냈소.');
+    if(dropped) await say('judge','normal','혐의 ④. 검사가 스스로 거두었소. 다만 판결 이유에 남기오. [[증명되지 않았다]]는 것이지, [[없었다]]는 뜻은 아니오.');
+    else { chargeSt(3,'unproven','증명 부족'); await say('judge','normal','혐의 ④, [[증명 부족]]. 이것은 피고가 ‘안 했다’는 뜻이 아니라 [[증명되지 않았다]]는 뜻이오.'); }
+  }
   await say('judge','normal','모두가 독을 의심했소. 그러나 법정은 의심으로 벌하지 않소. 그 대신, [[증명된 잘못은 하나도 놓치지 않소]].');
-  const dropped=!!(S.flags.drop&&S.flags.drop[3]), pts=(dropped?1:0)+(S.plums&&S.plums.has('IF')?1:0)+(S.trust>=3?1:0);
   const BL={'pre-poison':'독살이다','pre-illness':'아니다','pre-unknown':'모르겠다','post-poison':'독살이다','post-illness':'아니다','post-unknown':'모르겠다(증거로는 알 수 없다)'};
+  const beliefs=`처음 생각 → 지금 생각: ${BL[S.flags.pre]||'-'} → ${BL[S.flags.post]||'-'}`, badMin=`‘나쁜 신하’ 고르기: ${({myeonggil:'최명길',sangheon:'김상헌',both:'둘 다 나라를 위한 선택'})[S.flags.badMinister]||'-'}`, plum=`단비의 필사본: ${S.plums&&S.plums.has('IF')?'고친 자국과 매화 얼룩을 찾음':'-'}`;
+  if(J7()){
+    const miss=S.claimMiss||0, pts=(miss<=1?1:0)+(S.plums&&S.plums.has('IF')?1:0)+(S.trust>=3?1:0);
+    caseResult({grade:pts>=3?'공정한 판사':pts===2?'꼼꼼한 판사':'견습 판사',lead:dropped?'판사의 물음에 검사가 증명할 수 없는 혐의를 스스로 거두었고, 판사는 기록으로 증명되는 진짜 비극을 놓치지 않았습니다.':'모두가 믿는 독살 혐의에 ‘증명 부족’을 선고했고, 기록으로 증명되는 진짜 비극은 놓치지 않았습니다.',
+      items:[`혐의 ④: ${dropped?'판사가 묻자 검사가 스스로 취하':'검사가 유지 → 판사가 증명 부족으로 판결'}`,beliefs,badMin,`주장 가르기에서 헷갈린 횟수: ${miss}번`,plum],
+      judge:'수상한 것과 증명된 것은 다르오. 그것을 아는 판사요.',history:HIST7});
+    return true;
+  }
+  const pts=(dropped?1:0)+(S.plums&&S.plums.has('IF')?1:0)+(S.trust>=3?1:0);
   caseResult({grade:pts>=3?'진실을 세운 검사':pts===2?'성실한 검사':'견습 검사',lead:dropped?'모두가 믿는 독살 혐의를 스스로 내려놓고, 기록으로 증명되는 진짜 비극을 놓치지 않았습니다.':'독살 혐의를 끝까지 밀었지만 증명하지 못했습니다. 그 대신 증명되는 혐의는 지켰습니다.',
-    items:[`혐의 ④: ${dropped?'스스로 취하':'유지 → 증명 부족'}`,`처음 생각 → 지금 생각: ${BL[S.flags.pre]||'-'} → ${BL[S.flags.post]||'-'}`,`‘나쁜 신하’ 고르기: ${({myeonggil:'최명길',sangheon:'김상헌',both:'둘 다 나라를 위한 선택'})[S.flags.badMinister]||'-'}`,`단비의 필사본: ${S.plums&&S.plums.has('IF')?'고친 자국과 매화 얼룩을 찾음':'-'}`],
+    items:[`혐의 ④: ${dropped?'스스로 취하':'유지 → 증명 부족'}`,beliefs,badMin,plum],
     judge:'수상한 것과 증명된 것은 다르오. 그것을 아는 검사요.',history:HIST7});
   return true;
 }
+/* 판사 모드 4일차, 판결 전: 의원 함정 가르기(혐의 ④를 유지했을 때) → 두 증거 맞대기 → 판결 저울 */
+async function judgeWeigh7(){
+  await say('rival','normal','판사님, 판결 전에 하나만. 사건 6에서 우리는 광해군의 외교를 [[죄로 보지 않았어요]]. 인조의 외교도 [[같은 기준]]으로 봐 주세요.');
+  await say('judge','normal','판사, 원칙 카드는 사건이 바뀌어도 [[같은 말]]이오. 다만 책임을 따질 때 기준이 하나 더 있소. [[경고를 알고도]] 무시했는가.');
+  if(!(S.flags.drop&&S.flags.drop[3])){
+    await say('player','confident','판사님! 혐의 ④의 근거를 내겠어요. [[의원은 벌받지 않았다]]!');
+    if(!await sortClaims([
+      {who:'player',expr:'confident',text:'대신들이 세자를 치료한 의원을 벌하자고 했지만, 피고가 막았다.',ans:'ok',ev:['I10']},
+      {who:'player',expr:'confident',text:'그러니 피고가 의원을 시켜 세자를 죽인 것이 틀림없다.',ans:'no',fb:{ok:'수상한 것과 증명된 것은 다르오.',op:'좋다·나쁘다를 말하는 생각이 아니라, 증명해야 할 일이오. 그런데 증명할 기록이 없소.'},
+       after:[['judge','normal','의원을 감싼 것은 [[수상하오]]. 그러나 수상한 것과 증명된 것은 다르오.'],['player','sweat','…']]}])) return false;
+  }
+  await say('judge','normal','판사, 이 사건에서 [[의심만으로 내린 벌]]이 무엇이었는지, 그리고 지금 [[의심만 남은 혐의]]가 무엇인지 두 증거로 보이시오.');
+  if(!await presentPair('의심만으로 내린 벌과, 의심만 남은 혐의를 보여 줄 두 증거를 고르세요.','I7','I6',{hint:'세자빈이 무엇 때문에 벌을 받았는지, 그리고 세자의 죽음에 남은 기록이 무엇인지 함께 보시오.',
+    say:'피고는 [[의심만으로]] 세자빈에게 사약을 내렸어요. 그리고 세자의 죽음에 남은 것도 [[들은 말]]뿐이에요. 이 법정은 피고에게도 의심만으로 벌하지 않아요. 그러나 피고가 한 일은 그대로 따져요.'})) return false;
+  if(!await scale('혐의 ③ 세자의 가족에게 가혹한 벌을 내린 죄',[
+    {k:'동기',q:'피고가 세자빈을 벌한 까닭으로 증거에 맞는 것은?',opts:[{t:'세자빈이 왕의 음식에 독을 넣었다고 의심했다. 증거는 분명하지 않았다.',ok:true},{t:'세자빈이 정말 독을 넣었다.',ok:false,fb:'그것은 증명되지 않았소. 피고의 의심이었소.'}]},
+    {k:'방법',q:'어떻게 벌했나?',opts:[{t:'대신들이 줄지어 말렸지만 듣지 않고 사약을 내렸다.',ok:true},{t:'대신들과 의논해 모두의 뜻대로 정했다.',ok:false,fb:'대신들은 엎드려 말렸소.'}]},
+    {k:'결과',q:'무슨 일이 일어났나?',opts:[{t:'세자빈 강씨가 목숨을 잃었다.',ok:true},{t:'세자빈은 잠시 궁 밖에서 지냈을 뿐이다.',ok:false,fb:'증거를 다시 보시오.'}]},
+    {k:'그 뒤의 행동',q:'그 뒤 피고가 한 일은?',opts:[{t:'이듬해 어린 세 손자를 제주도로 귀양 보냈고, 둘이 그곳에서 세상을 떠났다.',ok:true},{t:'손자들을 궁에서 편히 보살폈다.',ok:false,fb:'그 말은 확인되지 않았소.'}]}])) return false;
+  await say('judge','normal','판사, 혐의마다 판결의 종류와 이유, 근거를 대시오.');
+  return true;
+}
 const HIST7='인조는 1623년 반정으로 왕이 되었습니다. 명과의 의리를 앞세우는 동안 후금(청)이 강해져 1627년 정묘호란, 1636년 병자호란이 일어났습니다. 인조는 남한산성에서 47일을 버티다 1637년 삼전도에서 항복했고, 많은 백성이 청으로 끌려갔습니다. 볼모로 갔던 소현세자는 1645년 돌아와 두 달 만에 세상을 떠났습니다. 독살 의혹은 지금도 이야기되지만, 실록의 관련 기록은 전해 들은 말입니다. 그 뒤 세자빈 강씨는 사약을 받았고, 어린 손자들은 제주도로 귀양 갔습니다.';
-regCase(7,{title:'남한산성의 겨울',desc:'인조 · 검사 · 난이도 6',ev:EVIDENCE7,locs:LOCS7,terms:TERMS7,defName:'인조',time:'100~110분',main:'pros',
-  lead:'사건 7은 검사 자리예요. 혐의가 넷이에요. 모두가 믿는 이야기를 증거로 따져 보세요. (교사 사전 확인 권장)',
-  locked:{def:'검사 사건',judge:'검사 사건'},
+regCase(7,{title:'남한산성의 겨울',desc:'인조 · 검사·판사 · 난이도 6',ev:EVIDENCE7,locs:LOCS7,terms:TERMS7,defName:'인조',time:'100~110분',main:'pros',
+  lead:'사건 7은 검사 자리가 기본이고, 판사 자리도 열려 있어요. 혐의가 넷이에요. 모두가 믿는 이야기를 증거로 따져 보세요. (교사 사전 확인 권장)',
+  locked:{def:'검사·판사 사건'},
   openLine:'지금부터 [[역사 법정]]을 엽니다. 피고는 조선의 왕, 인조.',history:HIST7,
   views:{prologue7:prologueView('#1e2230','#07080e')},
-  goal:{pros:'혐의가 넷인 검사예요. 모두가 믿는 이야기도 증거로 따지고, 증명되는 잘못은 하나도 놓치지 않아요.'},
+  goal:{pros:'혐의가 넷인 검사예요. 모두가 믿는 이야기도 증거로 따지고, 증명되는 잘못은 하나도 놓치지 않아요.',judge:'모두가 믿는 이야기도 주장으로 가르고, 의심만으로는 벌하지 않되 증명되는 잘못은 하나도 놓치지 않아요.'},
   recall:{q:'지난 사건에서 광해군의 외교(혐의 ②)는 왜 무죄였나요?',opts:[{t:'위험을 알고 전쟁을 피하려 한 외교 판단이었기 때문',ok:true},{t:'명나라가 나쁜 나라였기 때문'},{t:'강홍립이 혼자 항복했기 때문'}],yes:'잘 기억하고 있구려. 이번 사건에서도 그 기준을 쓰게 될 것이오.',no:'…위험을 알고 전쟁을 피한 외교였소. 이번 사건에서도 같은 기준을 쓰게 될 것이오.'},
   bgCards:{1:{ic:'❄️',t:'1627년, 1636년 두 번 북쪽 나라(후금, 뒤의 청)가 쳐들어왔어요. 1636년 겨울 인조는 남한산성으로 피했어요.'},2:{ic:'🏮',t:'소현세자는 8년 동안 청에 볼모로 있다가 1645년 돌아왔고, 두 달 만에 세상을 떠났어요.'},3:{ic:'🏚️',t:'세자가 세상을 떠난 뒤, 세자빈과 어린 손자들에게 무슨 일이 있었는지 봐요.'},4:{ic:'⚖️',t:'판결하는 날이에요. 사건 6과 같은 기준으로 외교를 판결해요.'}},
   record:['남한산성 밖에서 불탄 마을의 사람들','청으로 끌려갔다가 돌아와 손가락질받은 백성들','47일 동안 성 안에서 추위와 굶주림을 견딘 군사와 백성'],
@@ -289,4 +422,4 @@ regCase(7,{title:'남한산성의 겨울',desc:'인조 · 검사 · 난이도 6'
       3:{say:'어제 법정 요약! 궁녀 단비가 세자의 몸을 [[직접 봤대요]]!',opts:[{t:'아니야. 문밖에서 들은 말이었고, 필사본도 ‘들었다’를 고친 거였어.',ok:true},{t:'맞아. 직접 봤어.'}]}},
     pun:[['judge','normal','남한산성이 하도 추웠다니… 오늘 재판은 [[산성]]이 아니라 [[한성]]… 아니, 한기가 도는구려.'],['ttolbang','joy','하, 하하… 한기!'],['guide','normal','(법정이 정말로 조금 추워졌다.)']],punDay:2},
   gojeung:['남한산성 농성 기간(1636.12~1637.1, 47일)','최명길·김상헌의 주장','소현세자 귀국(1645.2)과 사망(1645.4), 실록의 사망 관련 기록이 전언(들은 말)이라는 점','의원 이형익 처벌 논의와 인조의 반대','세자빈 강씨 사사(1646) 경위와 대신들의 반대','손자들의 제주 유배(1647)와 그 뒤','청으로 끌려간 백성의 수(통계가 엇갈림)','궁녀 단비와 필사본, 통역관 대충은 게임 속 상상','묘호 ‘효종’은 봉림대군이 세상을 떠난 뒤(1659) 붙음 — 필사본의 시대 안 맞는 말'],
-  roles:{pros:runPros7}});
+  roles:{pros:run7,judge:run7}});
