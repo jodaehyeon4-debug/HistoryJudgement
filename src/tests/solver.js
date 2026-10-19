@@ -1,6 +1,7 @@
 // Plays a whole case on its own, using the game's own data to find the right moves.
 // 사용: node tests/solver.js c1 | c2p | c2d | c3d | c3p | c4p … [갈림길 태그,쉼표로]
-//   예) node tests/solver.js c3d sharp,hide    node tests/solver.js c3p keep
+//   예) node tests/solver.js c3d sharp,hide    node tests/solver.js c3p keep    node tests/solver.js c7j wait,both
+//   역할 글자: p 검사, d 변호인, j 판사 (첫 화면의 cx-사건-역할-new 단추를 누름)
 const {JSDOM}=require('jsdom');
 const html=require('fs').readFileSync('v03.html','utf8');
 const errors=[]; const log=[]; const _p=log.push.bind(log); log.push=(...a)=>{ console.log(...a); return _p(...a); };
