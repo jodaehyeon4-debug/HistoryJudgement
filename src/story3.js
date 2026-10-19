@@ -112,7 +112,7 @@ const TERMS3=[
 /* ---------- 증언 묶음 ---------- */
 /* 어부는 모든 길이와 시간을 물고기로 센다. 참고용 잉어로 재어 보면 관산성은 볼 수 없는 거리 */
 const FISH_GAG=me=>[[me,'think','잉어 서른 마리 길이요?'],['player','think','(잉어 한 마리가… 음… 계산이 안 되네.)'],[me,'normal','잉어 한 마리가 몇 자인데요?'],['fisher','angry','그야 잉어마다 다르지!'],['judge','stern','…경위, [[참고용 잉어]]를 가져오시오.'],
-  ['ttolbang','joy','네! 여기 있습니다! 아주 싱싱해요!'],['guide','normal','(똘방이 살아 있는 잉어를 안고 들어왔다. 잉어가 증언대에서 펄떡이더니… 해치의 얼굴에 물을 튀겼다.)'],['judge','shock','…흠. 잉어 한 마리가 한 자 남짓. 서른 마리면 [[열 걸음 남짓]]이구려.'],
+  ['ttolbang','fish','네! 여기 있습니다! 아주 싱싱해요!'],['guide','normal','(똘방이 살아 있는 잉어를 안고 들어왔다. 잉어가 증언대에서 펄떡이더니… 해치의 얼굴에 물을 튀겼다.)'],['judge','shock','…흠. 잉어 한 마리가 한 자 남짓. 서른 마리면 [[열 걸음 남짓]]이구려.'],
   [me,'confident','관산성은 지금의 충북 옥천 근처예요. 한강 나루에서 걸어서 [[며칠]] 걸리는 곳이죠. 증인, 정말 [[직접 보셨나요]]?'],['fisher','sweat','그, 그건…'],['judge','stern','증인, 본 것과 들은 것을 나누어 증언하시오.']];
 const T3fish=()=>({key:'어부',who:'fisher',allReveal:true,wrongR:[[['fisher','angry','그건 붕어 두 마리 값어치도 안 되오!']],[['fisher','base','허허, 그걸로는 고기 한 마리도 못 낚겠구려.']],[['fisher','angry','그 증거, 강물에 던져 버리시오!']]],lines:[
   {text:'나는 이 한강 나루에서 평생 고기를 잡은 사람이오.',expr:'base',press:[['rival','normal','평생이요? 그럼 551년 일도 기억하세요?'],['fisher','base','기억하다마다. 내가 젊을 때였지.']]},
@@ -341,7 +341,7 @@ async function prosD1_3(){
   await say('rival','present','551년의 기록입니다. 그해 한강 [[하류 6군은 백제]]가 가졌어요. 이 나루가 신라 땅이 된 건 553년이에요!',{action:true}); hideEvidence();
   await say('fisher','angry','몇 해 차이가 뭐 그리 대수요!');
   await shout('hold');
-  { const G=FISH_GAG('rival'); for(const x of G){ if(x[1]==='joy'&&x[0]==='ttolbang'){ Music.sting('splash'); shake(); } await say(x[0],x[1],x[2]); } }
+  { const G=FISH_GAG('rival'); for(const x of G){ if(x[1]==='fish'&&x[0]==='ttolbang'){ Music.sting('splash'); shake(); } await say(x[0],x[1],x[2]); } }
   await say('fisher','base','…직접 본 건 아니오. 장터에서 다들 그렇게 말하더란 말이오.',{testimony:true,tag:'새 증언'});
   S.found.add('J8'); Music.sting('get'); showEvidence('J8'); await say('guide','normal','증거 수첩에 [[전해 들은 말]]이 들어왔다.'); hideEvidence();
   await say('player','sweat','(내 증인의 말이… 들은 이야기였어.)');

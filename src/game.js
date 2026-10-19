@@ -37,9 +37,12 @@ const SPRITES={};
 const EXPR_FALLBACK={hesitate:['think','sweat','base'],plea:['sweat','base'],normal:['base'],smug:['base','normal'],confident:['present','base','normal'],present:['base','confident','normal'],think:['normal','base'],angry:['stern','base'],stern:['angry','base','normal'],smile:['base','normal'],shock:['sweat','base'],breakdown:['shock','sweat','base'],sweat:['shock','base']};
 const BASE_PREF={wiman:['base','angry'],jun:['base','hesitate'],merchant:['base'],heungsu:['base','hesitate'],scribe:['base','smug'],citizen:['base'],daon:['base'],defendant:['base','angry','sweat'],judge:['base','stern','shock'],rival:['base','sweat','shock'],player:['present','normal','sweat']};
 function pickExpr(A,expr,who){ if(typeof A==='string') return A; if(A[expr]) return A[expr]; for(const k of (EXPR_FALLBACK[expr]||[])) if(A[k]) return A[k]; for(const k of (BASE_PREF[who]||[])) if(A[k]) return A[k]; return A.base||A.normal||Object.values(A)[0]; }
+/* 사건마다 다른 옷: 말순 할머니는 시대를 건너는 단골 증인 (그림 이름 <인물>-<옷>_<표정>) */
+const OUTFIT={4:{malsun:'malsun-goryeo'},7:{malsun:'malsun-joseon'}};
+function sprSet(who){ const A=(typeof ASSETS!=='undefined'&&ASSETS.sprites)||{}, o=OUTFIT[S&&S.case]; return (o&&o[who]&&A[o[who]])||A[who]||null; }
 function charView(who,sp,expr){
   if(!sp) return '';
-  const A=(typeof ASSETS!=='undefined'&&ASSETS.sprites)?ASSETS.sprites[who]:null;
+  const A=sprSet(who);
   if(A){ const src=pickExpr(A,expr,who); if(src) return `<div class="spr e-${expr}"><img src="${src}" alt="${esc(sp.name)}"></div>`; }
   if(sp.draw) return sp.draw(expr);
   const P=SPRITES[who];
@@ -583,7 +586,7 @@ function renderNpcLayer(){
   const L=$('#npcl'); if(!L) return;
   const np=(S.mode==='inv'&&!moving)?npcOf(invLoc):null;
   if(!np){ L.innerHTML=''; L.hidden=true; return; }
-  const pl=npcPlace(np), A=ASSETS.sprites&&ASSETS.sprites[np.who], src=A?pickExpr(A,np.expr||'base',np.who):null;
+  const pl=npcPlace(np), A=sprSet(np.who), src=A?pickExpr(A,np.expr||'base',np.who):null;
   L.hidden=false;
   L.innerHTML=src?`<img class="npc-img" src="${src}" alt="${esc(NAMES[np.who]||'')}" style="left:${pl.x}%;height:${pl.h}%;bottom:${pl.b||0}%">`:'';
 }
@@ -851,7 +854,7 @@ function openResult(){
 function openGameOver(){
   const R=ROLE_NAME();
   openSheet(`<h2>이번 재판은 ${R}가 졌습니다</h2>
-    <div class="go-gag"><div class="go-tb">${ttolbangSVG('base')}</div><p>똘방이 깨진 방울 조각을 빗자루로 쓸어 담는다.<br><b>“자, 다시 해 보죠!”</b></p></div>
+    <div class="go-gag"><div class="go-tb">${(ASSETS.sprites&&ASSETS.sprites.ttolbang&&ASSETS.sprites.ttolbang.broom)?`<img src="${ASSETS.sprites.ttolbang.broom}" alt="빗자루를 든 똘방">`:ttolbangSVG('base')}</div><p>똘방이 깨진 방울 조각을 빗자루로 쓸어 담는다.<br><b>“자, 다시 해 보죠!”</b></p></div>
     <p class="lead">해치 방울이 모두 깨졌어요. 이 결과는 ‘피고에게 책임이 없다’는 뜻이 아니라 ‘${R}의 주장이 증거로 증명되지 못했다’는 뜻이에요.</p>
     <p class="lead">증거 카드의 글을 천천히 다시 읽고 다시 해 보세요. 다음 판에는 방울이 하나 더 있고, 해치의 힌트도 일찍 나와요.</p>
     <div class="sheet-foot"><button class="abtn" id="gTeacher" type="button">교사용 기록</button><button class="abtn primary" id="gRetry" type="button">항소하기</button></div>`,false);

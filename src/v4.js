@@ -187,6 +187,7 @@ function addGagCast(){
   addCast('malsun',{name:'말순 할머니',label:'말순 할머니',col:'#7a4a6a',spec:{skin:'#ecc6a0',robe:'#8a5a7a',robe2:'#6a3e5a',collar:'cross',hat:'bun',hair:'#cfcfd4',beard:'none',iris:'#3a2a20',blush:true}});
   addCast('clapper',{name:'방청석 박수 아저씨',label:'방청석 박수 아저씨',col:'#4a6a8a',spec:{skin:'#efc8a0',robe:'#4a6a8a',robe2:'#33506e',collar:'cross',hat:'short',hair:'#2a2220',beard:'thin',iris:'#3a2a20'}});
   BASE_PREF.ttolbang=['base']; EXPR_FALLBACK.bang=['base']; EXPR_FALLBACK.joy=['base']; EXPR_FALLBACK.sad=['sweat','base'];
+  EXPR_FALLBACK.fish=['joy','base']; EXPR_FALLBACK.muk=['joy','base']; EXPR_FALLBACK.broom=['joy','base']; EXPR_FALLBACK.moved=['base'];
 }
 addGagCast();
 /* 메밀묵: 사건 1부터 증거 수첩에 늘 들어 있는 개그 물건 (사건 9에서 결정적 증거) */
@@ -218,7 +219,7 @@ async function gagRepeat(n){
 async function gagCourt(day){
   const G=XD(S.case).gag; if(!G) return;
   if(day===1&&G.clap!==false){ Music.sting('cheer'); await say('guide','normal','(방청석 맨 앞줄에서 누가 힘차게 박수를 친다. 짝짝짝짝!)');
-    await say('clapper','base',G.clap||'아이고, 시작한다길래 그만…!',{view:'witness'}); await say('judge','stern','딸랑. 방청석, 지금은 [[박수 칠 때가 아니오]].'); }
+    await say('clapper','base',G.clap||'아이고, 시작한다길래 그만…!',{view:'witness'}); await say('judge','stern','딸랑. 방청석, 지금은 [[박수 칠 때가 아니오]].'); await say('clapper','sweat','…(슬그머니 손을 내린다)',{view:'witness'}); }
   if(G.pun&&day===(G.punDay||2)){ for(const x of G.pun) await say(x[0],x[1],x[2]); }
 }
 /* 재판 기록 보는 교사용: 웃음 관찰 (교사가 실제로 웃었는지 표시) */

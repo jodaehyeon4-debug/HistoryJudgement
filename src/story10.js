@@ -297,12 +297,12 @@ async function d4_10(){
   await say('judge','normal','피고는 처음엔 독립의 문을 세웠소. 그러나 그 문을 지킨 것은 피고가 아니라, [[같은 시대에 다른 길을 고른 사람들]]이었소.');
   await say('judge','normal','시대는 [[핑계가 될 수 없소]].');
   /* 시리즈 마지막 콜백: 박수 아저씨의 맞는 때 박수, 해치의 마지막 아재개그, 똘방의 메밀묵 */
-  Music.sting('clap'); await say('clapper','base','(방청석 맨 앞줄에서, 이번에는 꼭 맞는 때에) …짝, 짝, 짝.',{view:'witness'});
+  Music.sting('clap'); await say('clapper','moved','(방청석 맨 앞줄에서, 이번에는 꼭 맞는 때에) …짝, 짝, 짝.',{view:'witness'});
   Music.sting('cheer'); await say('guide','normal','(한 사람, 두 사람… 법정 전체가 따라 박수를 쳤다. 해치는 이번에는 방울을 흔들지 않았다.)');
   await say('judge','normal','…열 번의 재판이 끝났으니, 오늘은 [[재판장]]이 아니라 [[재판 짱]]이라 불러도 좋소.');
   Music.sting('cheer'); await say('guide','normal','(처음으로, [[모두가 웃었다]].)');
   await say('judge','normal','그리고 똘방. 그동안 깎았던 메밀묵을 [[모두 돌려주겠소]].'); mukReturn();
-  await say('ttolbang','joy','흐어어엉…! 메밀묵이 법정에 가득해요!');
+  await say('ttolbang','muk','흐어어엉…! 메밀묵이 법정에 가득해요!');
   await say('rival','normal','열 번의 재판이었어. 처음엔 이기고 지는 줄만 알았는데.',{view:'courtyard'});
   await say('player','normal','증거로 따지고, 기록을 의심하고, 다른 선택을 한 사람들을 기억하는 거였어.',{view:'courtyard'});
   const pts=(S.flags.letter==='zoom'?1:0)+(S.trust>=3?1:0)+((S.log||[]).filter(x=>!x.ok).length<=1?1:0);
