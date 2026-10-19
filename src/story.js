@@ -13,12 +13,12 @@ Object.assign(PHASE_NAME,{1:'1일차 조사',2:'1일차 법정',3:'2일차 조�
   const L=id=>LOCS.find(l=>l.id===id);
   const ru=L('ruins'); const gate=ru.rooms.find(r=>r.id==='ruins'); const cliff=ru.rooms.find(r=>r.id==='ruins-cliff');
   cliff.from=2;
-  cliff.npcs=[{who:'malsun',expr:'base',place:{x:30,h:60,b:2},from:2,topics:[
+  cliff.npcs=[{who:'malsun',expr:'base',place:{x:30},from:2,topics:[
     {id:'ms-saw',t:'무엇을 보셨나요?',must:true,lines:[['malsun','base','내가 다 봤다니까! 궁녀 [[3천 명]]이 이 강으로 뛰어드는 걸!'],['ME','normal','직접 보셨어요?'],['malsun','base','그럼! …아니, 우리 옆집 개똥이 할아버지가 봤대.'],['ME','think','그 할아버지는 직접 보셨대요?'],['malsun','sweat','…그 할아버지의 사촌의, 사돈의, 옆집 사람이…'],['guide','normal','(말순 할머니의 손가락이 하늘에 가계도를 그린다. 한 칸, 또 한 칸… 끝이 없다.)'],['ttolbang','base','그럼 그 사돈을 증인으로 부를까요?'],['judge','normal','(어디선가 해치의 목소리) …그 사돈은 1,400년 전 사람이오. 딸랑.'],['ME','think','(본 사람은 아무도 없고, 들은 사람만 줄줄이 있네. 이런 건 [[전해 들은 말]]이야.)']],gives:['E15']},
     {id:'ms-who',t:'할머니는 누구세요?',lines:[['malsun','base','이 근처에서 주막을 하는 말순이오. 소문이라면 내가 제일 빠르지!']]}],
     present:{E7:{lines:[['malsun','base','낙화암! 거기서 3천 명이… 응? 기록에는 숫자가 없다고? 이상하네, 다들 그러던데.']]},MUK:{lines:[['malsun','base','어머, 메밀묵! 우리 주막에도 있는데. 한 그릇 두 냥이오.']]}},
     def:[['malsun','base','그건 처음 보는 물건이네. 그런데 내가 들은 얘기로는…']]}];
-  gate.npcs=[{who:'citizen',expr:'base',place:{x:47,h:60,b:2},topics:[
+  gate.npcs=[{who:'citizen',expr:'base',place:{x:40},topics:[
     {id:'c-night',t:'그날의 사비성',lines:[['citizen','base','그날 해 질 녘, 강 쪽에서 북소리가 들렸어요.'],['citizen','plea','성 안은 아수라장이었지요. 다들 어디로 가야 할지 몰랐어요.']]},
     {id:'c-cliff',t:'강가 절벽',lines:[['citizen','base','성 뒤 강가에 큰 바위가 있어요. 궁녀들이 거기서 몸을 던졌다는 이야기가 전해지지요.'],['citizen','base','그런데… 몇 명이었는지 똑똑히 아는 사람은 없어요.']]},
     {id:'c-king',t:'왕의 행방',lock:'E8',must:true,lockSay:'(이 사람은 무언가를 말하기를 망설이고 있다. 적이 어디로 들어왔는지 보여 주면 입을 열지도 모른다.)',
@@ -33,14 +33,14 @@ Object.assign(PHASE_NAME,{1:'1일차 조사',2:'1일차 법정',3:'2일차 조�
   LOCS.push({id:'lobby',name:'법정 로비',time:'저녁',from:2,intro:'재판이 끝난 법정 로비다. 긴 의자에 누군가 앉아 있다.',
     miss:['반들반들한 마룻바닥이다.','빈 의자다.','창살 사이로 노을이 든다.','아무것도 없다.'],
     spots:[{x:5,y:62,w:31,h:22,label:'긴 의자',say:['나무 의자다. 오래 기다린 사람들의 손때가 묻어 있다.']},{x:83,y:64,w:13,h:20,label:'항아리',say:['물을 담아 두는 항아리다. 단서는 아니다.']},{x:57,y:45,w:9,h:18,label:'분재',say:['작은 소나무 분재다.']},{x:36,y:28,w:22,h:40,label:'법정 문',say:['내일 다시 열릴 법정의 문이다.']}],
-    npcs:[{who:'heungsu',expr:'base',place:{x:72,h:70,b:0},from:2,until:2,topics:[
+    npcs:[{who:'heungsu',expr:'base',place:{x:72},from:2,until:2,topics:[
       {id:'h-exile',t:'귀양살이',lines:[['heungsu','base','오래 귀양살이를 했소. 서울 일은 바람결에 들을 뿐이지.']]},
       {id:'h-minister',t:'대신들',lines:[['heungsu','base','대신들은 내가 오래 귀양살이를 해서 원망이 깊다고 했지…'],['heungsu','hesitate','그 말이 왕의 귀를 막았을지도 모르오.']]},
       {id:'h-ask',t:'왕의 물음',lock:'E3',must:true,lockSay:'(흥수는 입을 다물었다. 같은 생각을 한 다른 신하의 글을 보여 주면 마음을 열지도 모른다.)',
        lines:[['heungsu','hesitate','성충의 글을 보니… 내가 왕께 드린 말과 같구려.'],['heungsu','base','좋소. 내일 법정에 서겠소. 다만 내 입으로 다 말할 수 있을지는… 모르겠소.'],['ME','think','(무언가 숨기는 게 있어. 법정에서 [[더 물어봐야]] 할 것 같아.)']]}],
       present:{E3:{lines:[['heungsu','shock','이건… 성충의 글이 아니오!']],unlock:'h-ask'},E4:{lines:[['heungsu','hesitate','바른말을 한 신하가 옥에 갇혔지. 나도 그 꼴을 봤소.']]}},
       def:[['heungsu','base','늙은이가 알아볼 만한 물건이 아니구려.']]},
-     {who:'rival',expr:'smug',place:{x:72,h:70,b:0},from:3,topics:[
+     {who:'rival',expr:'smug',place:{x:72},from:3,topics:[
       {id:'n-656',t:'656년 기록',lines:[['rival','confident','성충이 옥에 갇힌 이야기와, 왕이 놀이에 빠졌다는 이야기는 [[같은 대목]]이에요. 내일 그걸 따져 물을 거예요.']]},
       {id:'n-who',t:'누가 쓴 기록인가',lock:'E10',must:true,lockSay:'(누리는 웃기만 한다. 그 기록을 직접 보여 주며 물어봐야겠다.)',
        lines:[['rival','smug','「삼국사기」요? 고려 때 엮은 책이죠. 그게 어쨌다는 거예요?'],['rival','normal','…흥, 서고의 잠긴 상자에 편찬 기록이 있다던데. 열쇠는 궁터 우물 근처에서 봤다는 소문이 있어요.']]}],

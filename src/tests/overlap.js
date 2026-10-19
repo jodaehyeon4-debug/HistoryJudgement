@@ -3,10 +3,10 @@ const {JSDOM}=require('jsdom');
 const html=require('fs').readFileSync('v03.html','utf8');
 const dom=new JSDOM(html,{runScripts:'dangerously',url:'https://example.org/',pretendToBeVisual:true,beforeParse(w){ w.__yjFast=true; }});
 setTimeout(()=>{ const Y=dom.window.__yj; let bad=0, cross=0;
-  for(const [n,D] of Object.entries(Y.CASE_DATA)) for(const l of D.locs) for(const r of (l.rooms||[l])){
+  for(const [n,D] of [['1',{locs:Y.C1LOCS}],['2',{locs:Y.LOCS2}],...Object.entries(Y.CASE_DATA)]) for(const l of D.locs) for(const r of (l.rooms||[l])){
     for(const np of (r.npcs||[])){
       const R=Y.npcRect(np);
-      for(const p of r.spots){ const cx=p.x+p.w/2, cy=p.y+p.h/2; if(cx>=R.x&&cx<=R.x+R.w&&cy>=R.y&&cy<=R.y+R.h){ bad++; console.log(`case ${n} ${r.id}: '${p.label}' center (${cx.toFixed(0)},${cy.toFixed(0)}) inside ${np.who} [${R.x.toFixed(0)}-${(R.x+R.w).toFixed(0)}, ${R.y.toFixed(0)}-${(R.y+R.h).toFixed(0)}]`); } } }
+      for(const p of r.spots){ const cx=p.x+p.w/2, cy=p.y+p.h/2, m=(p.ev||(p.gives&&p.gives.length))?2:0; /* 증거 자리는 돋보기 오차만큼 여유 */ if(cx>=R.x-m&&cx<=R.x+R.w+m&&cy>=R.y-m&&cy<=R.y+R.h+m){ bad++; console.log(`case ${n} ${r.id}: '${p.label}' center (${cx.toFixed(0)},${cy.toFixed(0)}) inside ${np.who} [${R.x.toFixed(0)}-${(R.x+R.w).toFixed(0)}, ${R.y.toFixed(0)}-${(R.y+R.h).toFixed(0)}]`); } } }
     /* 단서 자리가 다른 자리와 겹치면, 겹친 곳을 눌렀을 때 어느 쪽이 나올지 헷갈린다 */
     const S=r.spots; for(let i=0;i<S.length;i++) for(let j=i+1;j<S.length;j++){ const a=S[i], b=S[j]; if(!(a.ev||b.ev)) continue;
       const w=Math.min(a.x+a.w,b.x+b.w)-Math.max(a.x,b.x), h=Math.min(a.y+a.h,b.y+b.h)-Math.max(a.y,b.y);

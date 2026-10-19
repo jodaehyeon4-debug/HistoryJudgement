@@ -580,7 +580,9 @@ async function examineAt(){
 const josa=(w,a,b)=>{ const c=String(w).charCodeAt(String(w).length-1); return w+((c>=0xAC00&&c<=0xD7A3&&(c-0xAC00)%28)?b:a); };
 function npcOf(r){ if(!r) return null; const L=r.npcs||(r.npc?[r.npc]:[]); return L.find(avail)||null; }
 /* 조사 화면 그림 안에 인물을 세운다. 돋보기를 대고 Enter·클릭하면 말을 건다 */
-function npcPlace(np){ return np.place||{x:70,h:66,b:0}; }
+/* 조사 장면의 인물: 크기는 모두 같게, 발(그림 아래 끝)은 화면 바닥에 붙임. 장소 데이터의 place는 가로 자리(x)만 씀 */
+const NPC_H=64;
+function npcPlace(np){ return {x:(np.place&&np.place.x!=null)?np.place.x:70,h:NPC_H,b:0}; }
 function npcRect(np){ const pl=npcPlace(np), w=pl.h*0.469*0.62; return {x:pl.x-w/2,y:100-(pl.b||0)-pl.h*0.93,w:w,h:pl.h*0.93}; }
 function npcHit(x,y){ if(S.mode!=='inv') return null; const np=npcOf(invLoc); if(!np) return null; const r=npcRect(np); return (x>=r.x&&x<=r.x+r.w&&y>=r.y&&y<=r.y+r.h)?np:null; }
 function renderNpcLayer(){
@@ -1107,4 +1109,4 @@ textEl.textContent='역사 법정에 오신 것을 환영합니다. 아래에서
 showTitle();
 
 if(location.hash==='#dbg') window.__dbg={setView:setView,setName:setName,titleCard:titleCard};
-window.__yj={S:S,CASE_DATA:CASE_DATA,npcRect:npcRect,get CX(){return CX;},get invLoc(){return invLoc;},get invParent(){return invParent;},LOCS:LOCS,availLocs:availLocs,roomsOf:roomsOf,npcOf:npcOf,missingReq:missingReq,get pickExpect(){return S.expect;},get EVIDENCE(){return EVIDENCE;}};
+window.__yj={S:S,CASE_DATA:CASE_DATA,npcRect:npcRect,get CX(){return CX;},get invLoc(){return invLoc;},get invParent(){return invParent;},LOCS:LOCS,availLocs:availLocs,roomsOf:roomsOf,npcOf:npcOf,missingReq:missingReq,get pickExpect(){return S.expect;},get EVIDENCE(){return EVIDENCE;},get C1LOCS(){return C1DATA.locs;},get LOCS2(){return LOCS2;}};

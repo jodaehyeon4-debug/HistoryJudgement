@@ -30,7 +30,7 @@ const C3CH=()=>[{t:'① 동맹을 깨고 한강 하류를 빼앗은 죄'},{t:'�
 
 const LOCS3=[
   {id:'banwol',name:'반월성 접견실',time:'아침',role:'def',kind:'meet',intro:'신라의 궁궐 반월성. 피고 진흥왕이 변호인을 기다리고 있다.',miss:['…'],spots:[],
-   npcs:[{who:'jinheung',expr:'base',place:{x:52,h:74,b:0},topics:[
+   npcs:[{who:'jinheung',expr:'base',place:{x:52},topics:[
      {id:'j1-alli',t:'백제와의 사이',lines:[['jinheung','base','백제와 우리는 백 년 넘게 한편이었소. 고구려가 내려올 때마다 서로 군사를 보냈지.'],['jinheung','serious','…그걸 부정할 생각은 없소.']]},
      {id:'j1-river',t:'한강 하류를 차지한 일',must:true,lines:[['jinheung','serious','553년, 내가 한강 하류를 차지하고 신주를 둔 것은 사실이오.'],['jinheung','serious','변호인이 그걸 감추려 한다면 그만두시오. 기록에 다 남아 있으니.'],['ME','think','(혐의 ①은 기록으로 확정된 일이구나. 그렇다면 다툴 것은 ②와 ③이야.)']]},
      {id:'j1-seong',t:'성왕의 죽음',lock:'J3',lockSay:'(진흥왕은 대답을 피한다. 신라가 한강에 무엇을 두었는지 보여 주면 이야기를 시작할지도 모른다.)',lines:[['jinheung','serious','신주를 두고 김무력을 보냈소. 이듬해 그 김무력이 관산성에서 백제군과 맞섰지.'],['jinheung','sweat','성왕이 그 싸움에서… 그 이야기는 김무력에게 직접 들으시오.']]},
@@ -50,7 +50,7 @@ const LOCS3=[
     {x:55,y:66,w:9,h:11,label:'나무 부두',say:['낡은 나무 부두다. 삐걱거린다.']},
     {x:56,y:36,w:30,h:12,label:'노을 진 강물',say:['강물이 노을에 물들었다. 이 강을 두고 세 나라가 다투었다.']},
     {x:88,y:72,w:12,h:22,label:'갈대숲',say:['갈대가 우거져 있다. 아무것도 없다.']}],
-   npcs:[{who:'fisher',expr:'base',place:{x:44,h:56,b:4},until:2,topics:[
+   npcs:[{who:'fisher',expr:'base',place:{x:44},until:2,topics:[
      {id:'f-who',t:'누구세요?',lines:[['fisher','base','이 나루에서 고기 잡는 사람이오. 할아버지 때부터 백제 사람이지.']]},
      {id:'f-day',t:'그날의 나루',must:true,lines:[['fisher','base','신라 깃발이 저 성책에 걸리던 날을 잊지 못하오.'],['fisher','angry','함께 싸우자던 놈들이 우리 땅에 깃발을 꽂았지!']]},
      {id:'f-seong',t:'성왕 이야기',lock:'J3',lockSay:'(어부는 성책 쪽을 노려본다. 신라가 이 나루에 무엇을 두었는지 보여 주면 말을 꺼낼지도 모른다.)',lines:[['fisher','angry','신주라… 그 신주의 장수가 성왕을 죽였소.'],['fisher','base','장터에서 다들 그러던데. 신라 왕이 성왕을 베라 명했다고.'],['ME','think','(‘장터에서 다들 그러던데’… 직접 본 건 아닌가 봐.)']]}],
@@ -85,12 +85,12 @@ const LOCS3=[
    miss:['반들반들한 마룻바닥이다.','빈 의자다.','아무것도 없다.'],
    spots:[{x:5,y:62,w:31,h:22,label:'긴 의자',say:['나무 의자다.']},{x:36,y:28,w:22,h:40,label:'법정 문',say:['내일 다시 열릴 법정의 문이다.']}],
    npcs:[
-    {who:'player',expr:'upset',role:'def',place:{x:72,h:70,b:0},topics:[
+    {who:'player',expr:'upset',role:'def',place:{x:72},topics:[
       {id:'h-feel',t:'백제 편',lines:[['player','upset','…나도 알아. 법정은 편을 드는 곳이 아니라는 거.'],['player','upset','그래도 76년 만에 되찾은 땅을 2년 만에 빼앗겼잖아. [[나도 백제 편이 되고 싶었어]].']]},
       {id:'h-note',t:'혐의 ②를 세운 까닭',must:true,lines:[['player','upset','…사실, 재판 전에 법정 문틈에서 쪽지를 받았어.'],['player','upset','“진흥왕이 성왕의 목을 베라 했다는 문서가 있다.” 그 말만 믿고 혐의를 세웠지.'],['rival','think','(그 문서는 지금 어디 있지? 이 쪽지, [[확대해서]] 살펴봐야겠어.)']],gives:['J10']}],
      present:{J7:{lines:[['player','upset','555년… 응, 나도 봤어.']]},J10:{lines:[['player','upset','그 쪽지… 누가 보냈는지 나도 몰라.']]}},
      def:[['player','upset','지금은 그걸로 다투고 싶지 않아.']]},
-    {who:'rival',expr:'smug',role:'pros',place:{x:72,h:70,b:0},topics:[
+    {who:'rival',expr:'smug',role:'pros',place:{x:72},topics:[
       {id:'n-kids',t:'방청석의 아이들',must:true,lines:[['rival','normal','하람, 방청석 아이들이 다 백제 편이지? 그 마음에 맞춰 주고 싶은 거, 나도 알아.'],['rival','confident','그런데 [[아이들 편이 되는 것과 정의 편이 되는 건 달라]].'],['player','upset','…알아. 안다고.']]},
       {id:'n-note',t:'익명의 쪽지',lock:'J10',lockSay:'(누리에게 그 쪽지를 보여 줄까?)',lines:[['rival','think','이 쪽지가 혐의 ②의 근거였어? 문서가 있다면서, 그 문서는 어디 있는데?'],['rival','normal','그리고 하람, 이거 [[확대해]] 봤어? 귀퉁이에 뭔가 찍혀 있는 것 같은데.']]}],
      present:{J10:{lines:[['rival','shock','쪽지…? 보여 줘 봐.']],unlock:'n-note'},J7:{lines:[['rival','normal','555년이지. 553년보다 뒤야.']]}},

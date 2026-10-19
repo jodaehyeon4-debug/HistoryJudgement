@@ -45,7 +45,7 @@ const LOCS9=[
       {x:8,y:56,w:22,h:24,label:'잠긴 서랍',only2:true,ev:'U6',say:['어제 잠겼던 서랍이 열려 있다.','1866년 초의 편지다. [[러시아를 막으려]] 프랑스 신부들을 통해 프랑스와 손잡을 길을 찾았다.']}]},
     {id:'uh-anchae',name:'안채(노락당)',intro:'운현궁의 안채다.',miss:['마루다.','아무것도 없다.'],
      spots:[{x:30,y:24,w:30,h:30,label:'벽에 붙은 고지',ev:'U2',say:['양반에게도 군포를 걷는다는 [[호포제]] 알림이다.']}],
-     npcs:[{who:'oldservant',expr:'base',place:{x:78,h:60,b:2},from:2,topics:[
+     npcs:[{who:'oldservant',expr:'base',place:{x:78},from:2,topics:[
       {id:'os-hi',t:'이 집에서 오래 일하셨나요?',lines:[['oldservant','base','대감마님 젊을 때부터지요.']]},
       {id:'os-pray',t:'마님의 기도',lock:'U1',must:true,gives:['U15'],lockSay:'(하인은 마당만 쓴다. 대감의 일을 보여 주면 말할지도 모른다.)',
        lines:[['oldservant','base','무엇을 믿었냐고요? …허허.'],['oldservant','base','마님께서는 [[천주교에 마음을 두셨다]]는 말이 있었지요. 대감께서도 처음엔 서양 신부를 미워하지 않으셨소.'],['ME','think','(“말이 있었다”… 직접 본 게 아니라 [[전해 들은 말]]이야.)']]}],
@@ -54,19 +54,19 @@ const LOCS9=[
      spots:[{x:30,y:10,w:40,h:20,label:'현판',ev:'UD2',say:['현판이다. 멋진 글씨지만 쟁점과 이어질까?']}]}]},
   {id:'gbgong',name:'경복궁 공사 현장',time:'낮',intro:'경복궁을 다시 짓는 공사 현장이다.',miss:['돌가루다.','나무 조각이다.'],
    spots:[{x:56,y:16,w:26,h:30,label:'공사비 장부',ev:'U3',say:['공사비 장부다. ‘[[스스로 내는 돈]](원납전)’이라더니 뒤로 갈수록 억지로 걷었다.']},{x:8,y:64,w:20,h:20,label:'기와 더미',ev:'UD3',say:['새 기와 더미다. 쟁점과 이어질까?']}],
-   npcs:[{who:'mason',expr:'base',place:{x:40,h:60,b:2},until:1,topics:[
+   npcs:[{who:'mason',expr:'base',place:{x:40},until:1,topics:[
     {id:'ms-hi',t:'공사는 어떠세요?',lines:[['mason','base','평생 이런 큰 공사는 처음이오.']]},
     {id:'ms-pay',t:'일당',lock:'U3',lockSay:'(석수는 돌만 깎는다. 공사비를 보여 주면 대답할지도 모른다.)',
      lines:[['mason','base','처음엔 다들 신이 났소. [[품삯]]도 받았지.'],['mason','base','돈이 모자라자 억지로 끌려오는 사람이 늘었소.']],gives:['U14']}],
     present:{U3:{lines:[['mason','base','원납전… 그 이야기라면.']],unlock:'ms-pay'}},def:[['mason','base','돌 말고는 모르오.']]}]},
   {id:'market9',name:'장터',time:'오후',intro:'한양의 장터다. 쌀가게 앞이 웅성거린다.',miss:['짚신이다.','엽전 한 닢이다.'],
    spots:[{x:60,y:20,w:22,h:30,label:'쌓인 엽전 꾸러미',ev:'U4',say:['한 닢을 백 닢 값으로 쓰게 한 [[당백전]] 꾸러미다.']},{x:8,y:60,w:20,h:24,label:'빈 쌀자루',say:['빈 쌀자루다.']}],
-   npcs:[{who:'riceman',expr:'base',place:{x:40,h:60,b:2},topics:[
+   npcs:[{who:'riceman',expr:'base',place:{x:40},topics:[
     {id:'rm-hi',t:'장사는 어떠세요?',lines:[['riceman','base','쌀은 있는데 사는 사람이 없소.']]},
     {id:'rm-price',t:'쌀값',lock:'U4',must:true,lockSay:'(주인은 한숨만 쉰다. 요즘 돈을 보여 주면 대답할지도 모른다.)',
      lines:[['riceman','base','당백전 나온 뒤로 [[쌀값이 몇 배로]] 뛰었소. …잠깐, 팻말부터 고치고.'],['guide','normal','(주인이 팻말의 숫자를 고쳐 쓴다.)'],['riceman','base','쌀 한 가마 사려면 돈을 지게로 져 와야 했지. 말하는 사이에 [[또 올랐소]]!']],gives:['U5']}],
     present:{U4:{lines:[['riceman','angry','그 돈! 그 얘기라면 할 말이 많소.']],unlock:'rm-price'},MUK:{lines:[['riceman','base','메밀묵? 그것도 값이 하루가 다르게 오른다더군.']]}},def:[['riceman','base','쌀값보다 중요한 게 있소?']]},
-    {who:'malsun',expr:'base',place:{x:78,h:60,b:2},from:2,topics:[
+    {who:'malsun',expr:'base',place:{x:78},from:2,topics:[
      {id:'ms9-ghost',t:'서양 배 이야기',lines:[['malsun','base','내가 다 봤다니까! 서양 배에 [[귀신]]이 타고 있었어!'],['ME','think','직접 보셨어요?'],['malsun','sweat','…아니, 강화도 사돈의 팔촌이… 눈이 파랗고 머리가 노랗더래. 그게 귀신이지 뭐야!'],['ME','think','(낯선 사람이 소문에서 귀신이 됐구나. 그 시대의 두려움이야.)']]}],
      def:[['malsun','base','그건 모르는 물건이네.']]}]},
   {id:'river9',name:'절두산 아래 강가',time:'흐린 날',from:2,intro:'한강 절두산 아래다. 바람만 분다.',miss:['젖은 모래다.','바람 소리뿐이다.'],

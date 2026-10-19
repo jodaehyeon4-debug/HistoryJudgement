@@ -45,14 +45,14 @@ const LOCS8=[
      spots:[{x:40,y:30,w:20,h:20,label:'걸려 있는 갓끈',ev:'SD2',say:['벽에 값비싼 비단 갓끈이 걸려 있다.','이게 무엇을 증명할까?']},{x:8,y:60,w:24,h:22,label:'문갑',say:['잠긴 문갑이다.']}]}]},
   {id:'market8',name:'진주 장터',time:'낮',intro:'진주의 장터다. 사람들이 수군거린다.',miss:['장바구니다.','아무것도 없다.','짚신이다.'],
    spots:[{x:62,y:24,w:22,h:30,label:'장대에 걸린 흰 수건',ev:'S3',say:['장대에 흰 수건이 잔뜩 걸렸다.','1862년 봄, 농민들이 [[흰 수건]]을 두르고 모였다고 한다.']},{x:8,y:62,w:22,h:22,label:'곡식 자루',say:['비어 가는 곡식 자루다.']}],
-   npcs:[{who:'merchant8',expr:'base',place:{x:38,h:60,b:2},topics:[
+   npcs:[{who:'merchant8',expr:'base',place:{x:38},topics:[
     {id:'m8-hi',t:'장사는 어떠세요?',lines:[['merchant8','base','요즘은 곡식 값이 하늘을 찌르오.']]},
     {id:'m8-baek',t:'병사 나리',lock:'S1',must:true,lockSay:'(상인은 주변을 살핀다. 관아 창고 이야기라면 입을 열지도.)',
      lines:[['merchant8','base','쉿… 창고가 빈 건 [[그분이 오기 전부터]]였다는데.'],['merchant8','base','그분이 와서 그걸 메우라고 백성을 [[몇 배로]] 쥐어짰지. 고발장? 흥.'],['ME','think','(고발인 이야기야. 기억해 두자.)']],gives:['S9']}],
     present:{S1:{lines:[['merchant8','sweat','창고… 그 얘기라면…']],unlock:'m8-baek'},S2:{lines:[['merchant8','base','고발장이라… 자기 일은 쏙 빼놓았구먼.']]}},def:[['merchant8','base','팔 물건이 아니구려.']]}]},
   {id:'farmhouse',name:'농민의 집',time:'저녁',from:2,intro:'진주의 농민 집이다.',miss:['빈 쌀독이다.','아무것도 없다.','짚단이다.'],
    spots:[{x:56,y:20,w:24,h:36,label:'벽에 붙은 세금 쪽지',ev:'S4',say:['벽에 논, 베, 곡식 자루가 그려진 세금 쪽지 세 장.','[[세 가지 세금]]이 모두 농민을 괴롭혔다.']},{x:8,y:56,w:20,h:26,label:'빈 쌀독',say:['쌀독이 비어 있다.']}],
-   npcs:[{who:'farmwife',expr:'base',place:{x:38,h:58,b:2},topics:[
+   npcs:[{who:'farmwife',expr:'base',place:{x:38},topics:[
     {id:'fw-hi',t:'살림은 어떠세요?',lines:[['farmwife','base','세금 내고 나면 남는 게 없소.']]},
     {id:'fw-grain',t:'창고의 곡식',lock:'S1',must:true,lockSay:'(아낙은 빈 쌀독만 본다. 관아 창고 이야기라면 대답할지도.)',
      lines:[['farmwife','base','나라가 곡식 빌려주는 거, 그거 말이오?'],['farmwife','base','우리는 [[빌린 적도 없는데]] 갚으라 했소. 그것도 몇 배로.']]}],
@@ -60,7 +60,7 @@ const LOCS8=[
   {id:'daegamhouse',name:'김 대감의 집',time:'밤',from:2,rooms:[
     {id:'dg-sarang',name:'사랑채',intro:'김 대감 집의 사랑채다. 손님이 끊이지 않는다.',miss:['비단 방석이다.','아무것도 없다.'],
      spots:[{x:30,y:14,w:40,h:20,label:'대문 문패',ev:'SD1',say:['김씨 집안 문패가 걸려 있다.','집안 이름이 무엇을 증명할까?']},{x:8,y:56,w:20,h:26,label:'병풍',say:['화려한 병풍이다.']}],
-     npcs:[{who:'gyeomin',expr:'base',place:{x:72,h:60,b:2},from:2,topics:[
+     npcs:[{who:'gyeomin',expr:'base',place:{x:72},from:2,topics:[
       {id:'gm-hi',t:'여기서 무슨 일을?',lines:[['gyeomin','base','이 댁 살림과 장부를 맡은 아부라 하오.']]},
       {id:'gm-praise',t:'대감마님은 어떤 분인가요?',must:true,lines:[['gyeomin','base','우리 대감마님은 재채기도 [[나라를 위해]] 하시지요!'],['gyeomin','base','장부도 어찌나 아끼시는지, 밤마다 [[베개 속에 넣고]] 주무신다오!'],['judge','stern','(해치의 목소리) …방금 뭐라고 했소?'],['gyeomin','sweat','…대, 대감마님은 베개를 아끼신다고요.'],['ttolbang','bang','베개! 제가 가져올게요!'],['guide','normal','(똘방이 침방으로 뛰어갔지만, 문이 잠겨 있다.)'],['ME','think','(침방 열쇠는 아부에게 있어…)']]},
       {id:'gm-key',t:'주인 어른의 장부',lock:'S2',must:true,lockSay:'(아부는 열쇠를 꼭 쥐고 있다. 이 집을 고발한 글과, 고발인이 법정에서 한 장담을 함께 보이면?)',

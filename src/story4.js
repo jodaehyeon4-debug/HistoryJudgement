@@ -46,7 +46,7 @@ const LOCS4=[
     {x:72,y:41,w:12,h:14,label:'무너진 돌담',say:['돌담 한쪽이 무너져 있다. 단서는 아니다.']},
     {x:0,y:0,w:30,h:42,label:'앙상한 나무',say:['잎이 다 떨어진 나무다.']},
     {x:52,y:0,w:22,h:22,label:'흐린 겨울 하늘',say:['눈이 올 것 같다.']}],
-   npcs:[{who:'courtlady',expr:'base',place:{x:90,h:60,b:2},from:2,topics:[
+   npcs:[{who:'courtlady',expr:'base',place:{x:90},from:2,topics:[
      {id:'cl-day2',t:'다시 찾아온 까닭',lines:[['courtlady','base','또 오셨구려. 이곳에 오면 그날이 떠오르오.']]},
      {id:'cl-rite',t:'왕의 제사',lock:'H1',must:true,lockSay:'(궁녀는 물길만 바라본다. 그날의 기록을 보여 주며 물어보면 무언가 말해 줄지도 모른다.)',
       lines:[['courtlady','base','잔치라고들 하지요. 기록에도 그렇게 적혔고.'],['courtlady','base','그런데 한겨울이었소. 이 돌 물길에 술잔을 띄우며 놀았을까요? 이곳에서 [[제사]]를 지냈다는 이야기도 전해 오오.'],['ME','think','(잔치였다는 기록, 제사였다는 해석… 기록이 엇갈리는구나.)']],gives:['H7']}],
@@ -62,13 +62,13 @@ const LOCS4=[
       {x:85,y:15,w:12,h:52,label:'깃대의 깃발',say:['깃대에 매달린 깃발이 갈가리 찢겼다. 단서는 아니다.']},
       {x:21,y:44,w:15,h:10,label:'무너진 흙더미',say:['무너진 흙과 부러진 나무가 쌓여 있다.']},
       {x:32,y:10,w:46,h:16,label:'궁궐 지붕',say:['처마 끝이 그을려 있다.']}],
-     npcs:[{who:'courtlady',expr:'base',place:{x:50,h:60,b:2},until:1,topics:[
+     npcs:[{who:'courtlady',expr:'base',place:{x:50},until:1,topics:[
        {id:'cl-who',t:'그날 무엇을 보셨나요?',lines:[['courtlady','base','칼 든 군사들이 몰려왔소. 왕께서는 포석정에 계셨지.'],['courtlady','base','…그 뒤의 일은 말하고 싶지 않소.']]},
        {id:'cl-guest',t:'그날의 손님',lock:'H2',must:true,lockSay:'(궁녀는 입을 다물었다. 포석정에서 찾은 무언가를 보여 주면 기억을 떠올릴지도 모른다.)',
         lines:[['courtlady','base','그 붉은 깃털… 기억하오. 그 깃털을 투구에 꽂은 사람은 [[나이 든 장수]]였소.'],['courtlady','base','다른 장수들이 모두 그 앞에서 고개를 숙였지. 그 사람이 손을 들자…'],['ME','think','(나이 든 장수. 그날 군대를 이끈 사람이야.)']]}],
       present:{H2:{lines:[['courtlady','shock','이, 이 깃털은…!']],unlock:'cl-guest'},H4:{lines:[['courtlady','base','왕께서 고려에 사람을 보내셨지. 하지만 너무 늦었소.']]}},
       def:[['courtlady','base','늙은이가 알아볼 물건이 아니오.']]},
-     {who:'malsun',expr:'base',place:{x:50,h:60,b:2},from:2,topics:[
+     {who:'malsun',expr:'base',place:{x:50},from:2,topics:[
       {id:'ms4-feast',t:'포석정의 그날',lines:[['malsun','base','내가 다 봤다니까! 왕이 포석정에서 술잔을 띄우고 [[노래를 부르다가]]…!'],['ME','think','직접 보셨어요?'],['malsun','sweat','…아니, 이웃 마을 떡집 할멈이 봤대. 그 할멈의 시누이의…'],['ttolbang','base','할머니, 그 시누이는 또 몇 백 년 전 사람이에요?'],['ME','think','(또 전해 들은 말이야. 잔치였는지 제사였는지는 기록과 해석을 맞대 봐야 해.)']]}],
       present:{MUK:{lines:[['malsun','base','어머, 메밀묵! 신라에도 이게 있나? 한 그릇 두 냥이오.']]}},
       def:[['malsun','base','그건 모르는 물건이네. 그런데 내가 들은 얘기로는…']]}]},
@@ -104,7 +104,7 @@ const LOCS4=[
     {x:52,y:54,w:14,h:12,label:'논',say:['추수가 끝난 논이다.']},
     {x:77,y:65,w:16,h:9,label:'나무 의자',say:['누군가 쉬어 가는 나무 의자다.']},
     {x:58,y:80,w:22,h:14,label:'징검다리',say:['냇물을 건너는 징검다리다.']}],
-   npcs:[{who:'villager',expr:'base',place:{x:44,h:58,b:2},topics:[
+   npcs:[{who:'villager',expr:'base',place:{x:44},topics:[
      {id:'v-hi',t:'이 마을은요?',lines:[['villager','base','허허, 산 좋고 물 좋은 가은이라오.']]},
      {id:'v-child',t:'어린 시절',lock:'H5',must:true,lockSay:'(노인은 허허 웃기만 한다. 견훤이 나라를 세우며 한 말을 보여 주면 무언가 말해 줄지도 모른다.)',
       lines:[['villager','base','의자왕의 원한? 백제를 잇는다고?'],['villager','base','허허… 그 아이는 이 마을에서 자란 [[신라 아이]]요. 커서는 신라 군인이 되었지.'],['ME','shock','(백제의 복수자가… 신라에서 자란 신라 군인이었다고?)']]}],
@@ -114,7 +114,7 @@ const LOCS4=[
     {id:'gs-hall',name:'법당',intro:'김제 금산사의 법당이다. 935년, 견훤이 이 절에 갇혔다.',
      miss:['마룻바닥이다.','향 냄새가 난다.','아무것도 없다.'],
      spots:[{x:30,y:30,w:38,h:30,label:'법당',say:['법당 문이 굳게 닫혀 있다. 안에서 염불 소리가 들린다.']},{x:3,y:12,w:15,h:66,label:'석탑',say:['오래된 돌탑이다. 단서는 아니다.']},{x:83,y:50,w:10,h:20,label:'범종',say:['커다란 종이다. 새벽마다 울린다고 한다.']}],
-     npcs:[{who:'monk',expr:'base',place:{x:76,h:62,b:2},topics:[
+     npcs:[{who:'monk',expr:'base',place:{x:76},topics:[
        {id:'m-hi',t:'이 절에서는',lines:[['monk','base','쉿. 법당에서는 조용히 하시오.']]},
        {id:'m-door',t:'뒷문을 연 사람',lock:'H8',must:true,lockSay:'(승려는 손가락을 입에 댄다. 이 절에서 있었던 일을 보여 주면 말해 줄지도 모른다.)',
         lines:[['monk','base','석 달을 갇혀 계셨지요. 어느 밤 뒷문이 열려 있었소.'],['monk','base','탈출하신 뒤 [[곧장 고려의 왕건에게]] 가셨다고 들었소.'],['ME','think','(아들에게 갇힌 아버지가, 적이었던 고려로 갔다…)']]}],

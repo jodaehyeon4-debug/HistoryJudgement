@@ -2088,7 +2088,9 @@ async function examineAt(){
 const josa=(w,a,b)=>{ const c=String(w).charCodeAt(String(w).length-1); return w+((c>=0xAC00&&c<=0xD7A3&&(c-0xAC00)%28)?b:a); };
 function npcOf(r){ if(!r) return null; const L=r.npcs||(r.npc?[r.npc]:[]); return L.find(avail)||null; }
 /* 조사 화면 그림 안에 인물을 세운다. 돋보기를 대고 Enter·클릭하면 말을 건다 */
-function npcPlace(np){ return np.place||{x:70,h:66,b:0}; }
+/* 조사 장면의 인물: 크기는 모두 같게, 발(그림 아래 끝)은 화면 바닥에 붙임. 장소 데이터의 place는 가로 자리(x)만 씀 */
+const NPC_H=64;
+function npcPlace(np){ return {x:(np.place&&np.place.x!=null)?np.place.x:70,h:NPC_H,b:0}; }
 function npcRect(np){ const pl=npcPlace(np), w=pl.h*0.469*0.62; return {x:pl.x-w/2,y:100-(pl.b||0)-pl.h*0.93,w:w,h:pl.h*0.93}; }
 function npcHit(x,y){ if(S.mode!=='inv') return null; const np=npcOf(invLoc); if(!np) return null; const r=npcRect(np); return (x>=r.x&&x<=r.x+r.w&&y>=r.y&&y<=r.y+r.h)?np:null; }
 function renderNpcLayer(){
@@ -2615,7 +2617,7 @@ textEl.textContent='역사 법정에 오신 것을 환영합니다. 아래에서
 showTitle();
 
 if(location.hash==='#dbg') window.__dbg={setView:setView,setName:setName,titleCard:titleCard};
-window.__yj={S:S,CASE_DATA:CASE_DATA,npcRect:npcRect,get CX(){return CX;},get invLoc(){return invLoc;},get invParent(){return invParent;},LOCS:LOCS,availLocs:availLocs,roomsOf:roomsOf,npcOf:npcOf,missingReq:missingReq,get pickExpect(){return S.expect;},get EVIDENCE(){return EVIDENCE;}};
+window.__yj={S:S,CASE_DATA:CASE_DATA,npcRect:npcRect,get CX(){return CX;},get invLoc(){return invLoc;},get invParent(){return invParent;},LOCS:LOCS,availLocs:availLocs,roomsOf:roomsOf,npcOf:npcOf,missingReq:missingReq,get pickExpect(){return S.expect;},get EVIDENCE(){return EVIDENCE;},get C1LOCS(){return C1DATA.locs;},get LOCS2(){return LOCS2;}};
 
 
 /* ===== 사건 1: 4일 구성 데이터 (조사 중 인물, 날짜별 장소, 새 증거) ===== */
@@ -2632,12 +2634,12 @@ Object.assign(PHASE_NAME,{1:'1일차 조사',2:'1일차 법정',3:'2일차 조�
   const L=id=>LOCS.find(l=>l.id===id);
   const ru=L('ruins'); const gate=ru.rooms.find(r=>r.id==='ruins'); const cliff=ru.rooms.find(r=>r.id==='ruins-cliff');
   cliff.from=2;
-  cliff.npcs=[{who:'malsun',expr:'base',place:{x:30,h:60,b:2},from:2,topics:[
+  cliff.npcs=[{who:'malsun',expr:'base',place:{x:30},from:2,topics:[
     {id:'ms-saw',t:'무엇을 보셨나요?',must:true,lines:[['malsun','base','내가 다 봤다니까! 궁녀 [[3천 명]]이 이 강으로 뛰어드는 걸!'],['ME','normal','직접 보셨어요?'],['malsun','base','그럼! …아니, 우리 옆집 개똥이 할아버지가 봤대.'],['ME','think','그 할아버지는 직접 보셨대요?'],['malsun','sweat','…그 할아버지의 사촌의, 사돈의, 옆집 사람이…'],['guide','normal','(말순 할머니의 손가락이 하늘에 가계도를 그린다. 한 칸, 또 한 칸… 끝이 없다.)'],['ttolbang','base','그럼 그 사돈을 증인으로 부를까요?'],['judge','normal','(어디선가 해치의 목소리) …그 사돈은 1,400년 전 사람이오. 딸랑.'],['ME','think','(본 사람은 아무도 없고, 들은 사람만 줄줄이 있네. 이런 건 [[전해 들은 말]]이야.)']],gives:['E15']},
     {id:'ms-who',t:'할머니는 누구세요?',lines:[['malsun','base','이 근처에서 주막을 하는 말순이오. 소문이라면 내가 제일 빠르지!']]}],
     present:{E7:{lines:[['malsun','base','낙화암! 거기서 3천 명이… 응? 기록에는 숫자가 없다고? 이상하네, 다들 그러던데.']]},MUK:{lines:[['malsun','base','어머, 메밀묵! 우리 주막에도 있는데. 한 그릇 두 냥이오.']]}},
     def:[['malsun','base','그건 처음 보는 물건이네. 그런데 내가 들은 얘기로는…']]}];
-  gate.npcs=[{who:'citizen',expr:'base',place:{x:47,h:60,b:2},topics:[
+  gate.npcs=[{who:'citizen',expr:'base',place:{x:40},topics:[
     {id:'c-night',t:'그날의 사비성',lines:[['citizen','base','그날 해 질 녘, 강 쪽에서 북소리가 들렸어요.'],['citizen','plea','성 안은 아수라장이었지요. 다들 어디로 가야 할지 몰랐어요.']]},
     {id:'c-cliff',t:'강가 절벽',lines:[['citizen','base','성 뒤 강가에 큰 바위가 있어요. 궁녀들이 거기서 몸을 던졌다는 이야기가 전해지지요.'],['citizen','base','그런데… 몇 명이었는지 똑똑히 아는 사람은 없어요.']]},
     {id:'c-king',t:'왕의 행방',lock:'E8',must:true,lockSay:'(이 사람은 무언가를 말하기를 망설이고 있다. 적이 어디로 들어왔는지 보여 주면 입을 열지도 모른다.)',
@@ -2652,14 +2654,14 @@ Object.assign(PHASE_NAME,{1:'1일차 조사',2:'1일차 법정',3:'2일차 조�
   LOCS.push({id:'lobby',name:'법정 로비',time:'저녁',from:2,intro:'재판이 끝난 법정 로비다. 긴 의자에 누군가 앉아 있다.',
     miss:['반들반들한 마룻바닥이다.','빈 의자다.','창살 사이로 노을이 든다.','아무것도 없다.'],
     spots:[{x:5,y:62,w:31,h:22,label:'긴 의자',say:['나무 의자다. 오래 기다린 사람들의 손때가 묻어 있다.']},{x:83,y:64,w:13,h:20,label:'항아리',say:['물을 담아 두는 항아리다. 단서는 아니다.']},{x:57,y:45,w:9,h:18,label:'분재',say:['작은 소나무 분재다.']},{x:36,y:28,w:22,h:40,label:'법정 문',say:['내일 다시 열릴 법정의 문이다.']}],
-    npcs:[{who:'heungsu',expr:'base',place:{x:72,h:70,b:0},from:2,until:2,topics:[
+    npcs:[{who:'heungsu',expr:'base',place:{x:72},from:2,until:2,topics:[
       {id:'h-exile',t:'귀양살이',lines:[['heungsu','base','오래 귀양살이를 했소. 서울 일은 바람결에 들을 뿐이지.']]},
       {id:'h-minister',t:'대신들',lines:[['heungsu','base','대신들은 내가 오래 귀양살이를 해서 원망이 깊다고 했지…'],['heungsu','hesitate','그 말이 왕의 귀를 막았을지도 모르오.']]},
       {id:'h-ask',t:'왕의 물음',lock:'E3',must:true,lockSay:'(흥수는 입을 다물었다. 같은 생각을 한 다른 신하의 글을 보여 주면 마음을 열지도 모른다.)',
        lines:[['heungsu','hesitate','성충의 글을 보니… 내가 왕께 드린 말과 같구려.'],['heungsu','base','좋소. 내일 법정에 서겠소. 다만 내 입으로 다 말할 수 있을지는… 모르겠소.'],['ME','think','(무언가 숨기는 게 있어. 법정에서 [[더 물어봐야]] 할 것 같아.)']]}],
       present:{E3:{lines:[['heungsu','shock','이건… 성충의 글이 아니오!']],unlock:'h-ask'},E4:{lines:[['heungsu','hesitate','바른말을 한 신하가 옥에 갇혔지. 나도 그 꼴을 봤소.']]}},
       def:[['heungsu','base','늙은이가 알아볼 만한 물건이 아니구려.']]},
-     {who:'rival',expr:'smug',place:{x:72,h:70,b:0},from:3,topics:[
+     {who:'rival',expr:'smug',place:{x:72},from:3,topics:[
       {id:'n-656',t:'656년 기록',lines:[['rival','confident','성충이 옥에 갇힌 이야기와, 왕이 놀이에 빠졌다는 이야기는 [[같은 대목]]이에요. 내일 그걸 따져 물을 거예요.']]},
       {id:'n-who',t:'누가 쓴 기록인가',lock:'E10',must:true,lockSay:'(누리는 웃기만 한다. 그 기록을 직접 보여 주며 물어봐야겠다.)',
        lines:[['rival','smug','「삼국사기」요? 고려 때 엮은 책이죠. 그게 어쨌다는 거예요?'],['rival','normal','…흥, 서고의 잠긴 상자에 편찬 기록이 있다던데. 열쇠는 궁터 우물 근처에서 봤다는 소문이 있어요.']]}],
@@ -3146,7 +3148,7 @@ const LOCS2=[
      {x:10,y:48,w:12,h:20, label:'남쪽 길 이정표', ev:'C8', say:['남쪽을 가리키는 낡은 이정표다.','쫓겨난 준왕은 이 길로 [[남쪽]]에 가서 새로 자리를 잡았다고 한다.']},
      {x:37,y:53,w:5,h:16, label:'횃불 받침', say:['돌로 된 횃불 받침이다. 그날 밤에도 불이 타고 있었을까.']},
      {x:42,y:72,w:16,h:24, label:'수레바퀴 자국', say:['깊게 팬 수레바퀴 자국이다. 단서는 아니다.']},
-     {x:2,y:36,w:28,h:22, label:'성벽', say:['흙을 단단히 다져 쌓은 성벽이다.']}]},
+     {x:2,y:36,w:28,h:11, label:'성벽', say:['흙을 단단히 다져 쌓은 성벽이다.']}]},
    {id:'wg-court', name:'궁궐 마당', intro:'왕이 머물던 궁궐 마당이다. 준왕은 이곳에서 위만을 믿고 서쪽을 맡겼다.',
     miss:['돌계단이다.','마당 흙바닥이다.','특별한 건 없다.','바람에 깃발이 펄럭인다.'], spots:[
      {x:27.5,y:38.5,w:6.5,h:6, label:'왕좌 옆 나무 상자', ev:'C1', say:['왕좌 옆 나무 상자 안에 납작한 옥 홀과 접힌 지도가 들어 있다.','준왕이 위만을 믿고 [[높은 자리와 서쪽 100리 땅]]을 내린 증표다.']},
@@ -3184,7 +3186,7 @@ const PHASE2={1:'1일차 조사',2:'1일차 법정',3:'2일차 조사',4:'2일�
   /* 변호인 모드: 접견실 (재설계 v3) — 의뢰인이 변호인에게도 거짓말을 한다 */
   const mil=()=>S.flags&&S.flags.mil;
   LOCS2.unshift({id:'meet2',name:'접견실',bg:'lobby',kind:'meet',role:'def',time:'아침',intro:'피고 위만을 만나는 작은 방이다. 변호인과 피고 둘뿐이다.',miss:['아무것도 없다.'],spots:[],
-    npcs:[{who:'wiman',expr:'base',place:{x:50,h:72,b:0},until:2,topics:[
+    npcs:[{who:'wiman',expr:'base',place:{x:50},until:2,topics:[
       {id:'w-why',t:'군사를 이끌고 들어간 까닭',must:true,until:2,lines:[['wiman','base','한나라 군대가 [[정말로]] 쳐들어오고 있었소. 나는 왕을 지키러 들어갔을 뿐이오.'],['wiman','smug','변호인은 내 편 아니오? 내 말을 믿으시오.'],['ME','think','(변호인에게까지 거짓말을 하는 거라면… 증거로 확인해야 해.)']]},
       {id:'w-dress',t:'처음 조선에 온 날',must:true,until:2,lines:[['wiman','base','상투를 틀고 이 나라 옷을 입고 왔소. 연나라 차림이 아니었지.'],['wiman','base','그 일은 「사기」에도 적혀 있다 들었소. 변호인이 찾아보시오.'],['ME','think','(기록 사본을 찾아 수첩에 적어 두었다.)']],gives:['C4']},
       {id:'w-truth',t:'거짓 경보',lock:'C2',must:true,from:2,lockSay:'(위만은 팔짱을 꼈다. 그날 밤의 경보를 적은 기록과, 한나라가 실제로 언제 쳐들어왔는지를 함께 보여 줘야 입을 열 것 같다.)',
@@ -3192,17 +3194,17 @@ const PHASE2={1:'1일차 조사',2:'1일차 법정',3:'2일차 조사',4:'2일�
       present:{C2:{need:['C2','C3'],unlock:'w-truth',lines:[['wiman','angry','…알고 있었구려.']],wait:[['wiman','angry','그 기록 하나로 나를 몰아세울 셈이오?'],['ME','think','(한나라가 그때 정말 쳐들어왔는지 보여 줄 증거도 함께 내밀어야 해.)']]},
                C3:{need:['C2','C3'],unlock:'w-truth',lines:[['wiman','angry','…알고 있었구려.']],wait:[['wiman','smug','한나라 연표? 그게 어쨌다는 거요.'],['ME','think','(그날 밤 피고가 준왕에게 보낸 말을 적은 기록도 함께 보여 줘야 해.)']]}},
       def:[['wiman','base','그건 내 재판과 상관없는 물건이오.']]},
-     {who:'wiman',expr:'base',place:{x:50,h:72,b:0},from:3,topics:[
+     {who:'wiman',expr:'base',place:{x:50},from:3,topics:[
       {id:'w-last',t:'내일의 최후 진술',must:true,cond:()=>mil()!=='growth',lines:[['wiman','angry','변호인이 법정에서 한 일, 다 보았소.'],['wiman','base',"…처음엔 분했소. 그런데 밤새 생각해 보니, 내 거짓은 내가 갚아야 하는 것이더군."],['ME','think','(피고의 마음이 조금 열렸어.)']]},
       {id:'w-closed',t:'내일의 최후 진술',cond:()=>mil()==='growth',lines:[['wiman','smug','…할 말 없소. 변호인은 내 밀서를 쓰지 않았지.'],['ME','think','(피고가 마음을 닫았다. 최후 진술에서 무엇을 말할지 모르겠어.)']]}],
       def:[['wiman','base','…']]}]});
-  gate.npcs=[{who:'merchant',expr:'base',place:{x:80,h:60,b:0},until:2,topics:[
+  gate.npcs=[{who:'merchant',expr:'base',place:{x:80},until:2,topics:[
     {id:'m-know',t:'위만을 아시오?',lines:[['merchant','base','알다마다! 연나라에서부터 장사하며 오가던 사이지.'],['merchant','base','위만이 무리를 끌고 동쪽으로 갈 때도 내가 봤소.']]},
     {id:'m-night',t:'그날 밤',lines:[['merchant','base','그날 밤 서쪽에서 횃불이 줄지어 들어왔지. 나는 성문 밖에 있었소.'],['merchant','sweat','…한나라 군대? 글쎄, 그런 건 못 봤는데.'],['ME','think','(한나라 군대를 못 봤다… 기억해 두자.)']]},
     {id:'m-dress',t:'위만의 차림',lock:'C5',lockSay:'(상인은 딴청을 피운다. 이 나라의 이름에 얽힌 무언가를 보여 주면 반응할지도 모른다.)',lines:[['merchant','smug','나라 이름이 그대로라고? 흥, 그래도 위만은 [[연나라 사람]]이오.'],['merchant','smug','차림도 연나라 옷 그대로였지! 내 눈으로 봤다니까.'],['ME','think','(정말일까? 기록과 맞대 봐야겠어.)']]}],
     present:{C5:{lines:[['merchant','sweat','성문 현판…? 그게 어쨌다는 거요?']],unlock:'m-dress'},C1:{lines:[['merchant','base','준왕이 위만을 그렇게까지 믿었다니. 흥.']]}},
     def:[['merchant','base','그건 돈이 안 되는 물건이로군.']]}];
-  court.npcs=[{who:'jun',expr:'base',place:{x:58,h:62,b:0},from:2,role:'pros',topics:[
+  court.npcs=[{who:'jun',expr:'base',place:{x:58},from:2,role:'pros',topics:[
     {id:'j-trust',t:'위만을 믿은 까닭',lines:[['jun','base','난리를 피해 온 사람이었소. 우리 옷을 입고, 우리 땅을 지키겠다고 했지.'],['jun','hesitate','그래서 서쪽을 통째로 맡겼소.']]},
     {id:'j-night',t:'그날 밤',lock:'C1',must:true,lockSay:'(준왕은 고개를 돌렸다. 그가 위만에게 내린 증표를 보여 주면 마음을 열지도 모른다.)',lines:[['jun','hesitate','그날 밤… 갑자기 군사들이 몰려왔지.'],['jun','hesitate','아니, 갑자기는 아니었소. 그 전에… 무언가를 들었지. 법정에서 말하겠소.'],['ME','think','(무언가를 들었다… 법정에서 [[더 물어봐야]] 해.)']]}],
     present:{C1:{lines:[['jun','shock','이 홀은… 내가 위만에게 내린 것이오.'],['jun','hesitate','…좋소. 그날 밤 이야기를 하지.']],unlock:'j-night'},C6:{lines:[['jun','base','위만이 다스린 뒤로 쇠붙이가 흔해졌다더군.']]}},
@@ -3210,10 +3212,10 @@ const PHASE2={1:'1일차 조사',2:'1일차 법정',3:'2일차 조사',4:'2일�
   LOCS2.push({id:'harbor',name:'바닷가 포구',time:'새벽',from:3,intro:'준왕이 남쪽으로 떠났다는 바닷가 포구다. 낡은 배들이 묶여 있다.',
     miss:['젖은 모래다.','파도 소리뿐이다.','밧줄 토막이다.','아무것도 없다.'],
     spots:[{x:61,y:42,w:37,h:26,label:'묶여 있는 낡은 배',say:['오래된 나무배다. 단서는 아니다.']},{x:0,y:43,w:27,h:48,label:'그물 더미',say:['말려 둔 그물이다.']},{x:36,y:30,w:24,h:14,label:'수평선',say:['남쪽 바다가 끝없이 펼쳐진다.']},{x:0,y:28,w:35,h:14,label:'돌담',say:['파도를 막는 돌담이다.']}],
-    npcs:[{who:'merchant',expr:'base',place:{x:47,h:58,b:4},from:3,role:'def',topics:[
+    npcs:[{who:'merchant',expr:'base',place:{x:47},from:3,role:'def',topics:[
       {id:'h-def',t:'내일 법정에서는?',lines:[['merchant','smug','내일 검사 쪽 증인으로 나가오. 위만이 어떤 사람이었는지 다 말해 주지.'],['merchant','base','말 한 마디에 [[한 냥]]. 법정에서는 공짜로 해 주지만.'],['ME','think','(무엇이든 값을 매기는 버릇이 있네…)']]}],
       def:[['merchant','base','그건 얼마요? …흠, 돈이 안 되는 물건이로군.']]},
-     {who:'merchant',expr:'base',place:{x:47,h:58,b:4},from:3,role:'pros',topics:[
+     {who:'merchant',expr:'base',place:{x:47},from:3,role:'pros',topics:[
       {id:'h-why',t:'포구에는 왜?',lines:[['merchant','base','장사꾼이 포구에 오는 게 이상하오? 남쪽으로 가는 배를 알아보는 중이지. 이 말은 [[한 냥]]이오.']]},
       {id:'h-night',t:'그날 밤의 배',lock:'C10',must:true,lockSay:'(상인은 바다만 바라본다. 피고가 내민 밀서를 보여 주면 무언가 떠올릴지도 모른다.)',
        lines:[['merchant','sweat','밀서? 그날 밤에…? 말도 안 되오.'],['merchant','base','그날 밤 준왕 일행은 [[허둥지둥 배에 올라]] 남쪽으로 떠났소. 뱃사공들이 다 봤지.'],['merchant','sweat','누구한테 편지를 써 줄 틈 같은 건 없었다니까.']],gives:['C11']}],
@@ -3222,10 +3224,10 @@ const PHASE2={1:'1일차 조사',2:'1일차 법정',3:'2일차 조사',4:'2일�
   LOCS2.push({id:'lobby',name:'법정 로비',time:'저녁',from:3,intro:'재판이 끝난 법정 로비다. 누리가 창가에 서 있다.',
     miss:['반들반들한 마룻바닥이다.','빈 의자다.','아무것도 없다.'],
     spots:[{x:5,y:62,w:31,h:22,label:'긴 의자',say:['나무 의자다.']},{x:36,y:28,w:22,h:40,label:'법정 문',say:['내일 다시 열릴 법정의 문이다.']}],
-    npcs:[{who:'player',expr:'confident',place:{x:72,h:70,b:0},role:'def',topics:[
+    npcs:[{who:'player',expr:'confident',place:{x:72},role:'def',topics:[
       {id:'p-plan',t:'내일 검사의 작전',must:true,lines:[['player','confident','내일 증인은 연나라 상인이야. 상인 말이 틀렸다 해도 끝이 아니야.'],['player','smug','상투랑 옷차림은 꾸밀 수 있잖아? 위만이 데려온 무리가 [[연나라 사람들]]이었다는 건 그대로야.'],['ME','think','(하람은 그렇게 반격하겠구나. 나라를 움직인 사람들이 누구였는지 보여 줄 증거가 필요해.)']]}],
       def:[['player','normal','그걸로 나를 흔들 수 있을까?']]},
-     {who:'rival',expr:'smug',place:{x:72,h:70,b:0},role:'pros',topics:[
+     {who:'rival',expr:'smug',place:{x:72},role:'pros',topics:[
       {id:'r-letter',t:'준왕의 밀서',lock:'C10',must:true,lockSay:'(누리는 대답 대신 웃기만 한다. 그 밀서를 보여 주며 물어봐야겠다.)',lines:[['rival','smug','그 밀서요? 저도 진짜인지는 몰라요. 피고가 내민 문서니까요.'],['rival','normal','다만… 거기 적힌 [[지명]]이 언제 생긴 이름인지는, 확인해 볼 만하겠죠.'],['ME','think','(지명… 박물관 연표를 다시 떠올려 보자.)']]}],
       present:{C10:{lines:[['rival','normal','어제 그 밀서군요. 피고가 직접 꺼낸 거예요.']],unlock:'r-letter'}},
       def:[['rival','normal','그걸로 절 흔들 수 있을까요?']]}]});
@@ -4360,7 +4362,7 @@ const C3CH=()=>[{t:'① 동맹을 깨고 한강 하류를 빼앗은 죄'},{t:'�
 
 const LOCS3=[
   {id:'banwol',name:'반월성 접견실',time:'아침',role:'def',kind:'meet',intro:'신라의 궁궐 반월성. 피고 진흥왕이 변호인을 기다리고 있다.',miss:['…'],spots:[],
-   npcs:[{who:'jinheung',expr:'base',place:{x:52,h:74,b:0},topics:[
+   npcs:[{who:'jinheung',expr:'base',place:{x:52},topics:[
      {id:'j1-alli',t:'백제와의 사이',lines:[['jinheung','base','백제와 우리는 백 년 넘게 한편이었소. 고구려가 내려올 때마다 서로 군사를 보냈지.'],['jinheung','serious','…그걸 부정할 생각은 없소.']]},
      {id:'j1-river',t:'한강 하류를 차지한 일',must:true,lines:[['jinheung','serious','553년, 내가 한강 하류를 차지하고 신주를 둔 것은 사실이오.'],['jinheung','serious','변호인이 그걸 감추려 한다면 그만두시오. 기록에 다 남아 있으니.'],['ME','think','(혐의 ①은 기록으로 확정된 일이구나. 그렇다면 다툴 것은 ②와 ③이야.)']]},
      {id:'j1-seong',t:'성왕의 죽음',lock:'J3',lockSay:'(진흥왕은 대답을 피한다. 신라가 한강에 무엇을 두었는지 보여 주면 이야기를 시작할지도 모른다.)',lines:[['jinheung','serious','신주를 두고 김무력을 보냈소. 이듬해 그 김무력이 관산성에서 백제군과 맞섰지.'],['jinheung','sweat','성왕이 그 싸움에서… 그 이야기는 김무력에게 직접 들으시오.']]},
@@ -4380,7 +4382,7 @@ const LOCS3=[
     {x:55,y:66,w:9,h:11,label:'나무 부두',say:['낡은 나무 부두다. 삐걱거린다.']},
     {x:56,y:36,w:30,h:12,label:'노을 진 강물',say:['강물이 노을에 물들었다. 이 강을 두고 세 나라가 다투었다.']},
     {x:88,y:72,w:12,h:22,label:'갈대숲',say:['갈대가 우거져 있다. 아무것도 없다.']}],
-   npcs:[{who:'fisher',expr:'base',place:{x:44,h:56,b:4},until:2,topics:[
+   npcs:[{who:'fisher',expr:'base',place:{x:44},until:2,topics:[
      {id:'f-who',t:'누구세요?',lines:[['fisher','base','이 나루에서 고기 잡는 사람이오. 할아버지 때부터 백제 사람이지.']]},
      {id:'f-day',t:'그날의 나루',must:true,lines:[['fisher','base','신라 깃발이 저 성책에 걸리던 날을 잊지 못하오.'],['fisher','angry','함께 싸우자던 놈들이 우리 땅에 깃발을 꽂았지!']]},
      {id:'f-seong',t:'성왕 이야기',lock:'J3',lockSay:'(어부는 성책 쪽을 노려본다. 신라가 이 나루에 무엇을 두었는지 보여 주면 말을 꺼낼지도 모른다.)',lines:[['fisher','angry','신주라… 그 신주의 장수가 성왕을 죽였소.'],['fisher','base','장터에서 다들 그러던데. 신라 왕이 성왕을 베라 명했다고.'],['ME','think','(‘장터에서 다들 그러던데’… 직접 본 건 아닌가 봐.)']]}],
@@ -4415,12 +4417,12 @@ const LOCS3=[
    miss:['반들반들한 마룻바닥이다.','빈 의자다.','아무것도 없다.'],
    spots:[{x:5,y:62,w:31,h:22,label:'긴 의자',say:['나무 의자다.']},{x:36,y:28,w:22,h:40,label:'법정 문',say:['내일 다시 열릴 법정의 문이다.']}],
    npcs:[
-    {who:'player',expr:'upset',role:'def',place:{x:72,h:70,b:0},topics:[
+    {who:'player',expr:'upset',role:'def',place:{x:72},topics:[
       {id:'h-feel',t:'백제 편',lines:[['player','upset','…나도 알아. 법정은 편을 드는 곳이 아니라는 거.'],['player','upset','그래도 76년 만에 되찾은 땅을 2년 만에 빼앗겼잖아. [[나도 백제 편이 되고 싶었어]].']]},
       {id:'h-note',t:'혐의 ②를 세운 까닭',must:true,lines:[['player','upset','…사실, 재판 전에 법정 문틈에서 쪽지를 받았어.'],['player','upset','“진흥왕이 성왕의 목을 베라 했다는 문서가 있다.” 그 말만 믿고 혐의를 세웠지.'],['rival','think','(그 문서는 지금 어디 있지? 이 쪽지, [[확대해서]] 살펴봐야겠어.)']],gives:['J10']}],
      present:{J7:{lines:[['player','upset','555년… 응, 나도 봤어.']]},J10:{lines:[['player','upset','그 쪽지… 누가 보냈는지 나도 몰라.']]}},
      def:[['player','upset','지금은 그걸로 다투고 싶지 않아.']]},
-    {who:'rival',expr:'smug',role:'pros',place:{x:72,h:70,b:0},topics:[
+    {who:'rival',expr:'smug',role:'pros',place:{x:72},topics:[
       {id:'n-kids',t:'방청석의 아이들',must:true,lines:[['rival','normal','하람, 방청석 아이들이 다 백제 편이지? 그 마음에 맞춰 주고 싶은 거, 나도 알아.'],['rival','confident','그런데 [[아이들 편이 되는 것과 정의 편이 되는 건 달라]].'],['player','upset','…알아. 안다고.']]},
       {id:'n-note',t:'익명의 쪽지',lock:'J10',lockSay:'(누리에게 그 쪽지를 보여 줄까?)',lines:[['rival','think','이 쪽지가 혐의 ②의 근거였어? 문서가 있다면서, 그 문서는 어디 있는데?'],['rival','normal','그리고 하람, 이거 [[확대해]] 봤어? 귀퉁이에 뭔가 찍혀 있는 것 같은데.']]}],
      present:{J10:{lines:[['rival','shock','쪽지…? 보여 줘 봐.']],unlock:'n-note'},J7:{lines:[['rival','normal','555년이지. 553년보다 뒤야.']]}},
@@ -4814,7 +4816,7 @@ const LOCS4=[
     {x:72,y:41,w:12,h:14,label:'무너진 돌담',say:['돌담 한쪽이 무너져 있다. 단서는 아니다.']},
     {x:0,y:0,w:30,h:42,label:'앙상한 나무',say:['잎이 다 떨어진 나무다.']},
     {x:52,y:0,w:22,h:22,label:'흐린 겨울 하늘',say:['눈이 올 것 같다.']}],
-   npcs:[{who:'courtlady',expr:'base',place:{x:90,h:60,b:2},from:2,topics:[
+   npcs:[{who:'courtlady',expr:'base',place:{x:90},from:2,topics:[
      {id:'cl-day2',t:'다시 찾아온 까닭',lines:[['courtlady','base','또 오셨구려. 이곳에 오면 그날이 떠오르오.']]},
      {id:'cl-rite',t:'왕의 제사',lock:'H1',must:true,lockSay:'(궁녀는 물길만 바라본다. 그날의 기록을 보여 주며 물어보면 무언가 말해 줄지도 모른다.)',
       lines:[['courtlady','base','잔치라고들 하지요. 기록에도 그렇게 적혔고.'],['courtlady','base','그런데 한겨울이었소. 이 돌 물길에 술잔을 띄우며 놀았을까요? 이곳에서 [[제사]]를 지냈다는 이야기도 전해 오오.'],['ME','think','(잔치였다는 기록, 제사였다는 해석… 기록이 엇갈리는구나.)']],gives:['H7']}],
@@ -4830,13 +4832,13 @@ const LOCS4=[
       {x:85,y:15,w:12,h:52,label:'깃대의 깃발',say:['깃대에 매달린 깃발이 갈가리 찢겼다. 단서는 아니다.']},
       {x:21,y:44,w:15,h:10,label:'무너진 흙더미',say:['무너진 흙과 부러진 나무가 쌓여 있다.']},
       {x:32,y:10,w:46,h:16,label:'궁궐 지붕',say:['처마 끝이 그을려 있다.']}],
-     npcs:[{who:'courtlady',expr:'base',place:{x:50,h:60,b:2},until:1,topics:[
+     npcs:[{who:'courtlady',expr:'base',place:{x:50},until:1,topics:[
        {id:'cl-who',t:'그날 무엇을 보셨나요?',lines:[['courtlady','base','칼 든 군사들이 몰려왔소. 왕께서는 포석정에 계셨지.'],['courtlady','base','…그 뒤의 일은 말하고 싶지 않소.']]},
        {id:'cl-guest',t:'그날의 손님',lock:'H2',must:true,lockSay:'(궁녀는 입을 다물었다. 포석정에서 찾은 무언가를 보여 주면 기억을 떠올릴지도 모른다.)',
         lines:[['courtlady','base','그 붉은 깃털… 기억하오. 그 깃털을 투구에 꽂은 사람은 [[나이 든 장수]]였소.'],['courtlady','base','다른 장수들이 모두 그 앞에서 고개를 숙였지. 그 사람이 손을 들자…'],['ME','think','(나이 든 장수. 그날 군대를 이끈 사람이야.)']]}],
       present:{H2:{lines:[['courtlady','shock','이, 이 깃털은…!']],unlock:'cl-guest'},H4:{lines:[['courtlady','base','왕께서 고려에 사람을 보내셨지. 하지만 너무 늦었소.']]}},
       def:[['courtlady','base','늙은이가 알아볼 물건이 아니오.']]},
-     {who:'malsun',expr:'base',place:{x:50,h:60,b:2},from:2,topics:[
+     {who:'malsun',expr:'base',place:{x:50},from:2,topics:[
       {id:'ms4-feast',t:'포석정의 그날',lines:[['malsun','base','내가 다 봤다니까! 왕이 포석정에서 술잔을 띄우고 [[노래를 부르다가]]…!'],['ME','think','직접 보셨어요?'],['malsun','sweat','…아니, 이웃 마을 떡집 할멈이 봤대. 그 할멈의 시누이의…'],['ttolbang','base','할머니, 그 시누이는 또 몇 백 년 전 사람이에요?'],['ME','think','(또 전해 들은 말이야. 잔치였는지 제사였는지는 기록과 해석을 맞대 봐야 해.)']]}],
       present:{MUK:{lines:[['malsun','base','어머, 메밀묵! 신라에도 이게 있나? 한 그릇 두 냥이오.']]}},
       def:[['malsun','base','그건 모르는 물건이네. 그런데 내가 들은 얘기로는…']]}]},
@@ -4872,7 +4874,7 @@ const LOCS4=[
     {x:52,y:54,w:14,h:12,label:'논',say:['추수가 끝난 논이다.']},
     {x:77,y:65,w:16,h:9,label:'나무 의자',say:['누군가 쉬어 가는 나무 의자다.']},
     {x:58,y:80,w:22,h:14,label:'징검다리',say:['냇물을 건너는 징검다리다.']}],
-   npcs:[{who:'villager',expr:'base',place:{x:44,h:58,b:2},topics:[
+   npcs:[{who:'villager',expr:'base',place:{x:44},topics:[
      {id:'v-hi',t:'이 마을은요?',lines:[['villager','base','허허, 산 좋고 물 좋은 가은이라오.']]},
      {id:'v-child',t:'어린 시절',lock:'H5',must:true,lockSay:'(노인은 허허 웃기만 한다. 견훤이 나라를 세우며 한 말을 보여 주면 무언가 말해 줄지도 모른다.)',
       lines:[['villager','base','의자왕의 원한? 백제를 잇는다고?'],['villager','base','허허… 그 아이는 이 마을에서 자란 [[신라 아이]]요. 커서는 신라 군인이 되었지.'],['ME','shock','(백제의 복수자가… 신라에서 자란 신라 군인이었다고?)']]}],
@@ -4882,7 +4884,7 @@ const LOCS4=[
     {id:'gs-hall',name:'법당',intro:'김제 금산사의 법당이다. 935년, 견훤이 이 절에 갇혔다.',
      miss:['마룻바닥이다.','향 냄새가 난다.','아무것도 없다.'],
      spots:[{x:30,y:30,w:38,h:30,label:'법당',say:['법당 문이 굳게 닫혀 있다. 안에서 염불 소리가 들린다.']},{x:3,y:12,w:15,h:66,label:'석탑',say:['오래된 돌탑이다. 단서는 아니다.']},{x:83,y:50,w:10,h:20,label:'범종',say:['커다란 종이다. 새벽마다 울린다고 한다.']}],
-     npcs:[{who:'monk',expr:'base',place:{x:76,h:62,b:2},topics:[
+     npcs:[{who:'monk',expr:'base',place:{x:76},topics:[
        {id:'m-hi',t:'이 절에서는',lines:[['monk','base','쉿. 법당에서는 조용히 하시오.']]},
        {id:'m-door',t:'뒷문을 연 사람',lock:'H8',must:true,lockSay:'(승려는 손가락을 입에 댄다. 이 절에서 있었던 일을 보여 주면 말해 줄지도 모른다.)',
         lines:[['monk','base','석 달을 갇혀 계셨지요. 어느 밤 뒷문이 열려 있었소.'],['monk','base','탈출하신 뒤 [[곧장 고려의 왕건에게]] 가셨다고 들었소.'],['ME','think','(아들에게 갇힌 아버지가, 적이었던 고려로 갔다…)']]}],
@@ -5204,7 +5206,7 @@ const LOCS5=[
      spots:[{x:63,y:56,w:22,h:12,label:'책상 위 두루마리',ev:'Q1',say:['책상 위에 두루마리가 펼쳐져 있다. 나라에 알리는 글(방)을 베껴 둔 것이다.','“1232년, 서울을 [[강화도로 옮긴다]].” 수도를 옮긴다는 알림이다.']},{x:0,y:12,w:28,h:50,label:'빈 책장',say:['서랍이 다 열린 책장이다. 서류를 급히 챙겨 간 것 같다.']},{x:30,y:79,w:9,h:11,label:'엎어진 먹통',say:['엎어진 먹통이다. 먹이 말라붙었다.']},{x:41,y:7,w:20,h:11,label:'들보의 판자',say:['글씨가 다 지워진 판자다.']},{x:80,y:6,w:18,h:44,label:'부서진 창살',say:['창살이 부서져 바람이 들이친다.']}]},
     {id:'gk-gate',name:'궁궐 문',intro:'활짝 열린 궁궐 문이다. 지키는 군사는 없고, 늙은 궁궐 지기만 남았다.',miss:['돌바닥이다.','낙엽이다.','아무것도 없다.'],
      spots:[{x:30,y:22,w:40,h:38,label:'활짝 열린 문',say:['커다란 문이 활짝 열려 있다. 닫을 사람도 없다.']},{x:3,y:42,w:20,h:34,label:'쓰러진 나무 울타리',say:['적을 막으려 세운 나무 울타리가 쓰러져 있다.']},{x:44,y:68,w:20,h:24,label:'수레바퀴 자국',say:['수레바퀴 자국이 문 밖으로 길게 이어진다. 모두 짐을 싣고 떠난 모양이다.']}],
-     npcs:[{who:'gatekeeper',expr:'base',place:{x:80,h:62,b:2},topics:[
+     npcs:[{who:'gatekeeper',expr:'base',place:{x:80},topics:[
       {id:'gk-hi',t:'궁궐은 왜 비었나요?',lines:[['gatekeeper','base','다들 강화도로 갔소. 나만 남아 문을 지키지.']]},
       {id:'gk-meet',t:'회의는 어디서',lock:'Q1',must:true,lockSay:'(궁궐 지기는 문만 바라본다. 수도를 옮긴 일을 보여 주면 이야기해 줄지도 모른다.)',
        lines:[['gatekeeper','base','천도 말이오? 그건 궁궐에서 정한 게 아니오.'],['gatekeeper','base','대신들이 [[최씨 댁]]에 불려 가서 정했소. 왕께서는… 그 자리에 계셨는지도 모르겠구려.'],['ME','think','(궁궐이 아니라 최씨 댁에서… 결정한 사람은 누구였을까?)']],gives:['Q2']}],
@@ -5227,7 +5229,7 @@ const LOCS5=[
       {x:6,y:60,w:20,h:24,label:'연못',say:['잔잔한 연못이다.']}]},
     {id:'gh-wall',name:'성벽',intro:'강화도를 두른 성벽이다. 아직 쌓고 있는 곳도 있다.',miss:['돌무더기다.','흙이다.','아무것도 없다.'],
      spots:[{x:2,y:40,w:26,h:20,label:'쌓다 만 성벽',say:['돌을 쌓다 만 성벽이다.']},{x:29,y:38,w:7,h:29,label:'세워 둔 삽',say:['흙 묻은 삽이 세워져 있다.']},{x:2,y:63,w:20,h:28,label:'흙 바구니',say:['흙을 가득 담은 바구니들이다.']},{x:22,y:79,w:18,h:13,label:'나무 달구',say:['땅을 다지는 나무 달구다. 손잡이가 반질반질하다.']},{x:67,y:77,w:30,h:16,label:'지게',say:['돌을 나르던 지게다. 끈이 닳았다.']},{x:72,y:48,w:28,h:24,label:'돌무더기',say:['쌓으려고 모아 둔 돌무더기다.']}],
-     npcs:[{who:'wallkeeper',expr:'base',place:{x:56,h:60,b:2},topics:[
+     npcs:[{who:'wallkeeper',expr:'base',place:{x:56},topics:[
       {id:'wk-hi',t:'성벽은 누가 쌓나요?',lines:[['wallkeeper','base','성벽 쌓는 거 말이오? 바빠서 길게 말 못 하오.']]},
       {id:'wk-work',t:'성벽 공사',lock:'Q1',must:true,lockSay:'(성벽 지기는 돌만 나른다. 수도를 옮긴 일을 보여 주며 물어볼까?)',
        lines:[['wallkeeper','base','수도를 옮기니 성이 있어야 하잖소. 성도 궁궐도 다 [[백성들이 불려 와서]] 쌓았지.'],['wallkeeper','base','농사철에도 불려 왔소.']],gives:['Q6']}],
@@ -5236,7 +5238,7 @@ const LOCS5=[
   {id:'carving',name:'대장경 판각소',time:'오후',from:3,intro:'나무판에 불경을 새기는 판각소다. 나무 깎는 소리가 끊이지 않는다.',
    miss:['나무 부스러기다.','먹 냄새가 난다.','아무것도 없다.'],
    spots:[{x:84,y:4,w:16,h:52,label:'경판 선반',ev:'Q7',say:['선반마다 글자를 새긴 나무판이 빽빽하게 쌓여 있다.','1236년부터 16년 동안 새긴 [[대장경]]이다. 부처의 힘으로 나라를 지키려 했다.']},{x:2,y:55,w:34,h:30,label:'나무 담근 물통',say:['나무판을 물에 담가 두었다. 갈라지지 않게 하려는 것이다.']},{x:82,y:72,w:7,h:11,label:'조각칼 통',say:['날이 닳은 조각칼이 꽂혀 있다.']},{x:62,y:55,w:20,h:12,label:'작업대',say:['새기다 만 나무판이 놓여 있다.']},{x:65,y:77,w:11,h:13,label:'바닥의 나무판',say:['바닥에 내려놓은 나무판이다.']}],
-   npcs:[{who:'carver',expr:'base',place:{x:46,h:60,b:2},topics:[
+   npcs:[{who:'carver',expr:'base',place:{x:46},topics:[
      {id:'cv-hi',t:'무엇을 새기나요?',lines:[['carver','base','부처님 말씀이오. 한 글자 새길 때마다 절을 하지.']]},
      {id:'cv-feast',t:'최씨 댁 잔치를 보셨나요?',must:true,lines:[['carver','base','다니습봤 다 는내 를치잔 그. …앗, 또 거꾸로 나왔네.'],['ME','think','(…뭐라고? 소리 내어 거꾸로 읽어 볼까? 다…니…습…봤…)'],['ttolbang','joy','푸하하! 혀가 꼬이셨어요!'],['judge','normal','(어디선가 해치의 목소리) …소하 다시 해… 아니, 다시 하시오. 크흠.'],['ttolbang','joy','재판장님도 거꾸로 하셨어요! 푸하하하!'],['carver','sweat','경판은 글자를 거꾸로 새기거든요. 오래 하다 보니 말도 가끔…'],['ME','think','(경판은 찍으면 바로 읽히게 [[거꾸로]] 새기지. 그렇다면… [[거울]]에 비춰 보면 되겠다!)'],['guide','normal','(작업대 옆 구리거울에 장인의 말을 적은 종이를 비추자, 글자가 뒤집혀 바로 읽혔다.)'],['carver','base','“그 잔치는 내가 다 봤습니다.” 경판 나무를 실어 나르다 그 집 앞을 지났지요. 잔치는 [[하루]], 손님은 [[천 명 남짓]]이었어요.'],['carver','sweat','그날 우리 마을 사람들은… 성 쌓으러 불려 가 있었고요.'],['ME','think','(1만 명이 열흘이라던 그 종이와 다르잖아…!)']],gives:['Q10']},
      {id:'cv-wood',t:'나무 값',lock:'Q6',must:true,lockSay:'(장인은 칼질만 한다. 백성들이 불려 온 이야기를 꺼내면 대답할지도 모른다.)',
@@ -5483,7 +5485,7 @@ Object.entries({G1:1618,G2:1615,G3:1618,G4:1619,G5:1619,G6:1619,G7:1633,G8:1608,
 EVIDENCE6.find(x=>x.id==='G5').tag='hearsay'; EVIDENCE6.find(x=>x.id==='G3').tag='imagined';
 const LOCS6=[
   {id:'exile',name:'유배지 접견실',time:'아침',kind:'meet',intro:'광해군을 만나는 방이다. 의뢰인은 지쳐 보인다.',miss:['…'],spots:[],
-   npcs:[{who:'gwanghae',expr:'base',place:{x:52,h:74,b:0},topics:[
+   npcs:[{who:'gwanghae',expr:'base',place:{x:52},topics:[
      {id:'gw-deny',t:'대비를 가둔 일',must:true,lines:[['gwanghae','base','나는 대비를 가둔 적 없소. [[신하들이 한 일]]이오.'],['ME','think','(…말할 때 소매 끝을 만지작거렸어. 정말일까?)']]},
      {id:'gw-war',t:'명과 후금',lines:[['gwanghae','base','두 큰 나라 사이에서 조선이 살 길을 찾았을 뿐이오.']]},
      {id:'gw-confess',t:'서궁의 문',from:2,lock:'G1',must:true,lockSay:'(광해군은 고개를 돌렸다. 대비를 가둔 결정을 보여 주면 무너질지도 모른다.)',
@@ -5502,14 +5504,14 @@ const LOCS6=[
   {id:'build6',name:'궁궐 공사 터',time:'오후',intro:'새 궁궐을 짓는 공사 터다. 나무와 돌이 산처럼 쌓여 있다.',
    miss:['나무 부스러기다.','돌가루다.','아무것도 없다.'],
    spots:[{x:50,y:18,w:30,h:40,label:'쌓아 둔 큰 나무들',ev:'G2',say:['큰 나무가 산처럼 쌓여 있다.','전쟁이 끝난 지 얼마 안 됐는데 [[세 궁궐]]을 짓고 고치는 공사다. 백성의 부담이 컸다.']},{x:8,y:62,w:20,h:22,label:'돌 수레',say:['돌을 나르는 수레다.']}],
-   npcs:[{who:'carpenter',expr:'base',place:{x:34,h:60,b:2},topics:[
+   npcs:[{who:'carpenter',expr:'base',place:{x:34},topics:[
      {id:'cp-hi',t:'무엇을 짓나요?',lines:[['carpenter','base','궁궐이오. 끝이 없지.']]},
      {id:'cp-wood',t:'나무 값',lock:'G2',lockSay:'(목수는 나무만 깎는다. 공사 기록을 보여 주면 속마음을 말할지도 모른다.)',lines:[['carpenter','base','전쟁 끝난 지 얼마 안 됐는데… 나무 값, 품삯 다 백성 몫이오.'],['carpenter','base','힘들었소. 많이들 힘들었지.']]}],
     present:{G2:{lines:[['carpenter','base','그 기록이 맞소.']],unlock:'cp-wood'}},def:[['carpenter','base','난 나무밖에 모르오.']]}]},
   {id:'camp',name:'압록강 출병 진영',time:'새벽',from:2,intro:'1619년 명을 도우러 떠난 조선군의 진영이다. 강 건너가 후금 땅이다.',
    miss:['얼어붙은 땅이다.','천막 줄이다.','아무것도 없다.'],
    spots:[{x:56,y:20,w:28,h:34,label:'장수의 천막에 걸린 지도',ev:'G4',say:['천막 안에 지도가 걸려 있다.','서쪽에는 명, 북쪽에는 새로 세진 후금. 조선은 명의 요구로 [[1만 명이 넘는 군사]]를 보냈다.']},{x:8,y:66,w:16,h:18,label:'꽂힌 화살',ev:'GD2',say:['땅에 후금의 화살이 꽂혀 있다.','후금이 강하다는 건 누구나 안다.']},{x:84,y:70,w:14,h:16,label:'모닥불 자리',say:['꺼진 모닥불이다.']}],
-   npcs:[{who:'soldier6',expr:'base',place:{x:38,h:58,b:2},topics:[
+   npcs:[{who:'soldier6',expr:'base',place:{x:38},topics:[
      {id:'sd-hi',t:'싸움은 어땠나요?',lines:[['soldier6','base','이건 [[비밀]]인데요! (진영이 다 들리는 목소리로) 명나라 장수들은 서둘렀고, 후금은 빨랐어요!'],['ME','think','(…비밀이 아닌 것 같은데.)']]},
      {id:'sd-letter',t:'장수의 편지',lock:'G4',must:true,lockSay:'(군졸은 강 건너만 본다. 그때의 형편을 보여 주면 무언가 떠올릴지도 모른다.)',
       lines:[['soldier6','base','그 지도… 떠나기 전 생각이 나요.'],['soldier6','base','이건 비밀인데요! 강홍립 장군님이 떠나기 전 [[왕께 무언가를 따로 받았다]]던데요. 편지였는지 말이었는지는 저도 몰라요.'],['ME','think','(왕이 장군에게 따로 준 것… 법정에서 물어봐야 해.)']],gives:['G5']}],
@@ -5517,7 +5519,7 @@ const LOCS6=[
   {id:'sillok',name:'실록 편찬청',time:'밤',from:3,rooms:[
     {id:'sl-room',name:'사관의 방',intro:'「광해군일기」를 엮는 사관의 방이다.',miss:['책상이다.','먹 냄새가 난다.','아무것도 없다.'],
      spots:[{x:60,y:20,w:24,h:36,label:'책장의 의학책',ev:'G9',say:['책장에 두꺼운 의학책이 꽂혀 있다.','1613년 펴낸 [[「동의보감」]]이다. 광해군 때 나온 책이다.']},{x:10,y:60,w:22,h:22,label:'벼루',say:['먹이 말라 있다.']}],
-     npcs:[{who:'sagwan',expr:'base',place:{x:40,h:62,b:2},topics:[
+     npcs:[{who:'sagwan',expr:'base',place:{x:40},topics:[
       {id:'sg-hi',t:'무엇을 쓰시나요?',lines:[['sagwan','base','지난 임금의 일기요. 날마다 있었던 일을 적지.']]},
       {id:'sg-mark',t:'고친 자국',lock:'G5',must:true,lockSay:'(사관은 붓만 놀린다. 어제 압록강 진영에서 들은 이야기를 꺼내 보면 대답할지도 모른다.)',
        lines:[['sagwan','sweat','장수가 떠나기 전 왕께 따로 받은 것… 그 대목 말이오?'],['sagwan','base','원고에는 그 대목이 있었소. 그런데 [[붉은 먹으로 지우고 고친]] 자리가 많소.'],['sagwan','base','…지금 임금께서 지난 임금을 쫓아내셨으니, 쓰는 손도 조심스러울 수밖에.'],['ME','think','(기록을 쓴 사람이 피고를 쫓아낸 쪽이라면… 원고 더미도 살펴봐야겠어.)']]}],
@@ -5833,7 +5835,7 @@ const LOCS7=[
      spots:[{x:56,y:24,w:26,h:34,label:'벽에 붙은 날짜표',ev:'I1',say:['날짜표다. 1636년 12월부터 성 안에서 [[47일]]. 먹을 것이 떨어져 갔다.']},{x:10,y:50,w:20,h:28,label:'화로',say:['식은 화로다.']}]},
     {id:'nh-wall',name:'성벽 위',intro:'성 밖 마을이 내려다보이는 성벽 위다.',miss:['눈 쌓인 돌이다.','아무것도 없다.'],
      spots:[{x:20,y:50,w:40,h:24,label:'성가퀴',say:['몸을 숨기던 낮은 담이다.']},{x:66,y:14,w:28,h:24,label:'멀리 보이는 마을',say:['연기가 피어오르던 마을 자리다.']}],
-     npcs:[{who:'guard7',expr:'base',place:{x:72,h:60,b:2},topics:[
+     npcs:[{who:'guard7',expr:'base',place:{x:72},topics:[
       {id:'g7-hi',t:'그때 여기 계셨나요?',lines:[['guard7','base','이 성벽을 47일 동안 지켰소.']]},
       {id:'g7-out',t:'성 밖의 소리',lock:'I1',must:true,lockSay:'(병사는 성 밖만 본다. 성 안에서 버틴 날의 기록을 보여 주면 어떨까?)',
        lines:[['guard7','base','성 안도 춥고 배고팠지만…'],['guard7','base','밤마다 성 밖 [[마을들이 불타는 게]] 보였소. 그들은 피할 곳이 없었지.']]}],
@@ -5844,7 +5846,7 @@ const LOCS7=[
      spots:[{x:36,y:40,w:28,h:20,label:'탁자 위 두 장의 글',ev:'I2',say:['상소 두 장. 하나는 [[화해하자]], 하나는 [[끝까지 싸우자]].','전쟁 전부터 청의 위협을 알리는 말이 있었다.']},{x:8,y:20,w:18,h:40,label:'걸린 지도',say:['남한산성 둘레 지도다.']}]}]},
   {id:'samjeon',name:'삼전도 나루',time:'흐린 날',intro:'왕이 항복한 한강의 삼전도 나루다.',miss:['강가 모래다.','아무것도 없다.'],
    spots:[{x:40,y:16,w:20,h:56,label:'큰 비석',ev:'I3',say:['1637년 1월 왕이 여기서 [[청 황제에게 항복]]했다. 비석은 청의 요구로 세웠다.']},{x:6,y:70,w:24,h:18,label:'나룻배',say:['낡은 나룻배다.']}],
-   npcs:[{who:'daechung',expr:'base',place:{x:76,h:58,b:2},until:1,topics:[
+   npcs:[{who:'daechung',expr:'base',place:{x:76},until:1,topics:[
      {id:'dc-hi',t:'누구세요?',lines:[['daechung','base','통역관… 대충이오. 긴 말… 짧게.'],['ME','think','(정말 짧게 말하시네…)']]},
      {id:'dc-lunch',t:'사신이 무슨 말을 했나요?',must:true,lines:[['daechung','base','청나라 사신… 점심… 고기… 국… 많이.'],['malsun','base','(어디선가) 청나라 사람이 고깃국을 [[백 그릇]] 먹었대!'],['soldier6','base','(멀리서) 청나라 군대가 [[국을 먹으러]] 쳐들어왔대요!'],['ttolbang','shock','잠깐만요! 처음 말이랑 끝 말을 나란히 놓아 볼게요!']],
       after:async()=>{ await infoCard('말 전하기 사다리',LADDER7); await say('qingenvoy','base','…나는 그냥 [[국밥 한 그릇]] 먹었소.',{view:'inv'}); await say(ME(),'think','(말이 건너갈 때마다 부풀었어. ‘독살’이라는 말은 누가 시작했을까?)',{view:'inv'}); }}],
@@ -5854,20 +5856,20 @@ const LOCS7=[
      spots:[{x:56,y:20,w:26,h:30,label:'벽에 건 서양 그림',ev:'I4',say:['서양 그림이다. 세자는 8년 동안 청에 있다가 [[1645년 2월]] 돌아왔다.']},{x:10,y:56,w:20,h:24,label:'천문 책',ev:'ID1',say:['청에서 가져온 천문 책이다. 쟁점과 이어질까?']}]},
     {id:'sj-med',name:'약을 달이던 곳',intro:'약을 달이던 부엌이다.',miss:['그을린 아궁이다.','아무것도 없다.'],
      spots:[{x:30,y:30,w:24,h:30,label:'약탕관 옆 기록',ev:'I5',say:['날짜 적힌 종이다.','1645년 4월, 세자는 돌아온 지 [[두 달 만에]] 병으로 세상을 떠났다.']},{x:8,y:64,w:16,h:16,label:'빈 약그릇',ev:'ID2',say:['빈 약그릇이다. 이것으로 무엇을 알까?']}],
-     npcs:[{who:'servant7',expr:'base',place:{x:78,h:58,b:2},topics:[
+     npcs:[{who:'servant7',expr:'base',place:{x:78},topics:[
       {id:'s7-hi',t:'여기서 일하셨나요?',lines:[['servant7','base','약 심부름을 했지요.']]},
       {id:'s7-night',t:'그날 밤',lock:'I5',must:true,lockSay:'(하인은 눈을 피한다. 세자가 언제 세상을 떠났는지 보여 주면 어떨까?)',
        lines:[['servant7','base','…저는 그날 거처에 없었습니다.'],['servant7','base','다만 [[단비]]라는 궁녀가 다 봤다고 떠들었지요.'],['ME','think','(단비… 내일 법정에 설 증인이야.)']]}],
       present:{I5:{lines:[['servant7','sweat','그날 일을… 아시는군요.']],unlock:'s7-night'}},def:[['servant7','base','잘 모르겠습니다.']]}]},
     {id:'sj-yard',name:'마당',intro:'거처의 마당이다.',miss:['봄풀이다.','아무것도 없다.'],
      spots:[{x:30,y:30,w:30,h:30,label:'매화나무',say:['매화가 피어 있다.']}],
-     npcs:[{who:'malsun',expr:'base',place:{x:76,h:60,b:2},topics:[
+     npcs:[{who:'malsun',expr:'base',place:{x:76},topics:[
       {id:'ms7-poison',t:'세자 이야기',lines:[['malsun','base','내가 다 봤다니까! 세자가 [[검게 변한]] 걸!'],['ME','think','직접 보셨어요?'],['malsun','sweat','…아니, 장터에서 돌던 [[종이 한 장]]에 그렇게 적혀 있었어.'],['malsun','base','그 종이는 무슨 법정 [[서고]]에서 나왔다던가?'],['ME','think','(법정 서고…? 소문보다 그 종이부터 따져야 해.)']]}],
       def:[['malsun','base','그건 모르는 물건이네.']]}]}]},
   {id:'kangbin',name:'강빈의 옛 집',time:'흐린 날',from:3,rooms:[
     {id:'kb-room',name:'빈 방',intro:'세자빈 강씨가 살던 빈 방이다.',miss:['빈 방이다.','아무것도 없다.','바람 소리뿐이다.'],
      spots:[{x:30,y:24,w:30,h:30,label:'벽에 남은 글',ev:'I7',say:['벽에 남은 글이다.','1646년, 세자빈은 왕의 음식에 독을 넣었다는 [[의심]]으로 사약을 받았다. 증거는 분명하지 않았다.']},{x:66,y:50,w:20,h:30,label:'빈 경대',say:['거울 없는 경대다.']}],
-     npcs:[{who:'maid7',expr:'base',place:{x:16,h:60,b:2},topics:[
+     npcs:[{who:'maid7',expr:'base',place:{x:16},topics:[
       {id:'m7-hi',t:'세자빈은 어떤 분이었나요?',lines:[['maid7','base','청에 볼모로 가서도 농사지어 사람들을 먹이신 분이오.']]},
       {id:'m7-against',t:'반대한 대신들',lock:'I7',must:true,lockSay:'(몸종은 고개를 떨군다. 세자빈이 받은 벌의 기록을 보여 주면 어떨까?)',
        lines:[['maid7','base','대신들이 [[줄지어 엎드려]] 말렸소. 여러 번이나.'],['maid7','base','그래도 왕은 듣지 않았소.']],gives:['I8']}],
@@ -6254,14 +6256,14 @@ const LOCS8=[
      spots:[{x:40,y:30,w:20,h:20,label:'걸려 있는 갓끈',ev:'SD2',say:['벽에 값비싼 비단 갓끈이 걸려 있다.','이게 무엇을 증명할까?']},{x:8,y:60,w:24,h:22,label:'문갑',say:['잠긴 문갑이다.']}]}]},
   {id:'market8',name:'진주 장터',time:'낮',intro:'진주의 장터다. 사람들이 수군거린다.',miss:['장바구니다.','아무것도 없다.','짚신이다.'],
    spots:[{x:62,y:24,w:22,h:30,label:'장대에 걸린 흰 수건',ev:'S3',say:['장대에 흰 수건이 잔뜩 걸렸다.','1862년 봄, 농민들이 [[흰 수건]]을 두르고 모였다고 한다.']},{x:8,y:62,w:22,h:22,label:'곡식 자루',say:['비어 가는 곡식 자루다.']}],
-   npcs:[{who:'merchant8',expr:'base',place:{x:38,h:60,b:2},topics:[
+   npcs:[{who:'merchant8',expr:'base',place:{x:38},topics:[
     {id:'m8-hi',t:'장사는 어떠세요?',lines:[['merchant8','base','요즘은 곡식 값이 하늘을 찌르오.']]},
     {id:'m8-baek',t:'병사 나리',lock:'S1',must:true,lockSay:'(상인은 주변을 살핀다. 관아 창고 이야기라면 입을 열지도.)',
      lines:[['merchant8','base','쉿… 창고가 빈 건 [[그분이 오기 전부터]]였다는데.'],['merchant8','base','그분이 와서 그걸 메우라고 백성을 [[몇 배로]] 쥐어짰지. 고발장? 흥.'],['ME','think','(고발인 이야기야. 기억해 두자.)']],gives:['S9']}],
     present:{S1:{lines:[['merchant8','sweat','창고… 그 얘기라면…']],unlock:'m8-baek'},S2:{lines:[['merchant8','base','고발장이라… 자기 일은 쏙 빼놓았구먼.']]}},def:[['merchant8','base','팔 물건이 아니구려.']]}]},
   {id:'farmhouse',name:'농민의 집',time:'저녁',from:2,intro:'진주의 농민 집이다.',miss:['빈 쌀독이다.','아무것도 없다.','짚단이다.'],
    spots:[{x:56,y:20,w:24,h:36,label:'벽에 붙은 세금 쪽지',ev:'S4',say:['벽에 논, 베, 곡식 자루가 그려진 세금 쪽지 세 장.','[[세 가지 세금]]이 모두 농민을 괴롭혔다.']},{x:8,y:56,w:20,h:26,label:'빈 쌀독',say:['쌀독이 비어 있다.']}],
-   npcs:[{who:'farmwife',expr:'base',place:{x:38,h:58,b:2},topics:[
+   npcs:[{who:'farmwife',expr:'base',place:{x:38},topics:[
     {id:'fw-hi',t:'살림은 어떠세요?',lines:[['farmwife','base','세금 내고 나면 남는 게 없소.']]},
     {id:'fw-grain',t:'창고의 곡식',lock:'S1',must:true,lockSay:'(아낙은 빈 쌀독만 본다. 관아 창고 이야기라면 대답할지도.)',
      lines:[['farmwife','base','나라가 곡식 빌려주는 거, 그거 말이오?'],['farmwife','base','우리는 [[빌린 적도 없는데]] 갚으라 했소. 그것도 몇 배로.']]}],
@@ -6269,7 +6271,7 @@ const LOCS8=[
   {id:'daegamhouse',name:'김 대감의 집',time:'밤',from:2,rooms:[
     {id:'dg-sarang',name:'사랑채',intro:'김 대감 집의 사랑채다. 손님이 끊이지 않는다.',miss:['비단 방석이다.','아무것도 없다.'],
      spots:[{x:30,y:14,w:40,h:20,label:'대문 문패',ev:'SD1',say:['김씨 집안 문패가 걸려 있다.','집안 이름이 무엇을 증명할까?']},{x:8,y:56,w:20,h:26,label:'병풍',say:['화려한 병풍이다.']}],
-     npcs:[{who:'gyeomin',expr:'base',place:{x:72,h:60,b:2},from:2,topics:[
+     npcs:[{who:'gyeomin',expr:'base',place:{x:72},from:2,topics:[
       {id:'gm-hi',t:'여기서 무슨 일을?',lines:[['gyeomin','base','이 댁 살림과 장부를 맡은 아부라 하오.']]},
       {id:'gm-praise',t:'대감마님은 어떤 분인가요?',must:true,lines:[['gyeomin','base','우리 대감마님은 재채기도 [[나라를 위해]] 하시지요!'],['gyeomin','base','장부도 어찌나 아끼시는지, 밤마다 [[베개 속에 넣고]] 주무신다오!'],['judge','stern','(해치의 목소리) …방금 뭐라고 했소?'],['gyeomin','sweat','…대, 대감마님은 베개를 아끼신다고요.'],['ttolbang','bang','베개! 제가 가져올게요!'],['guide','normal','(똘방이 침방으로 뛰어갔지만, 문이 잠겨 있다.)'],['ME','think','(침방 열쇠는 아부에게 있어…)']]},
       {id:'gm-key',t:'주인 어른의 장부',lock:'S2',must:true,lockSay:'(아부는 열쇠를 꼭 쥐고 있다. 이 집을 고발한 글과, 고발인이 법정에서 한 장담을 함께 보이면?)',
@@ -6508,7 +6510,7 @@ const LOCS9=[
       {x:8,y:56,w:22,h:24,label:'잠긴 서랍',only2:true,ev:'U6',say:['어제 잠겼던 서랍이 열려 있다.','1866년 초의 편지다. [[러시아를 막으려]] 프랑스 신부들을 통해 프랑스와 손잡을 길을 찾았다.']}]},
     {id:'uh-anchae',name:'안채(노락당)',intro:'운현궁의 안채다.',miss:['마루다.','아무것도 없다.'],
      spots:[{x:30,y:24,w:30,h:30,label:'벽에 붙은 고지',ev:'U2',say:['양반에게도 군포를 걷는다는 [[호포제]] 알림이다.']}],
-     npcs:[{who:'oldservant',expr:'base',place:{x:78,h:60,b:2},from:2,topics:[
+     npcs:[{who:'oldservant',expr:'base',place:{x:78},from:2,topics:[
       {id:'os-hi',t:'이 집에서 오래 일하셨나요?',lines:[['oldservant','base','대감마님 젊을 때부터지요.']]},
       {id:'os-pray',t:'마님의 기도',lock:'U1',must:true,gives:['U15'],lockSay:'(하인은 마당만 쓴다. 대감의 일을 보여 주면 말할지도 모른다.)',
        lines:[['oldservant','base','무엇을 믿었냐고요? …허허.'],['oldservant','base','마님께서는 [[천주교에 마음을 두셨다]]는 말이 있었지요. 대감께서도 처음엔 서양 신부를 미워하지 않으셨소.'],['ME','think','(“말이 있었다”… 직접 본 게 아니라 [[전해 들은 말]]이야.)']]}],
@@ -6517,19 +6519,19 @@ const LOCS9=[
      spots:[{x:30,y:10,w:40,h:20,label:'현판',ev:'UD2',say:['현판이다. 멋진 글씨지만 쟁점과 이어질까?']}]}]},
   {id:'gbgong',name:'경복궁 공사 현장',time:'낮',intro:'경복궁을 다시 짓는 공사 현장이다.',miss:['돌가루다.','나무 조각이다.'],
    spots:[{x:56,y:16,w:26,h:30,label:'공사비 장부',ev:'U3',say:['공사비 장부다. ‘[[스스로 내는 돈]](원납전)’이라더니 뒤로 갈수록 억지로 걷었다.']},{x:8,y:64,w:20,h:20,label:'기와 더미',ev:'UD3',say:['새 기와 더미다. 쟁점과 이어질까?']}],
-   npcs:[{who:'mason',expr:'base',place:{x:40,h:60,b:2},until:1,topics:[
+   npcs:[{who:'mason',expr:'base',place:{x:40},until:1,topics:[
     {id:'ms-hi',t:'공사는 어떠세요?',lines:[['mason','base','평생 이런 큰 공사는 처음이오.']]},
     {id:'ms-pay',t:'일당',lock:'U3',lockSay:'(석수는 돌만 깎는다. 공사비를 보여 주면 대답할지도 모른다.)',
      lines:[['mason','base','처음엔 다들 신이 났소. [[품삯]]도 받았지.'],['mason','base','돈이 모자라자 억지로 끌려오는 사람이 늘었소.']],gives:['U14']}],
     present:{U3:{lines:[['mason','base','원납전… 그 이야기라면.']],unlock:'ms-pay'}},def:[['mason','base','돌 말고는 모르오.']]}]},
   {id:'market9',name:'장터',time:'오후',intro:'한양의 장터다. 쌀가게 앞이 웅성거린다.',miss:['짚신이다.','엽전 한 닢이다.'],
    spots:[{x:60,y:20,w:22,h:30,label:'쌓인 엽전 꾸러미',ev:'U4',say:['한 닢을 백 닢 값으로 쓰게 한 [[당백전]] 꾸러미다.']},{x:8,y:60,w:20,h:24,label:'빈 쌀자루',say:['빈 쌀자루다.']}],
-   npcs:[{who:'riceman',expr:'base',place:{x:40,h:60,b:2},topics:[
+   npcs:[{who:'riceman',expr:'base',place:{x:40},topics:[
     {id:'rm-hi',t:'장사는 어떠세요?',lines:[['riceman','base','쌀은 있는데 사는 사람이 없소.']]},
     {id:'rm-price',t:'쌀값',lock:'U4',must:true,lockSay:'(주인은 한숨만 쉰다. 요즘 돈을 보여 주면 대답할지도 모른다.)',
      lines:[['riceman','base','당백전 나온 뒤로 [[쌀값이 몇 배로]] 뛰었소. …잠깐, 팻말부터 고치고.'],['guide','normal','(주인이 팻말의 숫자를 고쳐 쓴다.)'],['riceman','base','쌀 한 가마 사려면 돈을 지게로 져 와야 했지. 말하는 사이에 [[또 올랐소]]!']],gives:['U5']}],
     present:{U4:{lines:[['riceman','angry','그 돈! 그 얘기라면 할 말이 많소.']],unlock:'rm-price'},MUK:{lines:[['riceman','base','메밀묵? 그것도 값이 하루가 다르게 오른다더군.']]}},def:[['riceman','base','쌀값보다 중요한 게 있소?']]},
-    {who:'malsun',expr:'base',place:{x:78,h:60,b:2},from:2,topics:[
+    {who:'malsun',expr:'base',place:{x:78},from:2,topics:[
      {id:'ms9-ghost',t:'서양 배 이야기',lines:[['malsun','base','내가 다 봤다니까! 서양 배에 [[귀신]]이 타고 있었어!'],['ME','think','직접 보셨어요?'],['malsun','sweat','…아니, 강화도 사돈의 팔촌이… 눈이 파랗고 머리가 노랗더래. 그게 귀신이지 뭐야!'],['ME','think','(낯선 사람이 소문에서 귀신이 됐구나. 그 시대의 두려움이야.)']]}],
      def:[['malsun','base','그건 모르는 물건이네.']]}]},
   {id:'river9',name:'절두산 아래 강가',time:'흐린 날',from:2,intro:'한강 절두산 아래다. 바람만 분다.',miss:['젖은 모래다.','바람 소리뿐이다.'],
@@ -6848,12 +6850,12 @@ const LOCS10=[
   {id:'press',name:'신문사',time:'낮',intro:'잉크 냄새가 난다.',miss:['종이 더미다.','잉크 얼룩이다.','아무것도 없다.'],
    spots:[{x:56,y:22,w:24,h:30,label:'벽에 걸린 신문',ev:'W2',say:['독립협회 사람들이 만든 한글 신문, [[독립신문]]이다.']},{x:8,y:60,w:20,h:20,label:'영어 사전',ev:'WD2',say:['오래된 영어 사전이다.','쟁점과 이어질까?']},
     {x:30,y:66,w:16,h:16,label:'새로 찍은 신문',only2:true,ev:'W6',say:['어제는 없던 신문이다.','“[[이날을 목 놓아 크게 우노라]].” 「시일야방성대곡」이다.']}],
-   npcs:[{who:'printer',expr:'base',place:{x:84,h:58,b:2},until:2,topics:[
+   npcs:[{who:'printer',expr:'base',place:{x:84},until:2,topics:[
     {id:'pr-hi',t:'무엇을 찍으세요?',lines:[['printer','base','속보! 인쇄공, 오늘도 소식을 찍다! …나쁜 소식이 더 많지.']]},
     {id:'pr-speech',t:'그 사람의 연설',lock:'W1',must:true,lockSay:'(활자만 고르는 인쇄공. 독립협회 이야기라면?)',
      lines:[['printer','base','속보! 독립협회 위원장, [[자주독립]]을 외치다! …그 연설, 내가 받아 적었소.'],['printer','sweat','속보… 사람이 변하다. …이 제목은 찍기 싫었소.']]}],
     present:{W1:{lines:[['printer','base','속보! 독립문, 하얗게 서다! …다들 얼굴이 환했지.']],unlock:'pr-speech'}},def:[['printer','base','속보! 인쇄공, 모르는 물건을 보다!']]},
-   {who:'malsun',expr:'base',place:{x:84,h:58,b:2},from:3,topics:[
+   {who:'malsun',expr:'base',place:{x:84},from:3,topics:[
     {id:'ms10-saw',t:'무엇을 보셨나요?',lock:'PF2',must:true,lockSay:'(할머니는 “이번엔 진짜 봤다니까!”만 되풀이한다.)',
      lines:[['malsun','angry','이번엔 [[내 눈으로]] 봤다니까!'],['malsun','base','그래, [[이 꽃]]! 바로 이 꽃이었어!'],['ME','think','(할머니가 처음으로 직접 본 증인이 됐어!)']],gives:['W14']},
     {id:'ms10-hi',t:'이번엔 무슨 소문인가요?',lines:[['malsun','base','이번엔 진짜 봤다니까! 법정 서고에서 누가 [[종이를 끼워 넣는]] 걸!'],['ttolbang','base','…옆집 사람이 봤죠?'],['printer','base','속보! 할머니, 또 소문을 퍼뜨리다!'],['malsun','angry','내 눈으로 봤다니까!! 소매에 [[꽃 모양 얼룩]]이 있었어!'],['ME','think','(꽃 모양 얼룩… 수상한 종이의 그 얼룩?)']]}],
@@ -6864,7 +6866,7 @@ const LOCS10=[
      spots:[{x:30,y:30,w:40,h:24,label:'탁자 위 조약 초안',ev:'W3',say:['조약 초안. [[찬성한 다섯 사람]] 가운데 학부대신 이완용이 있다.']}]},
     {id:'jm-wait',name:'대기실',intro:'대신들이 기다리던 방이다.',miss:['의자다.','아무것도 없다.'],
      spots:[{x:30,y:30,w:30,h:30,label:'빈 의자들',say:['의자들이 흐트러져 있다.']}],
-     npcs:[{who:'guard10',expr:'base',place:{x:76,h:60,b:2},topics:[
+     npcs:[{who:'guard10',expr:'base',place:{x:76},topics:[
       {id:'gd-hi',t:'그날 여기 계셨나요?',lines:[['guard10','base','회의실 앞을 지켰소.']]},
       {id:'gd-against',t:'반대한 사람들',lock:'W3',must:true,lockSay:'(정면만 보는 호위병. 그날의 조약 이야기라면?)',
        lines:[['guard10','base','참정대신 [[한규설]]은 끝까지 반대하다 끌려 나갔소.'],['guard10','base','모두가 뜻을 모았다고? 내가 본 건 그게 아니오.']],gives:['W4']}],
@@ -6877,7 +6879,7 @@ const LOCS10=[
    spots:[{x:30,y:20,w:40,h:40,label:'대한문 앞 게시',ev:'W8',say:['문 앞의 알림. 헤이그 특사를 빌미로 [[황제가 물러났다]]. 이완용이 앞장섰다.']}]},
   {id:'barracks',name:'해산된 군대의 병영',time:'1907년 8월',from:3,intro:'텅 빈 병영이다.',miss:['빈 막사다.','아무것도 없다.'],
    spots:[{x:56,y:24,w:26,h:30,label:'벗어 놓은 군복',ev:'W9',say:['벗어 놓은 군복. 1907년 8월, [[군대가 해산]]되었다.']}],
-   npcs:[{who:'soldier10',expr:'base',place:{x:30,h:60,b:2},topics:[
+   npcs:[{who:'soldier10',expr:'base',place:{x:30},topics:[
     {id:'sl-hi',t:'여기 계셨나요?',lines:[['soldier10','base','이 병영의 군인이었소.']]},
     {id:'sl-gun',t:'그날의 총소리',lock:'W9',must:true,lockSay:'(군복만 바라보는 군인. 그날의 기록이라면?)',
      lines:[['soldier10','base','해산식 날, 우리 대대장님이… 스스로 목숨을 끊으셨소.'],['soldier10','base','우리는 [[총을 들고 맞섰소]]. 그 뒤 많은 이가 의병이 되었지.']],gives:['W10']}],

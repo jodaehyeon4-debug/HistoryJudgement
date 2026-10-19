@@ -44,7 +44,7 @@ const LOCS7=[
      spots:[{x:56,y:24,w:26,h:34,label:'벽에 붙은 날짜표',ev:'I1',say:['날짜표다. 1636년 12월부터 성 안에서 [[47일]]. 먹을 것이 떨어져 갔다.']},{x:10,y:50,w:20,h:28,label:'화로',say:['식은 화로다.']}]},
     {id:'nh-wall',name:'성벽 위',intro:'성 밖 마을이 내려다보이는 성벽 위다.',miss:['눈 쌓인 돌이다.','아무것도 없다.'],
      spots:[{x:20,y:50,w:40,h:24,label:'성가퀴',say:['몸을 숨기던 낮은 담이다.']},{x:66,y:14,w:28,h:24,label:'멀리 보이는 마을',say:['연기가 피어오르던 마을 자리다.']}],
-     npcs:[{who:'guard7',expr:'base',place:{x:72,h:60,b:2},topics:[
+     npcs:[{who:'guard7',expr:'base',place:{x:72},topics:[
       {id:'g7-hi',t:'그때 여기 계셨나요?',lines:[['guard7','base','이 성벽을 47일 동안 지켰소.']]},
       {id:'g7-out',t:'성 밖의 소리',lock:'I1',must:true,lockSay:'(병사는 성 밖만 본다. 성 안에서 버틴 날의 기록을 보여 주면 어떨까?)',
        lines:[['guard7','base','성 안도 춥고 배고팠지만…'],['guard7','base','밤마다 성 밖 [[마을들이 불타는 게]] 보였소. 그들은 피할 곳이 없었지.']]}],
@@ -55,7 +55,7 @@ const LOCS7=[
      spots:[{x:36,y:40,w:28,h:20,label:'탁자 위 두 장의 글',ev:'I2',say:['상소 두 장. 하나는 [[화해하자]], 하나는 [[끝까지 싸우자]].','전쟁 전부터 청의 위협을 알리는 말이 있었다.']},{x:8,y:20,w:18,h:40,label:'걸린 지도',say:['남한산성 둘레 지도다.']}]}]},
   {id:'samjeon',name:'삼전도 나루',time:'흐린 날',intro:'왕이 항복한 한강의 삼전도 나루다.',miss:['강가 모래다.','아무것도 없다.'],
    spots:[{x:40,y:16,w:20,h:56,label:'큰 비석',ev:'I3',say:['1637년 1월 왕이 여기서 [[청 황제에게 항복]]했다. 비석은 청의 요구로 세웠다.']},{x:6,y:70,w:24,h:18,label:'나룻배',say:['낡은 나룻배다.']}],
-   npcs:[{who:'daechung',expr:'base',place:{x:76,h:58,b:2},until:1,topics:[
+   npcs:[{who:'daechung',expr:'base',place:{x:76},until:1,topics:[
      {id:'dc-hi',t:'누구세요?',lines:[['daechung','base','통역관… 대충이오. 긴 말… 짧게.'],['ME','think','(정말 짧게 말하시네…)']]},
      {id:'dc-lunch',t:'사신이 무슨 말을 했나요?',must:true,lines:[['daechung','base','청나라 사신… 점심… 고기… 국… 많이.'],['malsun','base','(어디선가) 청나라 사람이 고깃국을 [[백 그릇]] 먹었대!'],['soldier6','base','(멀리서) 청나라 군대가 [[국을 먹으러]] 쳐들어왔대요!'],['ttolbang','shock','잠깐만요! 처음 말이랑 끝 말을 나란히 놓아 볼게요!']],
       after:async()=>{ await infoCard('말 전하기 사다리',LADDER7); await say('qingenvoy','base','…나는 그냥 [[국밥 한 그릇]] 먹었소.',{view:'inv'}); await say(ME(),'think','(말이 건너갈 때마다 부풀었어. ‘독살’이라는 말은 누가 시작했을까?)',{view:'inv'}); }}],
@@ -65,20 +65,20 @@ const LOCS7=[
      spots:[{x:56,y:20,w:26,h:30,label:'벽에 건 서양 그림',ev:'I4',say:['서양 그림이다. 세자는 8년 동안 청에 있다가 [[1645년 2월]] 돌아왔다.']},{x:10,y:56,w:20,h:24,label:'천문 책',ev:'ID1',say:['청에서 가져온 천문 책이다. 쟁점과 이어질까?']}]},
     {id:'sj-med',name:'약을 달이던 곳',intro:'약을 달이던 부엌이다.',miss:['그을린 아궁이다.','아무것도 없다.'],
      spots:[{x:30,y:30,w:24,h:30,label:'약탕관 옆 기록',ev:'I5',say:['날짜 적힌 종이다.','1645년 4월, 세자는 돌아온 지 [[두 달 만에]] 병으로 세상을 떠났다.']},{x:8,y:64,w:16,h:16,label:'빈 약그릇',ev:'ID2',say:['빈 약그릇이다. 이것으로 무엇을 알까?']}],
-     npcs:[{who:'servant7',expr:'base',place:{x:78,h:58,b:2},topics:[
+     npcs:[{who:'servant7',expr:'base',place:{x:78},topics:[
       {id:'s7-hi',t:'여기서 일하셨나요?',lines:[['servant7','base','약 심부름을 했지요.']]},
       {id:'s7-night',t:'그날 밤',lock:'I5',must:true,lockSay:'(하인은 눈을 피한다. 세자가 언제 세상을 떠났는지 보여 주면 어떨까?)',
        lines:[['servant7','base','…저는 그날 거처에 없었습니다.'],['servant7','base','다만 [[단비]]라는 궁녀가 다 봤다고 떠들었지요.'],['ME','think','(단비… 내일 법정에 설 증인이야.)']]}],
       present:{I5:{lines:[['servant7','sweat','그날 일을… 아시는군요.']],unlock:'s7-night'}},def:[['servant7','base','잘 모르겠습니다.']]}]},
     {id:'sj-yard',name:'마당',intro:'거처의 마당이다.',miss:['봄풀이다.','아무것도 없다.'],
      spots:[{x:30,y:30,w:30,h:30,label:'매화나무',say:['매화가 피어 있다.']}],
-     npcs:[{who:'malsun',expr:'base',place:{x:76,h:60,b:2},topics:[
+     npcs:[{who:'malsun',expr:'base',place:{x:76},topics:[
       {id:'ms7-poison',t:'세자 이야기',lines:[['malsun','base','내가 다 봤다니까! 세자가 [[검게 변한]] 걸!'],['ME','think','직접 보셨어요?'],['malsun','sweat','…아니, 장터에서 돌던 [[종이 한 장]]에 그렇게 적혀 있었어.'],['malsun','base','그 종이는 무슨 법정 [[서고]]에서 나왔다던가?'],['ME','think','(법정 서고…? 소문보다 그 종이부터 따져야 해.)']]}],
       def:[['malsun','base','그건 모르는 물건이네.']]}]}]},
   {id:'kangbin',name:'강빈의 옛 집',time:'흐린 날',from:3,rooms:[
     {id:'kb-room',name:'빈 방',intro:'세자빈 강씨가 살던 빈 방이다.',miss:['빈 방이다.','아무것도 없다.','바람 소리뿐이다.'],
      spots:[{x:30,y:24,w:30,h:30,label:'벽에 남은 글',ev:'I7',say:['벽에 남은 글이다.','1646년, 세자빈은 왕의 음식에 독을 넣었다는 [[의심]]으로 사약을 받았다. 증거는 분명하지 않았다.']},{x:66,y:50,w:20,h:30,label:'빈 경대',say:['거울 없는 경대다.']}],
-     npcs:[{who:'maid7',expr:'base',place:{x:16,h:60,b:2},topics:[
+     npcs:[{who:'maid7',expr:'base',place:{x:16},topics:[
       {id:'m7-hi',t:'세자빈은 어떤 분이었나요?',lines:[['maid7','base','청에 볼모로 가서도 농사지어 사람들을 먹이신 분이오.']]},
       {id:'m7-against',t:'반대한 대신들',lock:'I7',must:true,lockSay:'(몸종은 고개를 떨군다. 세자빈이 받은 벌의 기록을 보여 주면 어떨까?)',
        lines:[['maid7','base','대신들이 [[줄지어 엎드려]] 말렸소. 여러 번이나.'],['maid7','base','그래도 왕은 듣지 않았소.']],gives:['I8']}],

@@ -50,12 +50,12 @@ const LOCS10=[
   {id:'press',name:'신문사',time:'낮',intro:'잉크 냄새가 난다.',miss:['종이 더미다.','잉크 얼룩이다.','아무것도 없다.'],
    spots:[{x:56,y:22,w:24,h:30,label:'벽에 걸린 신문',ev:'W2',say:['독립협회 사람들이 만든 한글 신문, [[독립신문]]이다.']},{x:8,y:60,w:20,h:20,label:'영어 사전',ev:'WD2',say:['오래된 영어 사전이다.','쟁점과 이어질까?']},
     {x:30,y:66,w:16,h:16,label:'새로 찍은 신문',only2:true,ev:'W6',say:['어제는 없던 신문이다.','“[[이날을 목 놓아 크게 우노라]].” 「시일야방성대곡」이다.']}],
-   npcs:[{who:'printer',expr:'base',place:{x:84,h:58,b:2},until:2,topics:[
+   npcs:[{who:'printer',expr:'base',place:{x:84},until:2,topics:[
     {id:'pr-hi',t:'무엇을 찍으세요?',lines:[['printer','base','속보! 인쇄공, 오늘도 소식을 찍다! …나쁜 소식이 더 많지.']]},
     {id:'pr-speech',t:'그 사람의 연설',lock:'W1',must:true,lockSay:'(활자만 고르는 인쇄공. 독립협회 이야기라면?)',
      lines:[['printer','base','속보! 독립협회 위원장, [[자주독립]]을 외치다! …그 연설, 내가 받아 적었소.'],['printer','sweat','속보… 사람이 변하다. …이 제목은 찍기 싫었소.']]}],
     present:{W1:{lines:[['printer','base','속보! 독립문, 하얗게 서다! …다들 얼굴이 환했지.']],unlock:'pr-speech'}},def:[['printer','base','속보! 인쇄공, 모르는 물건을 보다!']]},
-   {who:'malsun',expr:'base',place:{x:84,h:58,b:2},from:3,topics:[
+   {who:'malsun',expr:'base',place:{x:84},from:3,topics:[
     {id:'ms10-saw',t:'무엇을 보셨나요?',lock:'PF2',must:true,lockSay:'(할머니는 “이번엔 진짜 봤다니까!”만 되풀이한다.)',
      lines:[['malsun','angry','이번엔 [[내 눈으로]] 봤다니까!'],['malsun','base','그래, [[이 꽃]]! 바로 이 꽃이었어!'],['ME','think','(할머니가 처음으로 직접 본 증인이 됐어!)']],gives:['W14']},
     {id:'ms10-hi',t:'이번엔 무슨 소문인가요?',lines:[['malsun','base','이번엔 진짜 봤다니까! 법정 서고에서 누가 [[종이를 끼워 넣는]] 걸!'],['ttolbang','base','…옆집 사람이 봤죠?'],['printer','base','속보! 할머니, 또 소문을 퍼뜨리다!'],['malsun','angry','내 눈으로 봤다니까!! 소매에 [[꽃 모양 얼룩]]이 있었어!'],['ME','think','(꽃 모양 얼룩… 수상한 종이의 그 얼룩?)']]}],
@@ -66,7 +66,7 @@ const LOCS10=[
      spots:[{x:30,y:30,w:40,h:24,label:'탁자 위 조약 초안',ev:'W3',say:['조약 초안. [[찬성한 다섯 사람]] 가운데 학부대신 이완용이 있다.']}]},
     {id:'jm-wait',name:'대기실',intro:'대신들이 기다리던 방이다.',miss:['의자다.','아무것도 없다.'],
      spots:[{x:30,y:30,w:30,h:30,label:'빈 의자들',say:['의자들이 흐트러져 있다.']}],
-     npcs:[{who:'guard10',expr:'base',place:{x:76,h:60,b:2},topics:[
+     npcs:[{who:'guard10',expr:'base',place:{x:76},topics:[
       {id:'gd-hi',t:'그날 여기 계셨나요?',lines:[['guard10','base','회의실 앞을 지켰소.']]},
       {id:'gd-against',t:'반대한 사람들',lock:'W3',must:true,lockSay:'(정면만 보는 호위병. 그날의 조약 이야기라면?)',
        lines:[['guard10','base','참정대신 [[한규설]]은 끝까지 반대하다 끌려 나갔소.'],['guard10','base','모두가 뜻을 모았다고? 내가 본 건 그게 아니오.']],gives:['W4']}],
@@ -79,7 +79,7 @@ const LOCS10=[
    spots:[{x:30,y:20,w:40,h:40,label:'대한문 앞 게시',ev:'W8',say:['문 앞의 알림. 헤이그 특사를 빌미로 [[황제가 물러났다]]. 이완용이 앞장섰다.']}]},
   {id:'barracks',name:'해산된 군대의 병영',time:'1907년 8월',from:3,intro:'텅 빈 병영이다.',miss:['빈 막사다.','아무것도 없다.'],
    spots:[{x:56,y:24,w:26,h:30,label:'벗어 놓은 군복',ev:'W9',say:['벗어 놓은 군복. 1907년 8월, [[군대가 해산]]되었다.']}],
-   npcs:[{who:'soldier10',expr:'base',place:{x:30,h:60,b:2},topics:[
+   npcs:[{who:'soldier10',expr:'base',place:{x:30},topics:[
     {id:'sl-hi',t:'여기 계셨나요?',lines:[['soldier10','base','이 병영의 군인이었소.']]},
     {id:'sl-gun',t:'그날의 총소리',lock:'W9',must:true,lockSay:'(군복만 바라보는 군인. 그날의 기록이라면?)',
      lines:[['soldier10','base','해산식 날, 우리 대대장님이… 스스로 목숨을 끊으셨소.'],['soldier10','base','우리는 [[총을 들고 맞섰소]]. 그 뒤 많은 이가 의병이 되었지.']],gives:['W10']}],

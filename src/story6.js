@@ -33,7 +33,7 @@ Object.entries({G1:1618,G2:1615,G3:1618,G4:1619,G5:1619,G6:1619,G7:1633,G8:1608,
 EVIDENCE6.find(x=>x.id==='G5').tag='hearsay'; EVIDENCE6.find(x=>x.id==='G3').tag='imagined';
 const LOCS6=[
   {id:'exile',name:'유배지 접견실',time:'아침',kind:'meet',intro:'광해군을 만나는 방이다. 의뢰인은 지쳐 보인다.',miss:['…'],spots:[],
-   npcs:[{who:'gwanghae',expr:'base',place:{x:52,h:74,b:0},topics:[
+   npcs:[{who:'gwanghae',expr:'base',place:{x:52},topics:[
      {id:'gw-deny',t:'대비를 가둔 일',must:true,lines:[['gwanghae','base','나는 대비를 가둔 적 없소. [[신하들이 한 일]]이오.'],['ME','think','(…말할 때 소매 끝을 만지작거렸어. 정말일까?)']]},
      {id:'gw-war',t:'명과 후금',lines:[['gwanghae','base','두 큰 나라 사이에서 조선이 살 길을 찾았을 뿐이오.']]},
      {id:'gw-confess',t:'서궁의 문',from:2,lock:'G1',must:true,lockSay:'(광해군은 고개를 돌렸다. 대비를 가둔 결정을 보여 주면 무너질지도 모른다.)',
@@ -52,14 +52,14 @@ const LOCS6=[
   {id:'build6',name:'궁궐 공사 터',time:'오후',intro:'새 궁궐을 짓는 공사 터다. 나무와 돌이 산처럼 쌓여 있다.',
    miss:['나무 부스러기다.','돌가루다.','아무것도 없다.'],
    spots:[{x:50,y:18,w:30,h:40,label:'쌓아 둔 큰 나무들',ev:'G2',say:['큰 나무가 산처럼 쌓여 있다.','전쟁이 끝난 지 얼마 안 됐는데 [[세 궁궐]]을 짓고 고치는 공사다. 백성의 부담이 컸다.']},{x:8,y:62,w:20,h:22,label:'돌 수레',say:['돌을 나르는 수레다.']}],
-   npcs:[{who:'carpenter',expr:'base',place:{x:34,h:60,b:2},topics:[
+   npcs:[{who:'carpenter',expr:'base',place:{x:34},topics:[
      {id:'cp-hi',t:'무엇을 짓나요?',lines:[['carpenter','base','궁궐이오. 끝이 없지.']]},
      {id:'cp-wood',t:'나무 값',lock:'G2',lockSay:'(목수는 나무만 깎는다. 공사 기록을 보여 주면 속마음을 말할지도 모른다.)',lines:[['carpenter','base','전쟁 끝난 지 얼마 안 됐는데… 나무 값, 품삯 다 백성 몫이오.'],['carpenter','base','힘들었소. 많이들 힘들었지.']]}],
     present:{G2:{lines:[['carpenter','base','그 기록이 맞소.']],unlock:'cp-wood'}},def:[['carpenter','base','난 나무밖에 모르오.']]}]},
   {id:'camp',name:'압록강 출병 진영',time:'새벽',from:2,intro:'1619년 명을 도우러 떠난 조선군의 진영이다. 강 건너가 후금 땅이다.',
    miss:['얼어붙은 땅이다.','천막 줄이다.','아무것도 없다.'],
    spots:[{x:56,y:20,w:28,h:34,label:'장수의 천막에 걸린 지도',ev:'G4',say:['천막 안에 지도가 걸려 있다.','서쪽에는 명, 북쪽에는 새로 세진 후금. 조선은 명의 요구로 [[1만 명이 넘는 군사]]를 보냈다.']},{x:8,y:66,w:16,h:18,label:'꽂힌 화살',ev:'GD2',say:['땅에 후금의 화살이 꽂혀 있다.','후금이 강하다는 건 누구나 안다.']},{x:84,y:70,w:14,h:16,label:'모닥불 자리',say:['꺼진 모닥불이다.']}],
-   npcs:[{who:'soldier6',expr:'base',place:{x:38,h:58,b:2},topics:[
+   npcs:[{who:'soldier6',expr:'base',place:{x:38},topics:[
      {id:'sd-hi',t:'싸움은 어땠나요?',lines:[['soldier6','base','이건 [[비밀]]인데요! (진영이 다 들리는 목소리로) 명나라 장수들은 서둘렀고, 후금은 빨랐어요!'],['ME','think','(…비밀이 아닌 것 같은데.)']]},
      {id:'sd-letter',t:'장수의 편지',lock:'G4',must:true,lockSay:'(군졸은 강 건너만 본다. 그때의 형편을 보여 주면 무언가 떠올릴지도 모른다.)',
       lines:[['soldier6','base','그 지도… 떠나기 전 생각이 나요.'],['soldier6','base','이건 비밀인데요! 강홍립 장군님이 떠나기 전 [[왕께 무언가를 따로 받았다]]던데요. 편지였는지 말이었는지는 저도 몰라요.'],['ME','think','(왕이 장군에게 따로 준 것… 법정에서 물어봐야 해.)']],gives:['G5']}],
@@ -67,7 +67,7 @@ const LOCS6=[
   {id:'sillok',name:'실록 편찬청',time:'밤',from:3,rooms:[
     {id:'sl-room',name:'사관의 방',intro:'「광해군일기」를 엮는 사관의 방이다.',miss:['책상이다.','먹 냄새가 난다.','아무것도 없다.'],
      spots:[{x:60,y:20,w:24,h:36,label:'책장의 의학책',ev:'G9',say:['책장에 두꺼운 의학책이 꽂혀 있다.','1613년 펴낸 [[「동의보감」]]이다. 광해군 때 나온 책이다.']},{x:10,y:60,w:22,h:22,label:'벼루',say:['먹이 말라 있다.']}],
-     npcs:[{who:'sagwan',expr:'base',place:{x:40,h:62,b:2},topics:[
+     npcs:[{who:'sagwan',expr:'base',place:{x:40},topics:[
       {id:'sg-hi',t:'무엇을 쓰시나요?',lines:[['sagwan','base','지난 임금의 일기요. 날마다 있었던 일을 적지.']]},
       {id:'sg-mark',t:'고친 자국',lock:'G5',must:true,lockSay:'(사관은 붓만 놀린다. 어제 압록강 진영에서 들은 이야기를 꺼내 보면 대답할지도 모른다.)',
        lines:[['sagwan','sweat','장수가 떠나기 전 왕께 따로 받은 것… 그 대목 말이오?'],['sagwan','base','원고에는 그 대목이 있었소. 그런데 [[붉은 먹으로 지우고 고친]] 자리가 많소.'],['sagwan','base','…지금 임금께서 지난 임금을 쫓아내셨으니, 쓰는 손도 조심스러울 수밖에.'],['ME','think','(기록을 쓴 사람이 피고를 쫓아낸 쪽이라면… 원고 더미도 살펴봐야겠어.)']]}],

@@ -27,7 +27,7 @@ const LOCS2=[
      {x:10,y:48,w:12,h:20, label:'남쪽 길 이정표', ev:'C8', say:['남쪽을 가리키는 낡은 이정표다.','쫓겨난 준왕은 이 길로 [[남쪽]]에 가서 새로 자리를 잡았다고 한다.']},
      {x:37,y:53,w:5,h:16, label:'횃불 받침', say:['돌로 된 횃불 받침이다. 그날 밤에도 불이 타고 있었을까.']},
      {x:42,y:72,w:16,h:24, label:'수레바퀴 자국', say:['깊게 팬 수레바퀴 자국이다. 단서는 아니다.']},
-     {x:2,y:36,w:28,h:22, label:'성벽', say:['흙을 단단히 다져 쌓은 성벽이다.']}]},
+     {x:2,y:36,w:28,h:11, label:'성벽', say:['흙을 단단히 다져 쌓은 성벽이다.']}]},
    {id:'wg-court', name:'궁궐 마당', intro:'왕이 머물던 궁궐 마당이다. 준왕은 이곳에서 위만을 믿고 서쪽을 맡겼다.',
     miss:['돌계단이다.','마당 흙바닥이다.','특별한 건 없다.','바람에 깃발이 펄럭인다.'], spots:[
      {x:27.5,y:38.5,w:6.5,h:6, label:'왕좌 옆 나무 상자', ev:'C1', say:['왕좌 옆 나무 상자 안에 납작한 옥 홀과 접힌 지도가 들어 있다.','준왕이 위만을 믿고 [[높은 자리와 서쪽 100리 땅]]을 내린 증표다.']},
@@ -65,7 +65,7 @@ const PHASE2={1:'1일차 조사',2:'1일차 법정',3:'2일차 조사',4:'2일�
   /* 변호인 모드: 접견실 (재설계 v3) — 의뢰인이 변호인에게도 거짓말을 한다 */
   const mil=()=>S.flags&&S.flags.mil;
   LOCS2.unshift({id:'meet2',name:'접견실',bg:'lobby',kind:'meet',role:'def',time:'아침',intro:'피고 위만을 만나는 작은 방이다. 변호인과 피고 둘뿐이다.',miss:['아무것도 없다.'],spots:[],
-    npcs:[{who:'wiman',expr:'base',place:{x:50,h:72,b:0},until:2,topics:[
+    npcs:[{who:'wiman',expr:'base',place:{x:50},until:2,topics:[
       {id:'w-why',t:'군사를 이끌고 들어간 까닭',must:true,until:2,lines:[['wiman','base','한나라 군대가 [[정말로]] 쳐들어오고 있었소. 나는 왕을 지키러 들어갔을 뿐이오.'],['wiman','smug','변호인은 내 편 아니오? 내 말을 믿으시오.'],['ME','think','(변호인에게까지 거짓말을 하는 거라면… 증거로 확인해야 해.)']]},
       {id:'w-dress',t:'처음 조선에 온 날',must:true,until:2,lines:[['wiman','base','상투를 틀고 이 나라 옷을 입고 왔소. 연나라 차림이 아니었지.'],['wiman','base','그 일은 「사기」에도 적혀 있다 들었소. 변호인이 찾아보시오.'],['ME','think','(기록 사본을 찾아 수첩에 적어 두었다.)']],gives:['C4']},
       {id:'w-truth',t:'거짓 경보',lock:'C2',must:true,from:2,lockSay:'(위만은 팔짱을 꼈다. 그날 밤의 경보를 적은 기록과, 한나라가 실제로 언제 쳐들어왔는지를 함께 보여 줘야 입을 열 것 같다.)',
@@ -73,17 +73,17 @@ const PHASE2={1:'1일차 조사',2:'1일차 법정',3:'2일차 조사',4:'2일�
       present:{C2:{need:['C2','C3'],unlock:'w-truth',lines:[['wiman','angry','…알고 있었구려.']],wait:[['wiman','angry','그 기록 하나로 나를 몰아세울 셈이오?'],['ME','think','(한나라가 그때 정말 쳐들어왔는지 보여 줄 증거도 함께 내밀어야 해.)']]},
                C3:{need:['C2','C3'],unlock:'w-truth',lines:[['wiman','angry','…알고 있었구려.']],wait:[['wiman','smug','한나라 연표? 그게 어쨌다는 거요.'],['ME','think','(그날 밤 피고가 준왕에게 보낸 말을 적은 기록도 함께 보여 줘야 해.)']]}},
       def:[['wiman','base','그건 내 재판과 상관없는 물건이오.']]},
-     {who:'wiman',expr:'base',place:{x:50,h:72,b:0},from:3,topics:[
+     {who:'wiman',expr:'base',place:{x:50},from:3,topics:[
       {id:'w-last',t:'내일의 최후 진술',must:true,cond:()=>mil()!=='growth',lines:[['wiman','angry','변호인이 법정에서 한 일, 다 보았소.'],['wiman','base',"…처음엔 분했소. 그런데 밤새 생각해 보니, 내 거짓은 내가 갚아야 하는 것이더군."],['ME','think','(피고의 마음이 조금 열렸어.)']]},
       {id:'w-closed',t:'내일의 최후 진술',cond:()=>mil()==='growth',lines:[['wiman','smug','…할 말 없소. 변호인은 내 밀서를 쓰지 않았지.'],['ME','think','(피고가 마음을 닫았다. 최후 진술에서 무엇을 말할지 모르겠어.)']]}],
       def:[['wiman','base','…']]}]});
-  gate.npcs=[{who:'merchant',expr:'base',place:{x:80,h:60,b:0},until:2,topics:[
+  gate.npcs=[{who:'merchant',expr:'base',place:{x:80},until:2,topics:[
     {id:'m-know',t:'위만을 아시오?',lines:[['merchant','base','알다마다! 연나라에서부터 장사하며 오가던 사이지.'],['merchant','base','위만이 무리를 끌고 동쪽으로 갈 때도 내가 봤소.']]},
     {id:'m-night',t:'그날 밤',lines:[['merchant','base','그날 밤 서쪽에서 횃불이 줄지어 들어왔지. 나는 성문 밖에 있었소.'],['merchant','sweat','…한나라 군대? 글쎄, 그런 건 못 봤는데.'],['ME','think','(한나라 군대를 못 봤다… 기억해 두자.)']]},
     {id:'m-dress',t:'위만의 차림',lock:'C5',lockSay:'(상인은 딴청을 피운다. 이 나라의 이름에 얽힌 무언가를 보여 주면 반응할지도 모른다.)',lines:[['merchant','smug','나라 이름이 그대로라고? 흥, 그래도 위만은 [[연나라 사람]]이오.'],['merchant','smug','차림도 연나라 옷 그대로였지! 내 눈으로 봤다니까.'],['ME','think','(정말일까? 기록과 맞대 봐야겠어.)']]}],
     present:{C5:{lines:[['merchant','sweat','성문 현판…? 그게 어쨌다는 거요?']],unlock:'m-dress'},C1:{lines:[['merchant','base','준왕이 위만을 그렇게까지 믿었다니. 흥.']]}},
     def:[['merchant','base','그건 돈이 안 되는 물건이로군.']]}];
-  court.npcs=[{who:'jun',expr:'base',place:{x:58,h:62,b:0},from:2,role:'pros',topics:[
+  court.npcs=[{who:'jun',expr:'base',place:{x:58},from:2,role:'pros',topics:[
     {id:'j-trust',t:'위만을 믿은 까닭',lines:[['jun','base','난리를 피해 온 사람이었소. 우리 옷을 입고, 우리 땅을 지키겠다고 했지.'],['jun','hesitate','그래서 서쪽을 통째로 맡겼소.']]},
     {id:'j-night',t:'그날 밤',lock:'C1',must:true,lockSay:'(준왕은 고개를 돌렸다. 그가 위만에게 내린 증표를 보여 주면 마음을 열지도 모른다.)',lines:[['jun','hesitate','그날 밤… 갑자기 군사들이 몰려왔지.'],['jun','hesitate','아니, 갑자기는 아니었소. 그 전에… 무언가를 들었지. 법정에서 말하겠소.'],['ME','think','(무언가를 들었다… 법정에서 [[더 물어봐야]] 해.)']]}],
     present:{C1:{lines:[['jun','shock','이 홀은… 내가 위만에게 내린 것이오.'],['jun','hesitate','…좋소. 그날 밤 이야기를 하지.']],unlock:'j-night'},C6:{lines:[['jun','base','위만이 다스린 뒤로 쇠붙이가 흔해졌다더군.']]}},
@@ -91,10 +91,10 @@ const PHASE2={1:'1일차 조사',2:'1일차 법정',3:'2일차 조사',4:'2일�
   LOCS2.push({id:'harbor',name:'바닷가 포구',time:'새벽',from:3,intro:'준왕이 남쪽으로 떠났다는 바닷가 포구다. 낡은 배들이 묶여 있다.',
     miss:['젖은 모래다.','파도 소리뿐이다.','밧줄 토막이다.','아무것도 없다.'],
     spots:[{x:61,y:42,w:37,h:26,label:'묶여 있는 낡은 배',say:['오래된 나무배다. 단서는 아니다.']},{x:0,y:43,w:27,h:48,label:'그물 더미',say:['말려 둔 그물이다.']},{x:36,y:30,w:24,h:14,label:'수평선',say:['남쪽 바다가 끝없이 펼쳐진다.']},{x:0,y:28,w:35,h:14,label:'돌담',say:['파도를 막는 돌담이다.']}],
-    npcs:[{who:'merchant',expr:'base',place:{x:47,h:58,b:4},from:3,role:'def',topics:[
+    npcs:[{who:'merchant',expr:'base',place:{x:47},from:3,role:'def',topics:[
       {id:'h-def',t:'내일 법정에서는?',lines:[['merchant','smug','내일 검사 쪽 증인으로 나가오. 위만이 어떤 사람이었는지 다 말해 주지.'],['merchant','base','말 한 마디에 [[한 냥]]. 법정에서는 공짜로 해 주지만.'],['ME','think','(무엇이든 값을 매기는 버릇이 있네…)']]}],
       def:[['merchant','base','그건 얼마요? …흠, 돈이 안 되는 물건이로군.']]},
-     {who:'merchant',expr:'base',place:{x:47,h:58,b:4},from:3,role:'pros',topics:[
+     {who:'merchant',expr:'base',place:{x:47},from:3,role:'pros',topics:[
       {id:'h-why',t:'포구에는 왜?',lines:[['merchant','base','장사꾼이 포구에 오는 게 이상하오? 남쪽으로 가는 배를 알아보는 중이지. 이 말은 [[한 냥]]이오.']]},
       {id:'h-night',t:'그날 밤의 배',lock:'C10',must:true,lockSay:'(상인은 바다만 바라본다. 피고가 내민 밀서를 보여 주면 무언가 떠올릴지도 모른다.)',
        lines:[['merchant','sweat','밀서? 그날 밤에…? 말도 안 되오.'],['merchant','base','그날 밤 준왕 일행은 [[허둥지둥 배에 올라]] 남쪽으로 떠났소. 뱃사공들이 다 봤지.'],['merchant','sweat','누구한테 편지를 써 줄 틈 같은 건 없었다니까.']],gives:['C11']}],
@@ -103,10 +103,10 @@ const PHASE2={1:'1일차 조사',2:'1일차 법정',3:'2일차 조사',4:'2일�
   LOCS2.push({id:'lobby',name:'법정 로비',time:'저녁',from:3,intro:'재판이 끝난 법정 로비다. 누리가 창가에 서 있다.',
     miss:['반들반들한 마룻바닥이다.','빈 의자다.','아무것도 없다.'],
     spots:[{x:5,y:62,w:31,h:22,label:'긴 의자',say:['나무 의자다.']},{x:36,y:28,w:22,h:40,label:'법정 문',say:['내일 다시 열릴 법정의 문이다.']}],
-    npcs:[{who:'player',expr:'confident',place:{x:72,h:70,b:0},role:'def',topics:[
+    npcs:[{who:'player',expr:'confident',place:{x:72},role:'def',topics:[
       {id:'p-plan',t:'내일 검사의 작전',must:true,lines:[['player','confident','내일 증인은 연나라 상인이야. 상인 말이 틀렸다 해도 끝이 아니야.'],['player','smug','상투랑 옷차림은 꾸밀 수 있잖아? 위만이 데려온 무리가 [[연나라 사람들]]이었다는 건 그대로야.'],['ME','think','(하람은 그렇게 반격하겠구나. 나라를 움직인 사람들이 누구였는지 보여 줄 증거가 필요해.)']]}],
       def:[['player','normal','그걸로 나를 흔들 수 있을까?']]},
-     {who:'rival',expr:'smug',place:{x:72,h:70,b:0},role:'pros',topics:[
+     {who:'rival',expr:'smug',place:{x:72},role:'pros',topics:[
       {id:'r-letter',t:'준왕의 밀서',lock:'C10',must:true,lockSay:'(누리는 대답 대신 웃기만 한다. 그 밀서를 보여 주며 물어봐야겠다.)',lines:[['rival','smug','그 밀서요? 저도 진짜인지는 몰라요. 피고가 내민 문서니까요.'],['rival','normal','다만… 거기 적힌 [[지명]]이 언제 생긴 이름인지는, 확인해 볼 만하겠죠.'],['ME','think','(지명… 박물관 연표를 다시 떠올려 보자.)']]}],
       present:{C10:{lines:[['rival','normal','어제 그 밀서군요. 피고가 직접 꺼낸 거예요.']],unlock:'r-letter'}},
       def:[['rival','normal','그걸로 절 흔들 수 있을까요?']]}]});
