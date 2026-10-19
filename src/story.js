@@ -111,7 +111,7 @@ function prepStory(){
   resetState(); S.story=true; S.inTrial=true; S.found=new Set(); S.seen=new Set(); S.misses=0;
   gagEv(); paintMuk();
 }
-function startStory(){ S.storyMode=false; S.case=1; S.role='pros'; adaptEnter(1); clearSave(); prepStory(); (async()=>{ await caseIntro(); runStory(0); })(); }
+function startStory(){ S.storyMode=false; S.case=1; S.role='pros'; adaptEnter(1); clearSave(); prepStory(); track('start',{resume:false,from:0}); (async()=>{ await caseIntro(); runStory(0); })(); }
 function resumeStory(){
   S.storyMode=false; S.case=1; S.role='pros';
   const v=hasSave(); if(!v){ startStory(); return; }
@@ -119,7 +119,7 @@ function resumeStory(){
   if(v.variant!==undefined){ S.variant=v.variant; S.lines=buildLines(v.variant); }
   S.found=new Set(v.found); S.seen=new Set(v.seen||[]); S.trust=v.trust||bellsMax(); S.misses=v.misses||0; S.presses=v.presses||0; S.log=v.log||[]; S.used=new Set(v.used||[]); S.talked=new Set(v.talked||[]); S.unlocked=new Set(v.unlocked||[]); S.p2at=3;
   if(v.flags) S.flags=v.flags; if(v.verdicts) S.verdicts=v.verdicts;
-  gagEv(); renderGauge(); runStory(v.phase);
+  gagEv(); renderGauge(); track('start',{resume:true,from:v.phase}); runStory(v.phase);
 }
 
 async function runStory(from){
@@ -481,6 +481,7 @@ async function storyEnding(){
   await say('judge','normal','역사 법정에서 이기는 쪽은 언제나 [[증거]]요.',{view:'courtyard'});
   await scribeArchive();
   await caseFinale();
+  track('case_end',{grade:tierOf(score().total).name,trust:S.trust,wrongs:S.log.filter(x=>!x.ok).length});
   S.done=true; S.inTrial=false; clearSave(); openResult();
 }
 /* 재판이 끝난 빈 법정: 기록관이 붓을 줍다 소매에 매화 모양 먹이 번진다. 해치가 서고를 맡긴다 */

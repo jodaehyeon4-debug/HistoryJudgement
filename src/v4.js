@@ -104,13 +104,131 @@ function openPapers(){
 
 /* ---------- 법관 등급: 정확한 판결 수(처음 고른 판결 종류가 맞은 수)로 오른다 ---------- */
 const RANKS=[[0,'새내기 법관'],[4,'수습 법관'],[10,'법관'],[18,'명판관']];
+function rankOf(sum){ let name=RANKS[0][1]; RANKS.forEach(r=>{ if(sum>=r[0]) name=r[1]; }); return name; }
 function rankUpdate(){
   const n=S.case||1, V=S.verdicts||[], c=V.filter(v=>v.first).length; let R={};
   try{ R=JSON.parse(store.get('yj-rank')||'{}')||{}; }catch(e){}
   R[n]=Math.max(R[n]||0,c); store.set('yj-rank',JSON.stringify(R));
-  const sum=Object.values(R).reduce((a,b)=>a+b,0); let name=RANKS[0][1]; RANKS.forEach(r=>{ if(sum>=r[0]) name=r[1]; });
+  const sum=Object.values(R).reduce((a,b)=>a+b,0), name=rankOf(sum);
   const nx=RANKS.find(r=>r[0]>sum);
   return {correct:c,total:V.length,sum:sum,name:name,next:nx?`${nx[1]}까지 ${nx[0]-sum}`:''};
+}
+
+/* ---------- 학급 연표 (교사 화면): 반 전체가 함께 채우는 연표 판 ----------
+   이 기기의 학습 데이터에 다른 기기에서 내려받은 기록 파일을 합쳐, 사건마다 끝낸 친구·내린 판결·모은 수상한 종이를 연표 위에 놓는다.
+   합친 기록도 이 기기 안(yj-class)에만 두고, 판에 필요한 기록만 남긴다. 이름 대신 번호나 별명. */
+const CLASSKEY='yj-class', CLASSMAX=40000, BOARD_KINDS=['start','day_end','case_end','verdict_kind','paper'];
+function loadClassEvents(){ try{ return JSON.parse(store.get(CLASSKEY)||'[]')||[]; }catch(e){ return []; } }
+/* 내려받은 파일은 초 단위라서 초까지만 맞춰 같은 기록을 한 번만 센다 */
+const boardKey=e=>[Math.floor(e.t/1000),e.sid||'',e.case,e.role,e.kind,JSON.stringify(e.detail||{})].join('|');
+function boardEvents(){
+  const seen=new Set();
+  return loadEvents().concat(loadClassEvents()).filter(e=>{ if(!BOARD_KINDS.includes(e.kind)) return false; const k=boardKey(e); if(seen.has(k)) return false; seen.add(k); return true; }).sort((a,b)=>a.t-b.t);
+}
+function parseCSV(text){
+  const rows=[]; let row=[], cell='', q=false;
+  text=String(text).replace(/^﻿/,'');
+  for(let i=0;i<text.length;i++){ const ch=text[i];
+    if(q){ if(ch==='"'){ if(text[i+1]==='"'){ cell+='"'; i++; } else q=false; } else cell+=ch; }
+    else if(ch==='"') q=true;
+    else if(ch===','){ row.push(cell); cell=''; }
+    else if(ch==='\n'||ch==='\r'){ if(ch==='\r'&&text[i+1]==='\n') i++; row.push(cell); rows.push(row); row=[]; cell=''; }
+    else cell+=ch; }
+  if(cell||row.length){ row.push(cell); rows.push(row); }
+  return rows;
+}
+/* eventsCSV가 만든 파일을 다시 기록으로. 역사재판 기록 파일이 아니면 null */
+function csvEvents(text){
+  const R=parseCSV(text), h=R.shift()||[], ix=n=>h.indexOf(n);
+  const I={t:ix('시각'),sid:ix('번호_별명'),case:ix('사건'),role:ix('역할'),day:ix('일차'),kind:ix('종류'),detail:ix('내용')};
+  if(I.t<0||I.kind<0||I.case<0) return null;
+  const out=[];
+  R.forEach(r=>{ const kind=r[I.kind]; if(!BOARD_KINDS.includes(kind)) return;
+    const m=/(\d{4})[-./]\s*(\d{1,2})[-./]\s*(\d{1,2})\.?\s+(\d{1,2}):(\d{2})(?::(\d{2}))?/.exec(r[I.t]||''); if(!m) return;
+    let detail={}; try{ detail=JSON.parse(r[I.detail]||'{}')||{}; }catch(e){}
+    out.push({t:new Date(+m[1],m[2]-1,+m[3],+m[4],+m[5],+(m[6]||0)).getTime(),sid:(r[I.sid]||'').trim(),case:+r[I.case]||1,role:r[I.role]||'pros',day:+r[I.day]||0,kind:kind,detail:detail}); });
+  return out;
+}
+const yearNum=s=>{ const m=/(기원전\s*)?(\d+)/.exec(s||''); return m?(m[1]?-m[2]:+m[2]):0; };
+const eraOf=y=>y<0?'고조선':y<668?'삼국 시대':y<892?'남북국 시대':y<936?'후삼국 시대':y<1392?'고려':y<1897?'조선':'대한 제국';
+const chargeNo=c=>{ const m=/혐의\s*([①-⑩])/.exec(c); return m?m[1]:'·'; };
+/* 학생별·사건별로 모은다. 법관 등급은 rankUpdate와 같은 셈: 사건마다 한 판에서 처음 고른 판결이 맞은 수의 가장 큰 값을 더함 */
+function boardData(E){
+  const CS={}, ST={}, seg={};
+  const cs=n=>CS[n]||(CS[n]={on:new Set(),done:new Set(),pick:{},first:{},paper:new Set(),self:new Set(),plum:new Set()});
+  const st=s=>ST[s]||(ST[s]={sid:s,on:new Set(),done:new Set(),best:{},papers:new Set(),last:0});
+  E.forEach(e=>{
+    const sid=e.sid||'(이름표 없음)', n=+e.case||1, c=cs(n), s=st(sid), d=e.detail||{}, k=sid+'|'+n+'|'+e.role;
+    s.last=Math.max(s.last,e.t); c.on.add(sid); s.on.add(n);
+    if(e.kind==='start'&&!d.resume) seg[k]=new Set();
+    else if(e.kind==='verdict_kind'){
+      const ch=String(d.charge||''), fk=sid+'|'+e.role+'|'+ch;
+      if(d.try===1&&!c.first[fk]) c.first[fk]={ch:ch,ok:!!d.ok,pick:d.pick};
+      if(d.ok){ (c.pick[ch]||(c.pick[ch]={}))[sid+'|'+e.role]=d.pick; if(d.try===1) (seg[k]||(seg[k]=new Set())).add(ch); }
+    }
+    else if(e.kind==='paper'){ c.paper.add(sid); if(d.self) c.self.add(sid); if(d.plum) c.plum.add(sid); s.papers.add(n); }
+    else if(e.kind==='case_end'){ c.done.add(sid); s.done.add(n); s.best[n]=Math.max(s.best[n]||0,seg[k]?seg[k].size:0); seg[k]=new Set(); }
+  });
+  return {CS:CS,ST:ST,n:Object.keys(ST).length};
+}
+function boardHTML(D,o){
+  const N=D.n, pct=x=>N?Math.round(x/N*100):0, tot={done:0,v:0,p:0};
+  const cards=CASES.slice().sort((a,b)=>yearNum(CASE_YEAR[a.n])-yearNum(CASE_YEAR[b.n])).map(cc=>{
+    const n=cc.n, c=D.CS[n], y=yearNum(CASE_YEAR[n]), who=String(cc.d||'').split(' · ')[0];
+    const done=c?c.done.size:0, on=c?[...c.on].filter(s=>!c.done.has(s)).length:0, full=N&&done===N;
+    const charges=c?Object.keys(c.pick).sort():[], show=!o.big||o.reveal||full;
+    tot.done+=done; if(c){ tot.p+=c.paper.size; charges.forEach(ch=>{ tot.v+=Object.keys(c.pick[ch]).length; }); }
+    const vk=charges.map(ch=>{
+      const cnt={}; Object.values(c.pick[ch]).forEach(k=>{ cnt[k]=(cnt[k]||0)+1; }); const ks=Object.keys(cnt).sort((a,b)=>cnt[b]-cnt[a]);
+      const F=Object.values(c.first).filter(f=>f.ch===ch), wr={}; F.filter(f=>!f.ok).forEach(f=>{ wr[f.pick]=(wr[f.pick]||0)+1; }); const w=Object.keys(wr).sort((a,b)=>wr[b]-wr[a])[0];
+      return `<li><span class="cb-no">${chargeNo(ch)}</span><span class="cb-ch">${esc(ch.replace(/^혐의\s*[①-⑩]\s*/,''))}</span><span class="cb-bar">${ks.map(k=>`<i class="k-${k}" style="flex:${cnt[k]}"></i>`).join('')}</span><b>${ks.map(k=>`<span class="t-${k}">${VK[k]||k}${ks.length>1?' '+cnt[k]:''}</span>`).join(' · ')}</b>${o.big?'':`<small>처음에 맞힘 ${F.filter(f=>f.ok).length}/${F.length}명${w?` · 많이 헷갈린 답: ${VK[w]||w} ${wr[w]}명`:''}</small>`}</li>`; }).join('');
+    const hasPaper=n===2||!!XD(n).paper;
+    return `<li class="cb-i${!c?' none':full?' full':''}">
+      <div class="cb-top"><span class="cb-yr">${CASE_YEAR[n]||''}</span><span class="cb-era">${eraOf(y)}</span></div>
+      <div class="cb-t"><small>사건 ${n}${n===1?' · 첫 재판':''}</small><b>「${esc(cc.t)}」</b><span>${esc(who)}</span></div>
+      <div class="cb-meter" role="img" aria-label="끝낸 친구 ${done}명, 하는 중 ${on}명"><i class="d" style="width:${pct(done)}%"></i><i class="o" style="width:${pct(on)}%"></i></div>
+      ${c?`<p class="cb-cnt">끝낸 친구 <b>${done}</b>/${N}명${on?` · 하는 중 ${on}명`:''}</p>`:'<p class="cb-cnt">아직 아무도 열지 않았어요</p>'}
+      ${charges.length?(show?`<ul class="cb-vk">${vk}</ul>`:'<p class="cb-hide">판결은 모두 끝내면 보여요</p>'):''}
+      ${hasPaper&&c?`<p class="cb-paper">🗂️ 수상한 종이 <b>${c.paper.size}</b>명${!o.big&&c.paper.size?` <small>(스스로 찾음 ${c.self.size} · 매화 얼룩 ${c.plum.size})</small>`:''}</p>`:''}
+    </li>`; }).join('');
+  const legend=`<div class="cb-legend"><span><i class="d"></i>끝낸 친구</span><span><i class="o"></i>하는 중</span>${Object.keys(VK).map(k=>`<span><i class="k-${k}"></i>${VK[k]}</span>`).join('')}</div>`;
+  return `<div class="stats cb-stats"><div class="stat">함께한 신참 법관<b>${N}명</b></div><div class="stat">끝낸 재판<b>${tot.done}번</b></div><div class="stat">내린 판결<b>${tot.v}개</b></div><div class="stat">모은 수상한 종이<b>${tot.p}장</b></div></div>${legend}<ol class="cb-tl">${cards}</ol>`;
+}
+/* 교사용 화면 안의 학급 연표: 판 + 학생별 표 + 기록 파일 합치기 */
+function classBoardInner(msg){
+  const D=boardData(boardEvents()), imp=loadClassEvents().length, rows=Object.values(D.ST).sort((a,b)=>a.sid.localeCompare(b.sid,'ko',{numeric:true}));
+  const md=t=>{ const d=new Date(t); return `${d.getMonth()+1}월 ${d.getDate()}일 ${String(d.getHours()).padStart(2,'0')}:${String(d.getMinutes()).padStart(2,'0')}`; };
+  return `<p class="lead">반 친구들이 재판을 끝낼 때마다 연표가 채워져요. 사건은 일어난 해의 순서로 놓았어요. 학생 기기에서 ‘CSV 내려받기’로 받은 파일을 ‘기록 파일 합치기’로 넣으면 반 전체가 한 판에 모여요. 합친 기록도 이 기기 안에만 남아요.</p>
+    <div class="cb-ctl"><button class="abtn primary" type="button" id="cbBig">크게 띄우기</button><button class="abtn" type="button" id="cbAdd">기록 파일 합치기</button>${imp?`<button class="abtn" type="button" id="cbClear">합친 기록 지우기</button>`:''}<input type="file" id="cbFile" accept=".csv,text/csv" multiple hidden><span class="cb-src">이 기기 기록 + 합친 기록 ${imp}개</span></div>
+    ${msg?`<p class="cb-msg">${esc(msg)}</p>`:''}
+    ${D.n?boardHTML(D,{big:false}):'<p>아직 모인 기록이 없어요.</p>'}
+    ${rows.length?`<div class="tblwrap"><table class="tbl-sm cb-tbl"><thead><tr><th>번호·별명</th><th>끝낸 사건</th><th>하는 중</th><th>처음에 맞힌 판결</th><th>법관 등급</th><th>수상한 종이</th><th>마지막 기록</th></tr></thead><tbody>
+      ${rows.map(s=>{ const sum=Object.values(s.best).reduce((a,b)=>a+b,0); return `<tr><td>${esc(s.sid)}</td><td><span class="cb-strip">${CASES.map(c=>`<i class="${s.done.has(c.n)?'d':s.on.has(c.n)?'o':''}">${c.n}</i>`).join('')}</span></td><td>${[...s.on].filter(n=>!s.done.has(n)).sort((a,b)=>a-b).map(n=>'사건 '+n).join(', ')||'-'}</td><td>${sum}개</td><td>${rankOf(sum)}</td><td>${s.papers.size}장</td><td>${md(s.last)}</td></tr>`; }).join('')}</tbody></table></div>`:''}`;
+}
+function classBoardSection(){ return `<h3>학급 연표</h3><section id="cbWrap">${classBoardInner()}</section>`; }
+function bindClassBoard(){
+  const W=$('#cbWrap'); if(!W) return;
+  const redraw=msg=>{ W.innerHTML=classBoardInner(msg); bindClassBoard(); };
+  $('#cbBig').addEventListener('click',()=>openClassBoard(false));
+  const f=$('#cbFile');
+  $('#cbAdd').addEventListener('click',()=>f.click());
+  f.addEventListener('change',async()=>{
+    const L=loadClassEvents(), have=new Set(L.map(boardKey)); let files=0, bad=0, add=0;
+    for(const file of [...(f.files||[])]){ let ev=null; try{ ev=csvEvents(await file.text()); }catch(e){} if(!ev){ bad++; continue; } files++;
+      ev.forEach(e=>{ const k=boardKey(e); if(have.has(k)) return; have.add(k); L.push(e); add++; }); }
+    L.sort((a,b)=>a.t-b.t); if(L.length>CLASSMAX) L.splice(0,L.length-CLASSMAX);
+    let saved=true; try{ localStorage.setItem(CLASSKEY,JSON.stringify(L)); }catch(e){ saved=false; }
+    redraw(!saved?'이 기기의 저장 공간이 모자라 합치지 못했어요.':`기록 파일 ${files}개를 합쳤어요. 새 기록 ${add}개.${bad?` 역사재판 기록이 아닌 파일 ${bad}개는 건너뛰었어요.`:''}`);
+  });
+  const c=$('#cbClear'); if(c) c.addEventListener('click',()=>{ let ok=false; try{ ok=window.confirm('다른 기기에서 합친 기록을 지울까요? 이 기기에서 쌓인 기록은 그대로 남아요.'); }catch(e){} if(ok){ store.set(CLASSKEY,'[]'); redraw('합친 기록을 지웠어요.'); } });
+}
+/* 교실 화면에 띄우는 큰 연표: 반 전체 숫자만, 학생 이름표는 없음. 판결은 모두 끝낸 사건이거나 선생님이 보이기를 눌렀을 때만 */
+function openClassBoard(reveal){
+  const D=boardData(boardEvents());
+  openSheet(`<div class="cb-big"><h2>우리 반 역사 연표</h2><p class="lead">친구들이 재판을 끝낼 때마다 연표가 한 칸씩 채워져요.</p>${D.n?boardHTML(D,{big:true,reveal:reveal}):'<p class="lead">아직 모인 기록이 없어요.</p>'}</div>
+    <div class="sheet-foot"><button class="abtn" type="button" id="cbReveal">${reveal?'판결 가리기':'판결 모두 보이기'}</button><button class="abtn primary" type="button" id="cbBack">교사용으로</button></div>`,false);
+  $('#cbReveal').addEventListener('click',()=>openClassBoard(!reveal));
+  $('#cbBack').addEventListener('click',openTeacher);
 }
 /* 결과 화면에 덧붙일 v4 묶음: 정확한 판결, 법관 등급, 명탐정 도장, 「역사 기록부」 */
 function v4ResultHTML(record){

@@ -55,10 +55,20 @@ async function solveCross(){
   if(L.need2){ key('e'); await sleep(80); await pickEv(L.need2[0]); await idle(); await pickEv(L.need2[1]); await idle(); return; }
   const ev=[].concat(L.ev).find(id=>S.found.has(id)); key('e'); await sleep(80); await pickEv(ev); await idle();
 }
+/* 교사용 화면의 학급 연표: 방금 끝낸 사건 칸이 '끝낸 친구 1/1명'으로 채워졌는지, 크게 띄운 판에 영어 낱말이 없는지 */
+async function boardCheck(){
+  const n=Y().S.case||1; $('#tTeacher').click(); await sleep(60);
+  if(!$('#cbWrap')){ errors.push('class board: teacher screen did not open'); return; }
+  const card=[...d.querySelectorAll('#cbWrap .cb-i')].find(c=>+((/^사건 (\d+)/.exec(c.querySelector('.cb-t small').textContent)||[])[1])===n);
+  const txt=card?card.querySelector('.cb-cnt').textContent:'(칸 없음)'; log.push('BOARD 사건 '+n+': '+txt);
+  if(!/끝낸 친구 1\/1명/.test(txt)) errors.push('class board: case '+n+' not filled ('+txt+')');
+  $('#cbBig').click(); await sleep(60); const big=$('.cb-big');
+  if(!big||!big.querySelector('.cb-tl')) errors.push('class board: big view missing'); else if(/[A-Za-z]/.test(big.textContent)) errors.push('class board: latin text in big view');
+}
 async function run(start){
   await sleep(150); await start(); let days=0;
   for(let step=0;step<6000;step++){
-    if($('#r2back')||$('#rRetry')){ log.push('RESULT '+[...d.querySelectorAll('.tier,.res-list li,.stat')].map(x=>x.textContent).join(' / ')); break; }
+    if($('#r2back')||$('#rRetry')){ log.push('RESULT '+[...d.querySelectorAll('.tier,.res-list li,.stat')].map(x=>x.textContent).join(' / ')); await boardCheck(); break; }
     if(!$('#invbar').hidden && Y().S.mode==='inv'){ log.push('inv day '+Y().S.phase+' places '+Y().availLocs().map(l=>l.id).join('+')); await solveInv(); continue; }
     if($('#pGo')){ days++; const im=$('[data-imp]'); if(im) im.click(); $('#pGo').click(); await sleep(80); continue; }
     if($('#sheetGo')){ $('#sheetGo').click(); await sleep(60); continue; }

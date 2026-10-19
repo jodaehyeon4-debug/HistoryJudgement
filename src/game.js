@@ -859,9 +859,11 @@ function openGameOver(){
   $('#gRetry').addEventListener('click',()=>{ if(!S.story){ startTrial(); return; } if((S.case||1)>=3) startCaseX(S.case,S.role,true); else if(S.case===2) startCase2(S.role||(S.me==='rival'?'def':'pros'),true); else resumeStory(); });
 }
 function openTeacher(){
-  const back=S.done?openResult:null;
+  // 사건 1(과 맛보기 재판)만 openResult로 돌아가고, 사건 2부터는 결과 화면의 '처음 화면으로'와 같게
+  const back=S.done?((S.case||1)>=2?backToRoles:openResult):null;
   let body='';
-  if(!S.lines){ body=`<p class="lead">재판을 시작하면 이번 판의 정답과 학생의 증거 제시 기록이 여기에 나옵니다.</p>`; }
+  if(S.case>=2) body=`<p class="lead">사건 ${S.case}을(를) 하고 있어요. 이번 판의 증거 제시 기록은 아래 ‘학습 데이터’에 모입니다.</p>`;
+  else if(!S.lines){ body=`<p class="lead">재판을 시작하면 이번 판의 정답과 학생의 증거 제시 기록이 여기에 나옵니다.</p>`; }
   else {
     const v=S.variant;
     body=`<p class="lead">이번 판은 변형 ${v+1}/5입니다. 거짓 증언의 위치가 판마다 바뀌고, 같은 기기에서는 직전 변형이 다시 나오지 않습니다.</p>
@@ -876,12 +878,11 @@ function openTeacher(){
     ${S.invFound?`<p>조사에서 헛짚은 횟수: ${S.misses||0}번</p><p>조사에서 스스로 찾은 증거: ${S.invFound.length}/8 (${S.invFound.map(id=>id+' '+esc(EV_BY_ID[id].title)).join(', ')||'없음'})</p>`:''}
     ${S.classified?`<h3>분류 결과</h3><p>${S.lines.map((L,i)=>`${i+1}번 ${CAT_NAME[S.classify[i]]||'-'} ${S.classify[i]===correctCat(L)?'○':'×'}`).join(', ')}</p>`:''}`;
   }
-  if(S.case>=2) body=`<p class="lead">사건 ${S.case}을(를) 하고 있어요. 이번 판의 증거 제시 기록은 아래 ‘학습 데이터’에 모입니다.</p>`;
   const gj=(CASE_DATA[S.case]&&CASE_DATA[S.case].gojeung)||GOJEUNG;
-  openSheet(`<h2>교사용</h2>${teacherDataHTML()}<h3>이번 판</h3>${body}
+  openSheet(`<h2>교사용</h2>${classBoardSection()}${teacherDataHTML()}<h3>이번 판</h3>${body}
     <h3>고증 확인 목록${S.case>=3?` (사건 ${S.case})`:''}</h3><ol class="check">${gj.map(x=>`<li>${esc(x)}</li>`).join('')}</ol>${laughHTML()}
-    <div class="sheet-foot"><button class="abtn primary" id="tClose" type="button">${back?'재판 기록으로':'닫기'}</button></div>`,!back);
-  bindTeacherData(); bindLaugh();
+    <div class="sheet-foot"><button class="abtn primary" id="tClose" type="button">${back===openResult?'재판 기록으로':back?'처음 화면으로':'닫기'}</button></div>`,!back);
+  bindClassBoard(); bindTeacherData(); bindLaugh();
   $('#tClose').addEventListener('click',()=>{ if(back) back(); else closeSheet(); });
 }
 
