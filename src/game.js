@@ -117,6 +117,7 @@ function logLine(who,text,o){
   S.hist=S.hist||[]; const t=plain(text); const e={n:NAMES[who]||'',t:t,c:(o&&o.testimony)?'testi':(/^\s*[(（]/.test(t)?'thought':'')};
   const L=S.hist[S.hist.length-1]; if(L&&L.t===e.t&&L.n===e.n) return;
   if(e.c==='testi' && S.hist.some(x=>x.c==='testi'&&x.t===e.t)) return; S.hist.push(e); if(S.hist.length>250) S.hist.shift();
+  if(window.__yjTxt) window.__yjTxt(who,t,e.c);
 }
 function openHistory(back){
   const H=S.hist||[];
@@ -1077,4 +1078,4 @@ textEl.textContent='역사 법정에 오신 것을 환영합니다. 아래에서
 showTitle();
 
 if(location.hash==='#dbg') window.__dbg={setView:setView,setName:setName,titleCard:titleCard};
-window.__yj={S:S,CASE_DATA:CASE_DATA,npcRect:npcRect,get CX(){return CX;},get invLoc(){return invLoc;},get invParent(){return invParent;},LOCS:LOCS,availLocs:availLocs,roomsOf:roomsOf,npcOf:npcOf,missingReq:missingReq,get pickExpect(){return S.expect;}};
+window.__yj={S:S,CASE_DATA:CASE_DATA,npcRect:npcRect,get CX(){return CX;},get invLoc(){return invLoc;},get invParent(){return invParent;},LOCS:LOCS,availLocs:availLocs,roomsOf:roomsOf,npcOf:npcOf,missingReq:missingReq,get pickExpect(){return S.expect;},get EVIDENCE(){return EVIDENCE;}};

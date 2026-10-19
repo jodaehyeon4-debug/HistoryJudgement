@@ -10,6 +10,11 @@ const w=dom.window,d=w.document; const $=s=>d.querySelector(s); const sleep=ms=>
 const key=k=>{ d.dispatchEvent(new w.KeyboardEvent('keydown',{key:k,bubbles:true})); if(k.startsWith('Arrow')) d.dispatchEvent(new w.KeyboardEvent('keyup',{key:k,bubbles:true})); };
 const Y=()=>w.__yj;
 const PREF=(process.argv[3]||'').split(',').filter(Boolean);
+/* MEASURE=<파일>: 날마다 읽은 글자 수, 얻은 증거, 조사 장소·단서 자리, 증언의 거짓 수를 JSON으로 남김 (시뮬레이션·증거 표용) */
+const MEAS=process.env.MEASURE, M={mode:process.argv[2]||'c1',pref:PREF,days:[]};
+const dayNo=()=>{ const S=Y()&&Y().S; return S?(S.day||S.phase||0):0; };
+function dayRec(){ const n=dayNo(), S=Y().S; let r=M.days.find(x=>x.day===n); if(!r){ r={day:n,txt:0,lines:0,txtBy:{},inv:null,testi:{},found:[]}; M.days.push(r); } return r; }
+w.__yjTxt=(who,t,c)=>{ if(!Y()||!Y().S) return; const r=dayRec(); r.txt+=t.length; r.lines++; r.txtBy[who]=(r.txtBy[who]||0)+t.length; const S=Y().S; S.found&&S.found.forEach(id=>{ if(!M.days.some(x=>x.found.includes(id))) r.found.push(id); }); };
 async function idle(){ await sleep(10); for(let i=0;i<900;i++){ const sh=$('#shout.show'),tc=$('#tc.show'); if(sh){sh.click();await sleep(20);continue;} if(tc){tc.click();await sleep(20);continue;} if(!$('#next').hidden){ $('#dialog').click(); await sleep(25); continue; } const t=$('#text').innerHTML; await sleep(40); if($('#next').hidden && $('#text').innerHTML===t && !$('#shout.show') && !$('#tc.show')) return; } }
 const lensPos=()=>({x:parseFloat($('#lens').style.left),y:parseFloat($('#lens').style.top)});
 async function goTo(x,y){ for(let i=0;i<120;i++){ const p=lensPos(); if(Math.abs(p.x-x)<1.3&&Math.abs(p.y-y)<1.3) return; if(p.x<x-1.3) key('ArrowRight'); else if(p.x>x+1.3) key('ArrowLeft'); else if(p.y<y-1.3) key('ArrowDown'); else key('ArrowUp'); await sleep(3);} }
@@ -20,6 +25,9 @@ async function settle(){ for(let i=0;i<30;i++){ await idle(); if($('#sheet').hid
 async function pickEv(id){ for(let i=0;i<80&&!( !$('#sheet').hidden && $(`button.ev[data-id="${id}"]`));i++) await sleep(25); const b=$(`button.ev[data-id="${id}"]`); if(!b) return false; b.click(); await sleep(15); $('[data-act=present]').click(); await sleep(40); return true; }
 async function solveInv(){
   await settle();
+  if(MEAS){ const S=Y().S, r=dayRec(), I={locs:[],spots:0,real:0,decoy:0,npcs:0,topics:0,must:0};
+    for(const loc of Y().availLocs()){ I.locs.push(loc.id); for(const room of Y().roomsOf(loc)){ for(const p0 of room.spots){ const p=eff(p0); if(p.only2&&S.phase<(S.p2at||2)) continue; if(p.role&&p.role!==S.role) continue; if(!avail(p)) continue; I.spots++; const tl=(p.say||[]).reduce((n,x)=>n+String(Array.isArray(x)?x[x.length-1]:x).replace(/\[\[|\]\]/g,'').length,0); if((p.gives&&p.gives.length)||p.ev){ I.real++; } else { I.decoy++; I.decoyTxt=(I.decoyTxt||0)+tl; } } const np=Y().npcOf(room); if(np){ I.npcs++; np.topics.forEach(t=>{ if(avail(t)){ I.topics++; if(t.must) I.must++; } }); } } }
+    r.inv=I; }
   for(let pass=0;pass<5;pass++){
     const S=Y().S;
     for(const loc of Y().availLocs()){
@@ -45,6 +53,7 @@ async function solveInv(){
 }
 async function solveCross(){
   const CX=Y().CX; if(!CX) return; const T=CX.T, S=Y().S;
+  if(MEAS){ const r=dayRec(), k=T.key||T.title||'?'; if(!r.testi[k]) r.testi[k]={lines:T.lines.length,lies:T.lines.filter(l=>l.lie).length,pair:T.lines.filter(l=>l.need2).length,hidden:T.lines.filter(l=>l.reveal!==undefined||l.hidden).length,habit:!!T.habit}; }
   const vis=CX.vis, has=L=>(L.need2||[].concat(L.ev||[])).some(id=>S.found.has(id)) && (!L.need2||L.need2.every(id=>S.found.has(id)));
   let target=vis.findIndex(i=>T.lines[i].lie && !T.lines[i].broken && has(T.lines[i])); let act='present';
   if(target<0){ target=vis.findIndex(i=>{ const L=T.lines[i]; return (L.reveal!==undefined && !vis.includes(L.reveal)) || L.endOnPress; }); act='press'; }
@@ -85,6 +94,7 @@ async function run(start){
     await idle(); await sleep(30);
   }
   log.push('days paused '+days+' | bells '+Y().S.trust+' | missed '+(Y().S.misses||0));
+  if(MEAS){ const S=Y().S; M.ev=(Y().EVIDENCE||[]).map(e=>({id:e.id,title:e.title,type:e.type,y:e.y,fake:!!e.fake,gag:!!e.gag,tag:e.tag||''})); M.foundAll=[...(S.found||[])]; M.case=S.case||1; M.role=S.role||'pros'; M.misses=S.misses||0; try{ M.events=JSON.parse(w.localStorage.getItem('yj-events')||'[]').filter(e=>e.kind==='ev_found').map(e=>({day:e.day,id:e.detail.id,from:e.detail.from})); }catch(e){ M.events=[]; } require('fs').writeFileSync(MEAS,JSON.stringify(M)); }
   console.log('ERRORS:',errors.length?errors.slice(0,6):'none'); process.exit(0);
 }
 const mode=process.argv[2]||'c1';
